@@ -19,7 +19,7 @@ $images = ['assets/images/home.jpeg', 'assets/images/home1.webp', 'assets/images
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-43">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-57">
 </head>
 <body class="static-site review-page">
 <div class="site-shell">
@@ -38,4 +38,4 @@ $images = ['assets/images/home.jpeg', 'assets/images/home1.webp', 'assets/images
         </div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260714-13" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260714-15" defer></script></body></html>

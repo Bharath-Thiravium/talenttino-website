@@ -22,7 +22,7 @@
             <i class="fas fa-book"></i> Manage Courses
         </a>
         <a href="media.php" class="<?= basename($_SERVER['PHP_SELF']) === 'media.php' ? 'active' : '' ?>">
-            <i class="fas fa-photo-film"></i> Media
+            <i class="fas fa-photo-film"></i> Gallery / Media
         </a>
         <a href="services.php" class="<?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
             <i class="fas fa-concierge-bell"></i> Manage Services

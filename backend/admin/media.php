@@ -3,9 +3,12 @@ require_once 'auth_check.php';
 
 $success = '';
 $error = '';
+$galleryDir = __DIR__ . '/../../frontend/uploads/gallery/';
+$galleryUrl = '../../frontend/uploads/gallery/';
+$galleryFrontendPrefix = 'uploads/gallery/';
 $mediaDir = __DIR__ . '/../../frontend/uploads/media/';
 $mediaUrl = '../../frontend/uploads/media/';
-$frontendPrefix = 'uploads/media/';
+$mediaFrontendPrefix = 'uploads/media/';
 $allowedMimes = [
     'image/jpeg' => 'jpg',
     'image/png' => 'png',
@@ -90,10 +93,12 @@ $maxUploadLabel = tt_media_format_bytes($maxUploadBytes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
     $galleryImageUpload = ($_POST['media_kind'] ?? '') === 'gallery_image';
-    if (!tt_media_ensure_dir($mediaDir)) {
-        $error = 'Unable to create media upload folder.';
+    $targetDir = $galleryImageUpload ? $galleryDir : $mediaDir;
+    $targetLabel = $galleryImageUpload ? 'gallery upload folder' : 'media upload folder';
+    if (!tt_media_ensure_dir($targetDir)) {
+        $error = 'Unable to create ' . $targetLabel . '.';
     } elseif (!isset($_FILES['media_file']) || $_FILES['media_file']['error'] === UPLOAD_ERR_NO_FILE) {
-        $error = 'Please choose an image file.';
+        $error = 'Please choose a file.';
     } elseif ($_FILES['media_file']['error'] !== UPLOAD_ERR_OK) {
         $error = tt_media_upload_error_message((int) $_FILES['media_file']['error'], $maxUploadBytes);
     } elseif ($_FILES['media_file']['size'] > $maxUploadBytes) {
@@ -107,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
         } else {
             $name = tt_media_safe_name($_FILES['media_file']['name']);
             $filename = $name . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6) . '.' . $allowedMimes[$mime];
-            if (move_uploaded_file($_FILES['media_file']['tmp_name'], $mediaDir . $filename)) {
+            if (move_uploaded_file($_FILES['media_file']['tmp_name'], $targetDir . $filename)) {
                 $success = $galleryImageUpload ? 'Gallery image uploaded successfully.' : 'Media uploaded successfully.';
             } else {
                 $error = 'Unable to save the uploaded file.';
@@ -118,33 +123,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_media'])) {
     $file = basename((string)($_POST['file'] ?? ''));
-    $path = $mediaDir . $file;
+    $library = ($_POST['library'] ?? '') === 'gallery' ? 'gallery' : 'media';
+    $path = ($library === 'gallery' ? $galleryDir : $mediaDir) . $file;
     if ($file !== '' && is_file($path)) {
         unlink($path);
-        $success = 'Media deleted successfully.';
+        $success = $library === 'gallery' ? 'Gallery image deleted successfully.' : 'Media deleted successfully.';
     } else {
-        $error = 'Media file not found.';
+        $error = $library === 'gallery' ? 'Gallery image not found.' : 'Media file not found.';
     }
 }
 
+tt_media_ensure_dir($galleryDir);
 tt_media_ensure_dir($mediaDir);
-$files = [];
-foreach (glob($mediaDir . '*') ?: [] as $path) {
-    if (!is_file($path)) continue;
-    $file = basename($path);
-    if (str_starts_with($file, '.')) continue;
-    $mime = mime_content_type($path) ?: '';
-    $files[] = [
-        'name' => $file,
-        'mime' => $mime,
-        'size' => filesize($path),
-        'modified' => filemtime($path),
-        'frontend_path' => $frontendPrefix . rawurlencode($file),
-        'admin_url' => $mediaUrl . rawurlencode($file),
-        'is_image' => str_starts_with($mime, 'image/'),
-    ];
+
+function tt_media_collect_files(string $dir, string $adminUrl, string $frontendPrefix, bool $imagesOnly = false): array
+{
+    $files = [];
+    foreach (glob($dir . '*') ?: [] as $path) {
+        if (!is_file($path)) continue;
+        $file = basename($path);
+        if (str_starts_with($file, '.')) continue;
+        $mime = mime_content_type($path) ?: '';
+        if ($imagesOnly && !str_starts_with($mime, 'image/')) continue;
+        $files[] = [
+            'name' => $file,
+            'mime' => $mime,
+            'size' => filesize($path),
+            'modified' => filemtime($path),
+            'frontend_path' => $frontendPrefix . rawurlencode($file),
+            'admin_url' => $adminUrl . rawurlencode($file),
+            'is_image' => str_starts_with($mime, 'image/'),
+        ];
+    }
+    usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
+    return $files;
 }
-usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
+
+$galleryFiles = tt_media_collect_files($galleryDir, $galleryUrl, $galleryFrontendPrefix, true);
+$files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -170,14 +186,63 @@ usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
         <?php if ($success): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?></div><?php endif; ?>
         <?php if ($error): ?><div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-        <div class="admin-card media-upload-intro">
-            <div>
-                <h3><i class="fas fa-images"></i> Gallery Images</h3>
-                <p>Upload images here. New images are shown automatically on the frontend Gallery page.</p>
+        <div class="media-upload-options">
+            <div class="admin-card media-upload-intro">
+                <div>
+                    <h3><i class="fas fa-images"></i> Gallery Images</h3>
+                    <p>Upload public gallery images. These images are shown automatically on the frontend Gallery page.</p>
+                </div>
+                <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="gallery_image">
+                    <i class="fas fa-plus"></i> Add Gallery Image
+                </button>
             </div>
-            <button type="button" class="course-add-btn course" data-open-media-upload>
-                <i class="fas fa-plus"></i> Add Gallery Image
-            </button>
+            <div class="admin-card media-upload-intro">
+                <div>
+                    <h3><i class="fas fa-folder-plus"></i> Media Files</h3>
+                    <p>Upload reusable files for course images, page content, brochures, or admin copy-paste paths.</p>
+                </div>
+                <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="media_file">
+                    <i class="fas fa-plus"></i> Add Media File
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-header">
+                <h3><i class="fas fa-images"></i> Gallery Images</h3>
+                <span style="font-size:13px;color:#64748B;"><strong><?= count($galleryFiles) ?></strong> files</span>
+            </div>
+            <?php if ($galleryFiles): ?>
+            <div class="media-grid">
+                <?php foreach ($galleryFiles as $file): ?>
+                <article class="media-card">
+                    <a class="media-preview" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank">
+                        <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>">
+                    </a>
+                    <div class="media-body">
+                        <h3 title="<?= htmlspecialchars($file['name']) ?>"><?= htmlspecialchars($file['name']) ?></h3>
+                        <p><?= htmlspecialchars($file['mime']) ?> · <?= number_format($file['size'] / 1024, 1) ?> KB</p>
+                        <label>Gallery path</label>
+                        <input type="text" value="<?= htmlspecialchars($file['frontend_path']) ?>" readonly onclick="this.select();">
+                        <div class="media-actions">
+                            <a class="btn-xs btn-blue" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank"><i class="fas fa-eye"></i> View</a>
+                            <form method="POST" onsubmit="return confirm('Delete this gallery image?');">
+                                <input type="hidden" name="delete_media" value="1">
+                                <input type="hidden" name="library" value="gallery">
+                                <input type="hidden" name="file" value="<?= htmlspecialchars($file['name']) ?>">
+                                <button class="btn-xs btn-red" type="submit"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+            <div class="empty-state">
+                <i class="fas fa-images"></i>
+                <p>No gallery images uploaded yet.</p>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="admin-card">
@@ -205,6 +270,7 @@ usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
                             <a class="btn-xs btn-blue" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank"><i class="fas fa-eye"></i> View</a>
                             <form method="POST" onsubmit="return confirm('Delete this media file?');">
                                 <input type="hidden" name="delete_media" value="1">
+                                <input type="hidden" name="library" value="media">
                                 <input type="hidden" name="file" value="<?= htmlspecialchars($file['name']) ?>">
                                 <button class="btn-xs btn-red" type="submit"><i class="fas fa-trash"></i> Delete</button>
                             </form>
@@ -228,31 +294,65 @@ usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
         <div class="admin-modal-header">
             <div>
                 <h2 id="mediaUploadTitle"><i class="fas fa-cloud-upload-alt"></i> Add Gallery Image</h2>
-                <p>Choose a JPG, PNG, WebP, or GIF image. After upload, it will appear in the public gallery.</p>
+                <p id="mediaUploadDescription">Choose a JPG, PNG, WebP, or GIF image. After upload, it will appear in the public gallery.</p>
             </div>
             <button type="button" class="modal-close" data-close-media-upload aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
         <form method="POST" enctype="multipart/form-data" class="media-upload-form">
             <input type="hidden" name="upload_media" value="1">
-            <input type="hidden" name="media_kind" value="gallery_image">
+            <input type="hidden" name="media_kind" value="gallery_image" data-media-kind-input>
             <div class="admin-modal-body">
                 <div class="form-group">
-                    <label>Image File</label>
+                    <label data-media-file-label>Image File</label>
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= $maxUploadBytes ?>">
-                    <input type="file" name="media_file" accept="image/jpeg,image/png,image/webp,image/gif" required>
-                    <small class="field-help">Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.</small>
+                    <input type="file" name="media_file" accept="image/jpeg,image/png,image/webp,image/gif" required data-media-file-input>
+                    <small class="field-help" data-media-file-help>Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.</small>
                 </div>
             </div>
             <div class="admin-modal-footer">
                 <button type="button" class="btn-cancel" data-close-media-upload>Cancel</button>
-                <button class="btn-save" type="submit"><i class="fas fa-cloud-upload-alt"></i> Upload Image</button>
+                <button class="btn-save" type="submit" data-media-submit><i class="fas fa-cloud-upload-alt"></i> Upload Image</button>
             </div>
         </form>
     </div>
 </div>
 <script>
 const mediaUploadModal = document.getElementById('mediaUploadModal');
-function openMediaUploadModal() {
+const mediaUploadTitle = document.getElementById('mediaUploadTitle');
+const mediaUploadDescription = document.getElementById('mediaUploadDescription');
+const mediaKindInput = document.querySelector('[data-media-kind-input]');
+const mediaFileLabel = document.querySelector('[data-media-file-label]');
+const mediaFileInput = document.querySelector('[data-media-file-input]');
+const mediaFileHelp = document.querySelector('[data-media-file-help]');
+const mediaSubmit = document.querySelector('[data-media-submit]');
+const uploadModalModes = {
+    gallery_image: {
+        title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Image',
+        description: 'Choose a JPG, PNG, WebP, or GIF image. After upload, it will appear in the public gallery.',
+        label: 'Image File',
+        accept: 'image/jpeg,image/png,image/webp,image/gif',
+        help: 'Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.',
+        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Image'
+    },
+    media_file: {
+        title: '<i class="fas fa-cloud-upload-alt"></i> Add Media File',
+        description: 'Choose an image or PDF for reusable admin media paths. These files do not automatically appear in Gallery.',
+        label: 'Media File',
+        accept: 'image/jpeg,image/png,image/webp,image/gif,application/pdf',
+        help: 'Allowed: JPG, PNG, WebP, GIF, PDF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.',
+        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Media'
+    }
+};
+function openMediaUploadModal(kind = 'gallery_image') {
+    const mode = uploadModalModes[kind] || uploadModalModes.gallery_image;
+    mediaUploadTitle.innerHTML = mode.title;
+    mediaUploadDescription.textContent = mode.description;
+    mediaKindInput.value = kind;
+    mediaFileLabel.textContent = mode.label;
+    mediaFileInput.value = '';
+    mediaFileInput.setAttribute('accept', mode.accept);
+    mediaFileHelp.textContent = mode.help;
+    mediaSubmit.innerHTML = mode.submit;
     mediaUploadModal.classList.add('is-open');
     mediaUploadModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
@@ -262,7 +362,9 @@ function closeMediaUploadModal() {
     mediaUploadModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
 }
-document.querySelectorAll('[data-open-media-upload]').forEach(button => button.addEventListener('click', openMediaUploadModal));
+document.querySelectorAll('[data-open-media-upload]').forEach(button => {
+    button.addEventListener('click', () => openMediaUploadModal(button.dataset.mediaKind || 'gallery_image'));
+});
 document.querySelectorAll('[data-close-media-upload]').forEach(button => button.addEventListener('click', closeMediaUploadModal));
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && mediaUploadModal.classList.contains('is-open')) {

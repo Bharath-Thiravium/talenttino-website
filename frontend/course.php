@@ -37,7 +37,7 @@ if (!$courses) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-43">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-57">
     <style>
         body.course-list-page .course-showcase-card{position:relative!important;display:flex!important;flex-direction:column!important;aspect-ratio:auto!important;min-height:460px!important;padding:0 22px 82px!important;overflow:hidden!important;cursor:pointer!important}
         body.course-list-page .course-showcase-card .course-image{width:calc(100% + 44px)!important;height:190px!important;min-height:190px!important;max-height:190px!important;margin:0 -22px 18px!important;border-radius:8px 8px 0 0!important;overflow:hidden!important}
@@ -51,6 +51,111 @@ if (!$courses) {
         body.course-list-page .course-showcase-card .course-actions .btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:100%!important;min-height:42px!important;height:42px!important;padding:0 12px!important;border-radius:8px!important;clip-path:none!important;font-size:13px!important;font-weight:900!important;text-decoration:none!important}
         body.course-list-page .course-showcase-card .course-enquiry-btn{background:#fff!important;color:#1554d1!important;-webkit-text-fill-color:#1554d1!important;border:1px solid rgba(79,140,255,.42)!important;box-shadow:none!important}
         body.course-list-page .course-showcase-card .course-download-btn{color:#fff!important;-webkit-text-fill-color:#fff!important;background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;border:0!important}
+        @media (max-width:700px){
+            body.course-list-page .course-showcase-grid{width:min(100% - 28px,420px)!important;margin:0 auto!important;grid-template-columns:1fr!important;gap:24px!important}
+            body.course-list-page .course-showcase-card{min-height:auto!important;padding:0!important;border-radius:18px!important;overflow:hidden!important;box-shadow:0 22px 58px rgba(15,23,42,.10)!important}
+            body.course-list-page .course-showcase-card .course-image{width:100%!important;height:210px!important;min-height:210px!important;max-height:210px!important;margin:0!important;border-radius:0!important}
+            body.course-list-page .course-showcase-card .course-card-top{padding:24px 22px 0!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important}
+            body.course-list-page .course-showcase-card h3{margin:26px 22px 14px!important;font-size:clamp(23px,6vw,28px)!important;line-height:1.18!important}
+            body.course-list-page .course-showcase-card>p{display:block!important;margin:0 22px 24px!important;overflow:visible!important;font-size:14.5px!important;line-height:1.65!important}
+            body.course-list-page .course-showcase-card .course-footer{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;margin:0!important;padding:16px 22px 22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border-top:1px solid rgba(79,140,255,.14)!important}
+            body.course-list-page .course-showcase-card .course-actions{display:contents!important}
+            body.course-list-page .course-showcase-card .course-actions .btn{min-height:46px!important;height:46px!important;border-radius:10px!important;gap:0!important}
+            body.course-list-page .course-showcase-card .course-actions i{display:none!important}
+        }
+        body.course-list-page .course-showcase-card .course-footer{
+            left:22px!important;
+            right:22px!important;
+            bottom:22px!important;
+            width:auto!important;
+            max-width:none!important;
+            overflow:visible!important;
+        }
+        body.course-list-page .course-showcase-card .course-actions{
+            width:100%!important;
+            display:grid!important;
+            grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+            align-items:center!important;
+            gap:10px!important;
+        }
+        body.course-list-page .course-showcase-card .course-actions .btn{
+            width:100%!important;
+            max-width:100%!important;
+            min-width:0!important;
+            height:42px!important;
+            min-height:42px!important;
+            padding:0 14px!important;
+            display:inline-flex!important;
+            align-items:center!important;
+            justify-content:center!important;
+            border-radius:10px!important;
+            clip-path:none!important;
+            transform:none!important;
+            font-size:13px!important;
+            font-weight:900!important;
+            line-height:1!important;
+            letter-spacing:0!important;
+            text-align:center!important;
+            white-space:nowrap!important;
+            overflow:hidden!important;
+            text-overflow:ellipsis!important;
+        }
+        body.course-list-page .course-showcase-card .course-actions .btn i{
+            display:none!important;
+        }
+        body.course-list-page .course-showcase-card .course-enquiry-btn{
+            background:#ffffff!important;
+            color:#1554d1!important;
+            -webkit-text-fill-color:#1554d1!important;
+            border:1px solid rgba(79,140,255,.46)!important;
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,.78)!important;
+        }
+        body.course-list-page .course-showcase-card .course-download-btn{
+            background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;
+            color:#ffffff!important;
+            -webkit-text-fill-color:#ffffff!important;
+            border:1px solid transparent!important;
+            box-shadow:0 12px 24px rgba(124,92,255,.24)!important;
+        }
+        body.course-list-page .course-showcase-card .course-actions .btn:hover{
+            transform:translateY(-2px)!important;
+            box-shadow:0 16px 30px rgba(37,99,235,.16)!important;
+        }
+        @media (max-width:700px){
+            body.course-list-page .course-showcase-card .course-footer{
+                position:static!important;
+                padding:16px 22px 22px!important;
+                display:block!important;
+            }
+            body.course-list-page .course-showcase-card .course-actions{
+                display:grid!important;
+                grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+                gap:10px!important;
+            }
+            body.course-list-page .course-showcase-card .course-actions .btn{
+                height:46px!important;
+                min-height:46px!important;
+                border-radius:10px!important;
+                font-size:13px!important;
+            }
+        }
+        body.course-list-page .course-showcase-card .course-image{
+            background:#f4f8ff!important;
+            display:flex!important;
+            align-items:center!important;
+            justify-content:center!important;
+        }
+        body.course-list-page .course-showcase-card .course-image img{
+            width:100%!important;
+            height:100%!important;
+            object-fit:contain!important;
+            object-position:center!important;
+            background:#f4f8ff!important;
+        }
+        body.course-list-page .course-showcase-card:hover .course-image img{
+            transform:none!important;
+            filter:saturate(1.03) contrast(1.02)!important;
+        }
     </style>
 </head>
 <body class="static-site course-list-page">
@@ -138,6 +243,6 @@ if (!$courses) {
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260714-13" defer></script>
+<script src="assets/js/site-pages.js?v=20260714-15" defer></script>
 </body>
 </html>

@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-43">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-57">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -123,6 +123,107 @@ function tt_catalog_fallback_image(array $course): string
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions i{color:inherit!important;-webkit-text-fill-color:inherit!important}
         @media (max-width:1100px){body.catalog-body .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
         @media (max-width:700px){body.catalog-body .catalog-section{padding:34px 0!important}body.catalog-body .catalog-grid{grid-template-columns:1fr!important}body.catalog-body .catalog-grid>.catalog-card{min-height:500px!important}}
+        @media (max-width:700px){
+            body.catalog-body .catalog-grid{width:min(100% - 28px,420px)!important;margin:0 auto!important;gap:24px!important}
+            body.catalog-body .catalog-grid>.catalog-card,
+            body.catalog-body.compact-catalog .catalog-grid>.catalog-card,
+            body.catalog-body .catalog-grid>.catalog-card:nth-child(n){min-height:auto!important;padding:0!important;border-radius:18px!important;overflow:hidden!important;box-shadow:0 22px 58px rgba(15,23,42,.10)!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-image{width:100%!important;height:210px!important;min-height:210px!important;max-height:210px!important;margin:0!important;border-radius:0!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-icon{margin:24px 22px 18px!important;border-radius:13px!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-category{top:236px!important;right:22px!important}
+            body.catalog-body .catalog-grid>.catalog-card h2{min-height:0!important;margin:14px 22px 14px!important;font-size:clamp(23px,6vw,28px)!important;line-height:1.18!important}
+            body.catalog-body .catalog-grid>.catalog-card>p{display:block!important;min-height:0!important;margin:0 22px 24px!important;overflow:visible!important;font-size:14.5px!important;line-height:1.65!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin:0!important;padding:16px 22px 22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border-top:1px solid rgba(79,140,255,.14)!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{min-height:46px!important;height:46px!important;border-radius:10px!important;gap:0!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions i{display:none!important}
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions{
+            left:22px!important;
+            right:22px!important;
+            bottom:22px!important;
+            width:auto!important;
+            max-width:none!important;
+            display:grid!important;
+            grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+            align-items:center!important;
+            gap:10px!important;
+            overflow:visible!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+            width:100%!important;
+            max-width:100%!important;
+            min-width:0!important;
+            height:42px!important;
+            min-height:42px!important;
+            padding:0 14px!important;
+            display:inline-flex!important;
+            align-items:center!important;
+            justify-content:center!important;
+            border-radius:10px!important;
+            clip-path:none!important;
+            transform:none!important;
+            font-size:13px!important;
+            font-weight:900!important;
+            line-height:1!important;
+            letter-spacing:0!important;
+            text-align:center!important;
+            white-space:nowrap!important;
+            overflow:hidden!important;
+            text-overflow:ellipsis!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn{
+            background:#ffffff!important;
+            color:#1554d1!important;
+            -webkit-text-fill-color:#1554d1!important;
+            border:1px solid rgba(79,140,255,.46)!important;
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,.78)!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+            background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;
+            color:#ffffff!important;
+            -webkit-text-fill-color:#ffffff!important;
+            border:1px solid transparent!important;
+            box-shadow:0 12px 24px rgba(124,92,255,.24)!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn:hover,
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta:hover{
+            transform:translateY(-2px)!important;
+            box-shadow:0 16px 30px rgba(37,99,235,.16)!important;
+        }
+        @media (max-width:700px){
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions{
+                position:static!important;
+                padding:16px 22px 22px!important;
+                grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+                gap:10px!important;
+            }
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+                height:46px!important;
+                min-height:46px!important;
+                border-radius:10px!important;
+                font-size:13px!important;
+            }
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image{
+            background:#f4f8ff!important;
+            display:flex!important;
+            align-items:center!important;
+            justify-content:center!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image img{
+            width:100%!important;
+            height:100%!important;
+            object-fit:contain!important;
+            object-position:center!important;
+            background:#f4f8ff!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card:hover .catalog-image img{
+            transform:none!important;
+            filter:saturate(1.03) contrast(1.02)!important;
+        }
     </style>
 </head>
 <body class="static-site catalog-body <?= ($coursePage['layout'] ?? '') === 'compact' ? 'compact-catalog' : '' ?> <?= htmlspecialchars($coursePage['body_class'] ?? '') ?>">
@@ -191,7 +292,7 @@ function tt_catalog_fallback_image(array $course): string
                             data-download="<?= $hasBrochure ? 'download.php?id=' . (int)$course['id'] : '' ?>">
                             View Details
                         </button>
-                        <a class="catalog-cta" href="contact.php?course=<?= rawurlencode($course['name']) ?>">Enquire <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="catalog-cta" href="contact.php?course=<?= rawurlencode($course['name']) ?>">Enquire</a>
                     </div>
                 </article>
                 <?php endforeach; ?>
@@ -213,6 +314,6 @@ function tt_catalog_fallback_image(array $course): string
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260714-13" defer></script>
+<script src="assets/js/site-pages.js?v=20260714-15" defer></script>
 </body>
 </html>
