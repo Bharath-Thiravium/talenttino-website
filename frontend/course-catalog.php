@@ -1,0 +1,218 @@
+<?php
+require_once __DIR__ . '/includes/site-data.php';
+
+$coursePage = $coursePage ?? [
+    'title' => 'Courses',
+    'subtitle' => 'Practical IT training programs with projects, internship support and placement assistance.',
+    'active' => 'course',
+    'courses' => [],
+];
+
+function tt_icon_class(string $icon): string
+{
+    return str_contains($icon, ' ') ? $icon : 'fa-solid ' . $icon;
+}
+
+function tt_catalog_image_url(?string $image): string
+{
+    $managedImage = tt_course_image_url($image);
+    if ($managedImage !== '') {
+        return $managedImage;
+    }
+
+    $path = trim((string)$image);
+    if ($path === '' || preg_match('#^(https?:)?//#i', $path)) {
+        return '';
+    }
+
+    $cleanPath = ltrim(str_replace('\\', '/', $path), '/');
+    if (str_contains($cleanPath, '..')) {
+        return '';
+    }
+
+    $allowed = ['assets/images/', 'uploads/media/', 'uploads/course-images/'];
+    foreach ($allowed as $prefix) {
+        if (str_starts_with($cleanPath, $prefix) && is_file(__DIR__ . '/' . $cleanPath)) {
+            return $cleanPath;
+        }
+    }
+
+    return '';
+}
+
+function tt_catalog_fallback_image(array $course): string
+{
+    $needle = strtolower(trim(($course['name'] ?? '') . ' ' . ($course['category'] ?? '') . ' ' . ($course['desc'] ?? '')));
+    $map = [
+        'cloud' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
+        'cyber' => 'uploads/media/cyber-security-20260703-133329-242125.png',
+        'security' => 'uploads/media/cyber-security-20260703-133329-242125.png',
+        'data science' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
+        'artificial intelligence' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
+        'ai' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
+        'database' => 'uploads/media/data-analyst-20260703-133130-702998.png',
+        'data' => 'uploads/media/data-analyst-20260703-133130-702998.png',
+        'digital marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+        'marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+        'graphic' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+        'design' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+        'web' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
+        'full stack' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
+        'programming' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'software' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'testing' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'hardware' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
+        'computer' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'accounting' => 'uploads/media/data-analyst-20260703-133130-702998.png',
+        'career' => 'assets/images/contact-counsellor-hero.png',
+        'english' => 'assets/images/contact-counsellor-hero.png',
+    ];
+
+    foreach ($map as $word => $path) {
+        if (str_contains($needle, $word) && is_file(__DIR__ . '/' . $path)) {
+            return $path;
+        }
+    }
+
+    return 'uploads/media/full-stack-development-20260703-133158-761383.png';
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php tt_render_seo([
+        'title' => $coursePage['title'] . ' | Talentteno Institute Madurai',
+        'description' => $coursePage['subtitle'],
+        'canonical' => tt_abs_url(basename($_SERVER['SCRIPT_NAME'] ?? 'course.php')),
+        'breadcrumbs' => [
+            ['name' => 'Home', 'url' => 'index.php'],
+            ['name' => 'Courses', 'url' => 'course.php'],
+            ['name' => $coursePage['title'], 'url' => basename($_SERVER['SCRIPT_NAME'] ?? 'course.php')],
+        ],
+        'courses' => $coursePage['courses'],
+    ]); ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-43">
+    <style>
+        body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
+        body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
+        body.catalog-body .catalog-grid>.catalog-card,
+        body.catalog-body.compact-catalog .catalog-grid>.catalog-card,
+        body.catalog-body .catalog-grid>.catalog-card:nth-child(n){position:relative!important;inset:auto!important;grid-column:auto!important;grid-row:auto!important;display:flex!important;flex-direction:column!important;min-width:0!important;width:100%!important;min-height:520px!important;margin:0!important;padding:0 22px 84px!important;transform:none!important;translate:none!important;border-radius:8px!important;overflow:hidden!important;background:#fff!important;border:1px solid rgba(37,99,235,.14)!important;box-shadow:0 18px 46px rgba(15,23,42,.08)!important;color:#10172a!important}
+        body.catalog-body .catalog-grid>.catalog-card::before,
+        body.catalog-body .catalog-grid>.catalog-card::after{display:none!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image{display:block!important;width:calc(100% + 44px)!important;height:220px!important;min-height:220px!important;max-height:220px!important;margin:0 -22px 20px!important;border-radius:8px 8px 0 0!important;overflow:hidden!important;background:#eaf3ff!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-icon{position:static!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:52px!important;height:52px!important;min-width:52px!important;margin:0 0 18px!important;border-radius:10px!important;background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;box-shadow:0 14px 26px rgba(79,140,255,.18)!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-icon i{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:22px!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-category{position:absolute!important;top:242px!important;right:22px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;max-width:calc(100% - 96px)!important;min-height:28px!important;padding:6px 13px!important;border-radius:999px!important;background:#eef6ff!important;border:1px solid rgba(79,140,255,.28)!important;color:#1554d1!important;-webkit-text-fill-color:#1554d1!important;font-size:12px!important;font-weight:900!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+        body.catalog-body .catalog-grid>.catalog-card h2{display:block!important;visibility:visible!important;opacity:1!important;min-height:58px!important;margin:0 0 10px!important;color:#10172a!important;-webkit-text-fill-color:#10172a!important;background:none!important;font-size:25px!important;font-weight:900!important;line-height:1.16!important;letter-spacing:0!important;text-align:left!important}
+        body.catalog-body .catalog-grid>.catalog-card>p{display:-webkit-box!important;visibility:visible!important;opacity:1!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:42px!important;margin:0 0 14px!important;color:#52627a!important;-webkit-text-fill-color:#52627a!important;font-size:14px!important;line-height:1.5!important;text-align:left!important}
+        body.catalog-body .catalog-grid>.catalog-card ul,
+        body.catalog-body .catalog-grid>.catalog-card .catalog-price{display:none!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:absolute!important;left:22px!important;right:22px!important;bottom:22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important;padding-top:14px!important;border-top:1px solid rgba(37,99,235,.13)!important;background:#fff!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;min-width:0!important;min-height:42px!important;height:42px!important;padding:0 12px!important;border-radius:8px!important;clip-path:none!important;text-decoration:none!important;font-size:13px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important;white-space:nowrap!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn{background:#fff!important;color:#1554d1!important;-webkit-text-fill-color:#1554d1!important;border:1px solid rgba(79,140,255,.42)!important;box-shadow:none!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;box-shadow:0 12px 26px rgba(79,140,255,.25)!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions i{color:inherit!important;-webkit-text-fill-color:inherit!important}
+        @media (max-width:1100px){body.catalog-body .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+        @media (max-width:700px){body.catalog-body .catalog-section{padding:34px 0!important}body.catalog-body .catalog-grid{grid-template-columns:1fr!important}body.catalog-body .catalog-grid>.catalog-card{min-height:500px!important}}
+    </style>
+</head>
+<body class="static-site catalog-body <?= ($coursePage['layout'] ?? '') === 'compact' ? 'compact-catalog' : '' ?> <?= htmlspecialchars($coursePage['body_class'] ?? '') ?>">
+<div class="site-shell">
+    <header class="site-header compact-header">
+        <div class="site-container nav-wrap">
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <nav class="site-nav">
+                <a href="index.php">Home</a>
+                <a href="about.php">About</a>
+                <div class="nav-item has-menu"><a href="course.php">Course <i class="fa-solid fa-chevron-down"></i></a><div class="nav-menu"><a href="shorttermcourse.php">Short Term Course</a><a href="popularcourse.php">Popular Course</a><a href="advancecourse.php">Advance Course</a></div></div>
+                <a href="gallery.php">Gallery</a>
+                <a href="contact.php">Contact</a>
+                <div class="nav-item has-menu more-menu"><a href="#">More <i class="fa-solid fa-chevron-down"></i></a><div class="nav-menu"><a href="services.php">Services</a><a href="career.php">Career</a><a href="blog.php">Blog</a><a href="project.php">Project</a></div></div>
+            </nav>
+            <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+    <main class="page-main catalog-page">
+        <section class="catalog-hero">
+            <div class="site-container reveal">
+                <span class="hero-kicker"><i class="fa-solid fa-layer-group"></i> Talentteno Course Catalog</span>
+                <h1><?= htmlspecialchars($coursePage['title']) ?></h1>
+                <p><?= htmlspecialchars($coursePage['subtitle']) ?></p>
+            </div>
+        </section>
+        <section class="catalog-section">
+            <div class="site-container catalog-grid">
+                <?php foreach ($coursePage['courses'] as $course): ?>
+                <?php
+                    $courseImage = tt_catalog_image_url($course['image'] ?? '');
+                    if ($courseImage === '') {
+                        $courseImage = tt_catalog_fallback_image($course);
+                    }
+                    $hasBrochure = !empty($course['id']) && tt_course_brochure_exists($course['brochure_file'] ?? '');
+                    $courseHighlights = array_values(array_filter(array_map('trim', $course['items'] ?? [])));
+                    $courseFeeValue = (float)($course['fee'] ?? 0);
+                    $courseOriginalFeeValue = (float)($course['original_fee'] ?? 0);
+                    $courseFeeLabel = $courseFeeValue > 0 ? tt_money($courseFeeValue) : 'Contact for fee';
+                ?>
+                <article class="catalog-card reveal">
+                    <?php if ($courseImage !== ''): ?>
+                    <div class="catalog-image"><img src="<?= htmlspecialchars($courseImage) ?>" alt="<?= htmlspecialchars($course['name']) ?>" loading="lazy" decoding="async"></div>
+                    <?php endif; ?>
+                    <div class="catalog-icon"><i class="<?= htmlspecialchars(tt_icon_class($course['icon'])) ?>"></i></div>
+                    <?php if (!empty($course['category'])): ?><span class="catalog-category"><?= htmlspecialchars($course['category']) ?></span><?php endif; ?>
+                    <h2><?= htmlspecialchars($course['name']) ?></h2>
+                    <?php if (!empty($course['desc'])): ?><p><?= htmlspecialchars($course['desc']) ?></p><?php endif; ?>
+                    <?php if (!empty($course['items'])): ?>
+                    <ul>
+                        <?php foreach ($course['items'] as $item): ?><li><i class="fa-solid fa-check"></i> <?= htmlspecialchars($item) ?></li><?php endforeach; ?>
+                    </ul>
+                    <?php endif; ?>
+                    <div class="catalog-price"><?php if ($courseOriginalFeeValue > $courseFeeValue && $courseFeeValue > 0): ?><del><?= tt_money($courseOriginalFeeValue) ?></del><?php endif; ?><strong><?= htmlspecialchars($courseFeeLabel) ?></strong></div>
+                    <div class="catalog-actions">
+                        <button class="catalog-detail-btn" type="button"
+                            data-course-modal
+                            data-title="<?= htmlspecialchars($course['name'], ENT_QUOTES) ?>"
+                            data-category="<?= htmlspecialchars($course['category'] ?? '', ENT_QUOTES) ?>"
+                            data-description="<?= htmlspecialchars($course['desc'] ?? '', ENT_QUOTES) ?>"
+                            data-duration="<?= htmlspecialchars($course['duration'] ?? '', ENT_QUOTES) ?>"
+                            data-fee="<?= htmlspecialchars($courseFeeLabel, ENT_QUOTES) ?>"
+                            data-image="<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>"
+                            data-highlights="<?= htmlspecialchars(implode("\n", $courseHighlights), ENT_QUOTES) ?>"
+                            data-enquire="contact.php?course=<?= rawurlencode($course['name']) ?>"
+                            data-download="<?= $hasBrochure ? 'download.php?id=' . (int)$course['id'] : '' ?>">
+                            View Details
+                        </button>
+                        <a class="catalog-cta" href="contact.php?course=<?= rawurlencode($course['name']) ?>">Enquire <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    </main>
+    <div class="course-detail-modal" id="courseDetailModal" aria-hidden="true">
+        <div class="course-detail-backdrop" data-close-course-detail></div>
+        <div class="course-detail-panel" role="dialog" aria-modal="true" aria-labelledby="courseDetailTitle">
+            <button class="course-detail-close" type="button" data-close-course-detail aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <div class="course-detail-image" hidden><img src="" alt="" loading="lazy" decoding="async"></div>
+            <span class="course-detail-category"></span>
+            <h2 id="courseDetailTitle"></h2>
+            <p class="course-detail-description"></p>
+            <ul class="course-detail-highlights"></ul>
+            <div class="course-detail-meta"><span class="course-detail-duration"></span><strong class="course-detail-fee"></strong></div>
+            <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php">Enquire Now</a><a class="btn btn-primary course-detail-download" href="contact.php" hidden><i class="fa-solid fa-download"></i> Brochure</a></div>
+        </div>
+    </div>
+    <?php include __DIR__ . "/includes/footer.php"; ?>
+</div>
+<script src="assets/js/site-pages.js?v=20260714-13" defer></script>
+</body>
+</html>
