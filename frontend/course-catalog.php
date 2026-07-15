@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260714-57">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-02">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -152,6 +152,10 @@ function tt_catalog_fallback_image(array $course): string
         }
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+            position:relative!important;
+            inset:auto!important;
+            opacity:1!important;
+            visibility:visible!important;
             width:100%!important;
             max-width:100%!important;
             min-width:0!important;
@@ -208,17 +212,38 @@ function tt_catalog_fallback_image(array $course): string
             }
         }
         body.catalog-body .catalog-grid>.catalog-card .catalog-image{
-            background:#f4f8ff!important;
+            position:relative!important;
             display:flex!important;
             align-items:center!important;
             justify-content:center!important;
+            background-image:var(--catalog-image-bg)!important;
+            background-size:cover!important;
+            background-position:center!important;
+            isolation:isolate!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image::before{
+            content:""!important;
+            position:absolute!important;
+            inset:-12px!important;
+            z-index:-1!important;
+            background:inherit!important;
+            filter:blur(16px) saturate(1.08)!important;
+            transform:scale(1.08)!important;
+            opacity:.55!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image::after{
+            content:""!important;
+            position:absolute!important;
+            inset:0!important;
+            z-index:-1!important;
+            background:rgba(244,248,255,.34)!important;
         }
         body.catalog-body .catalog-grid>.catalog-card .catalog-image img{
             width:100%!important;
             height:100%!important;
-            object-fit:contain!important;
+            object-fit:cover!important;
             object-position:center!important;
-            background:#f4f8ff!important;
+            background:transparent!important;
         }
         body.catalog-body .catalog-grid>.catalog-card:hover .catalog-image img{
             transform:none!important;
@@ -259,14 +284,28 @@ function tt_catalog_fallback_image(array $course): string
                         $courseImage = tt_catalog_fallback_image($course);
                     }
                     $hasBrochure = !empty($course['id']) && tt_course_brochure_exists($course['brochure_file'] ?? '');
+                    $enquiryHref = 'contact.php?course=' . rawurlencode($course['name']);
+                    $downloadHref = $hasBrochure
+                        ? 'download.php?id=' . (int)$course['id']
+                        : 'download.php?title=' . rawurlencode($course['name']);
                     $courseHighlights = array_values(array_filter(array_map('trim', $course['items'] ?? [])));
                     $courseFeeValue = (float)($course['fee'] ?? 0);
                     $courseOriginalFeeValue = (float)($course['original_fee'] ?? 0);
                     $courseFeeLabel = $courseFeeValue > 0 ? tt_money($courseFeeValue) : 'Contact for fee';
                 ?>
-                <article class="catalog-card reveal">
+                <article class="catalog-card reveal" tabindex="0"
+                    data-course-modal
+                    data-title="<?= htmlspecialchars($course['name'], ENT_QUOTES) ?>"
+                    data-category="<?= htmlspecialchars($course['category'] ?? '', ENT_QUOTES) ?>"
+                    data-description="<?= htmlspecialchars($course['desc'] ?? '', ENT_QUOTES) ?>"
+                    data-duration="<?= htmlspecialchars($course['duration'] ?? '', ENT_QUOTES) ?>"
+                    data-fee="<?= htmlspecialchars($courseFeeLabel, ENT_QUOTES) ?>"
+                    data-image="<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>"
+                    data-highlights="<?= htmlspecialchars(implode("\n", $courseHighlights), ENT_QUOTES) ?>"
+                    data-enquire="<?= htmlspecialchars($enquiryHref, ENT_QUOTES) ?>"
+                    data-download="<?= htmlspecialchars($downloadHref, ENT_QUOTES) ?>">
                     <?php if ($courseImage !== ''): ?>
-                    <div class="catalog-image"><img src="<?= htmlspecialchars($courseImage) ?>" alt="<?= htmlspecialchars($course['name']) ?>" loading="lazy" decoding="async"></div>
+                    <div class="catalog-image" style="--catalog-image-bg:url('<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>')"><img src="<?= htmlspecialchars($courseImage) ?>" alt="<?= htmlspecialchars($course['name']) ?>" loading="lazy" decoding="async"></div>
                     <?php endif; ?>
                     <div class="catalog-icon"><i class="<?= htmlspecialchars(tt_icon_class($course['icon'])) ?>"></i></div>
                     <?php if (!empty($course['category'])): ?><span class="catalog-category"><?= htmlspecialchars($course['category']) ?></span><?php endif; ?>
@@ -279,20 +318,8 @@ function tt_catalog_fallback_image(array $course): string
                     <?php endif; ?>
                     <div class="catalog-price"><?php if ($courseOriginalFeeValue > $courseFeeValue && $courseFeeValue > 0): ?><del><?= tt_money($courseOriginalFeeValue) ?></del><?php endif; ?><strong><?= htmlspecialchars($courseFeeLabel) ?></strong></div>
                     <div class="catalog-actions">
-                        <button class="catalog-detail-btn" type="button"
-                            data-course-modal
-                            data-title="<?= htmlspecialchars($course['name'], ENT_QUOTES) ?>"
-                            data-category="<?= htmlspecialchars($course['category'] ?? '', ENT_QUOTES) ?>"
-                            data-description="<?= htmlspecialchars($course['desc'] ?? '', ENT_QUOTES) ?>"
-                            data-duration="<?= htmlspecialchars($course['duration'] ?? '', ENT_QUOTES) ?>"
-                            data-fee="<?= htmlspecialchars($courseFeeLabel, ENT_QUOTES) ?>"
-                            data-image="<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>"
-                            data-highlights="<?= htmlspecialchars(implode("\n", $courseHighlights), ENT_QUOTES) ?>"
-                            data-enquire="contact.php?course=<?= rawurlencode($course['name']) ?>"
-                            data-download="<?= $hasBrochure ? 'download.php?id=' . (int)$course['id'] : '' ?>">
-                            View Details
-                        </button>
-                        <a class="catalog-cta" href="contact.php?course=<?= rawurlencode($course['name']) ?>">Enquire</a>
+                        <a class="catalog-detail-btn" href="<?= tt_h($enquiryHref) ?>"><i class="fa-solid fa-message"></i> Enquiry</a>
+                        <a class="catalog-cta" href="<?= tt_h($downloadHref) ?>"><i class="fa-solid fa-download"></i> Download</a>
                     </div>
                 </article>
                 <?php endforeach; ?>
@@ -314,6 +341,6 @@ function tt_catalog_fallback_image(array $course): string
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260714-15" defer></script>
+<script src="assets/js/site-pages.js?v=20260715-02" defer></script>
 </body>
 </html>

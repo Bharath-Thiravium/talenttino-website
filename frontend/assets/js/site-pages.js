@@ -153,9 +153,10 @@ dropdownItems.forEach(item => {
     trigger?.setAttribute('aria-haspopup', 'true');
     trigger?.setAttribute('aria-expanded', 'false');
     trigger?.addEventListener('click', event => {
-        if (trigger.getAttribute('href') === '#' || window.innerWidth <= 980) event.preventDefault();
+        const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
+        if (trigger.getAttribute('href') === '#' || isMobileNav) event.preventDefault();
         // Desktop uses hover for the submenu; a click follows course.php normally.
-        if (window.innerWidth > 980 && trigger.getAttribute('href') !== '#') return;
+        if (!isMobileNav && trigger.getAttribute('href') !== '#') return;
         const wasOpen = item.classList.contains('open');
         dropdownItems.forEach(other => {
             if (other === item) return;
@@ -393,10 +394,12 @@ function openCourseDetails(button) {
             if (button.dataset.image) {
                 image.src = button.dataset.image;
                 image.alt = `${button.dataset.title || 'Course'} preview`;
+                imageWrap.style.setProperty('--course-detail-image-bg', `url("${button.dataset.image.replace(/"/g, '\\"')}")`);
                 imageWrap.hidden = false;
             } else {
                 image.removeAttribute('src');
                 image.alt = '';
+                imageWrap.style.removeProperty('--course-detail-image-bg');
                 imageWrap.hidden = true;
             }
         }

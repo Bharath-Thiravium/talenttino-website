@@ -7,6 +7,15 @@ $env = static function (string $key, string $default = ''): string {
     return $value === false ? $default : $value;
 };
 
+if (!defined('TT_TIMEZONE')) {
+    define('TT_TIMEZONE', $env('TT_TIMEZONE', 'Asia/Kolkata'));
+}
+if (!defined('TT_DB_TIME_ZONE')) {
+    define('TT_DB_TIME_ZONE', $env('TT_DB_TIME_ZONE', '+05:30'));
+}
+
+date_default_timezone_set(TT_TIMEZONE);
+
 if (!defined('DB_HOST')) {
     define('DB_HOST', $env('DB_HOST', '127.0.0.1'));
 }
@@ -48,4 +57,5 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset('utf8mb4');
+$conn->query("SET time_zone = '" . $conn->real_escape_string(TT_DB_TIME_ZONE) . "'");
 ?>
