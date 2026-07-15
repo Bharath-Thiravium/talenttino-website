@@ -40,6 +40,13 @@ if (nav) {
         nav.appendChild(enrollCta);
     }
     const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
+    if (courseMenu && !courseMenu.querySelector('a[data-course-menu-all]')) {
+        const allCoursesLink = document.createElement('a');
+        allCoursesLink.href = 'course.php';
+        allCoursesLink.textContent = 'All Courses';
+        allCoursesLink.dataset.courseMenuAll = 'true';
+        courseMenu.prepend(allCoursesLink);
+    }
     if (courseMenu && !courseMenu.querySelector('a[href="designingcourse.php"]')) {
         const designCourseLink = document.createElement('a');
         designCourseLink.href = 'designingcourse.php';
@@ -153,14 +160,16 @@ dropdownItems.forEach(item => {
     trigger?.setAttribute('aria-haspopup', 'true');
     trigger?.setAttribute('aria-expanded', 'false');
     trigger?.addEventListener('click', event => {
+        const triggerHref = trigger.getAttribute('href') || '';
         const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
-        if (trigger.getAttribute('href') === '#' || isMobileNav) {
+        const wasOpen = item.classList.contains('open');
+        if (isMobileNav && wasOpen && triggerHref !== '#') return;
+        if (triggerHref === '#' || isMobileNav) {
             event.preventDefault();
             event.stopPropagation();
         }
         // Desktop uses hover for the submenu; a click follows course.php normally.
-        if (!isMobileNav && trigger.getAttribute('href') !== '#') return;
-        const wasOpen = item.classList.contains('open');
+        if (!isMobileNav && triggerHref !== '#') return;
         dropdownItems.forEach(other => {
             if (other === item) return;
             other.classList.remove('open');
