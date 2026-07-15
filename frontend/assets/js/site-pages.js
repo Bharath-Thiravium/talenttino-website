@@ -154,7 +154,10 @@ dropdownItems.forEach(item => {
     trigger?.setAttribute('aria-expanded', 'false');
     trigger?.addEventListener('click', event => {
         const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
-        if (trigger.getAttribute('href') === '#' || isMobileNav) event.preventDefault();
+        if (trigger.getAttribute('href') === '#' || isMobileNav) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         // Desktop uses hover for the submenu; a click follows course.php normally.
         if (!isMobileNav && trigger.getAttribute('href') !== '#') return;
         const wasOpen = item.classList.contains('open');
