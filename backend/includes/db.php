@@ -20,13 +20,13 @@ if (!defined('DB_HOST')) {
     define('DB_HOST', $env('DB_HOST', '127.0.0.1'));
 }
 if (!defined('DB_USER')) {
-    define('DB_USER', $env('DB_USER', 'talentteno_app'));
+    define('DB_USER', $env('DB_USER', 'u494785662_talentwebsite'));
 }
 if (!defined('DB_PASS')) {
-    define('DB_PASS', $env('DB_PASS', 'talentteno_local_password'));
+    define('DB_PASS', $env('DB_PASS', 'Talenttino@2026'));
 }
 if (!defined('DB_NAME')) {
-    define('DB_NAME', $env('DB_NAME', 'talentteno_db'));
+    define('DB_NAME', $env('DB_NAME', 'u494785662_talentwebsite'));
 }
 if (!defined('DB_PORT')) {
     define('DB_PORT', (int)$env('DB_PORT', '3306'));
