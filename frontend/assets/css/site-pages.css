@@ -37977,6 +37977,122 @@ html body.about-page .timeline-card p {
     max-width: 28ch !important;
 }
 
+/* Home hero left visual: keep the tilted-card model, but use the uploaded artwork. */
+html body.home-page .home-hero-copy h1.home-image-title,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title {
+    position: relative !important;
+    width: min(100%, 640px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 24px !important;
+    padding: 0 !important;
+    display: block !important;
+    aspect-ratio: 3 / 2 !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    background:
+        linear-gradient(135deg, rgba(16, 185, 255, .18), rgba(124, 92, 255, .08)),
+        #061631 !important;
+    border: 1px solid rgba(56, 189, 248, .72) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transform: perspective(900px) rotateZ(-3deg) skewX(-2deg) !important;
+    box-shadow:
+        -18px 22px 0 rgba(255, 255, 255, .98),
+        -19px 22px 0 rgba(15, 23, 42, .95),
+        0 0 0 5px rgba(14, 165, 233, .08),
+        0 28px 70px rgba(15, 23, 42, .18),
+        0 0 44px rgba(14, 165, 233, .18) !important;
+    animation: homeLeftArtIn .82s cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 10px !important;
+    z-index: 2 !important;
+    border: 1px solid rgba(56, 189, 248, .64) !important;
+    border-radius: 6px !important;
+    box-shadow:
+        inset 0 0 28px rgba(14, 165, 233, .14),
+        0 0 24px rgba(14, 165, 233, .12) !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 3 !important;
+    background:
+        linear-gradient(90deg, transparent 0 22px, rgba(14, 165, 233, .92) 22px 70px, transparent 70px) left 18px top 18px / 92px 3px no-repeat,
+        linear-gradient(90deg, transparent 0 22px, rgba(14, 165, 233, .92) 22px 70px, transparent 70px) right 18px bottom 18px / 92px 3px no-repeat,
+        radial-gradient(circle at 16% 18%, rgba(14, 165, 233, .18), transparent 12%),
+        linear-gradient(135deg, rgba(255,255,255,.10), transparent 28%, transparent 72%, rgba(14,165,233,.12)) !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title img {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.01) !important;
+    filter: saturate(1.04) contrast(1.04) !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title:hover img {
+    transform: scale(1.035) !important;
+    transition: transform .7s cubic-bezier(.16, 1, .3, 1) !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title:hover,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title:hover {
+    box-shadow:
+        -18px 22px 0 rgba(255, 255, 255, .98),
+        -19px 22px 0 rgba(15, 23, 42, .95),
+        0 0 0 5px rgba(14, 165, 233, .10),
+        0 34px 82px rgba(15, 23, 42, .22),
+        0 0 58px rgba(14, 165, 233, .25) !important;
+}
+
+@keyframes homeLeftArtIn {
+    from {
+        opacity: 0;
+        transform: perspective(900px) rotateZ(-5deg) skewX(-2deg) translate3d(-24px, 18px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(900px) rotateZ(-3deg) skewX(-2deg) translate3d(0, 0, 0);
+    }
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero-copy h1.home-image-title,
+    html body.home-page .home-hero .home-hero-copy h1.home-image-title {
+        width: min(100%, 620px) !important;
+        margin-bottom: 22px !important;
+    }
+}
+
+@media (max-width: 560px) {
+    html body.home-page .home-hero-copy h1.home-image-title,
+    html body.home-page .home-hero .home-hero-copy h1.home-image-title {
+        width: min(100%, 420px) !important;
+        transform: perspective(700px) rotateZ(-2deg) skewX(-1deg) !important;
+        box-shadow:
+            -8px 12px 0 rgba(255, 255, 255, .96),
+            -9px 12px 0 rgba(6, 18, 52, .92),
+            0 0 0 4px rgba(14, 165, 233, .08),
+            0 20px 46px rgba(15, 23, 42, .14) !important;
+    }
+
+    html body.home-page .home-hero-copy h1.home-image-title::before {
+        inset: 7px !important;
+    }
+}
+
 /* AI chat send button: keep it compact and icon-only after form submits. */
 html body.home-page .home-ai-form {
     grid-template-columns: minmax(0, 1fr) 54px !important;

@@ -210,7 +210,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-ai2">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-homeleft2">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -247,7 +247,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
             <div class="site-container hero-grid">
                 <div class="hero-copy home-hero-copy reveal">
                     <span class="hero-kicker home-kicker"><i class="fa-solid fa-star"></i> #1 IT Training Institute in Madurai</span>
-                    <h1><?= tt_h($settings['tagline']) ?></h1>
+                    <h1 class="home-image-title">
+                        <span class="sr-only"><?= tt_h($settings['tagline']) ?></span>
+                        <img src="assets/images/home left.jpeg" alt="<?= tt_h($settings['tagline']) ?>" decoding="async" fetchpriority="high">
+                    </h1>
                     <p>From basics to advanced technologies, learn everything you need to succeed in the IT industry. <?= tt_h($settings['success_rate']) ?> Job Assistance + Free Internship.</p>
                     <div class="home-stats">
                         <div><strong><?= tt_h($settings['total_students']) ?></strong><span>Students Trained</span></div>
@@ -534,6 +537,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-ai2" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-homeleft2" defer></script>
 </body>
 </html>
