@@ -8,6 +8,7 @@ $coursePage = [
     'title' => 'Cyber Security Courses',
     'subtitle' => 'Network security, server administration, cloud security, ethical hacking and SOC training with practical lab support.',
     'body_class' => 'cyber-security-course-page',
+    'hero_image' => 'assets/images/Cyber Security .png',
     'courses' => [
         [
             'icon' => 'fa-network-wired',

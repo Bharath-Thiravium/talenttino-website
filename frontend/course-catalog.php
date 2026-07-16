@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-09">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -249,6 +249,283 @@ function tt_catalog_fallback_image(array $course): string
             transform:none!important;
             filter:saturate(1.03) contrast(1.02)!important;
         }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"]{
+            position:relative!important;
+            min-height:464px!important;
+            height:464px!important;
+            padding:0!important;
+            background:#061631!important;
+        }
+        body.catalog-body .catalog-hero .catalog-hero-bg{
+            position:absolute!important;
+            inset:0!important;
+            z-index:0!important;
+            width:100%!important;
+            height:100%!important;
+            object-fit:cover!important;
+            object-position:center center!important;
+            opacity:1!important;
+            filter:saturate(1.06) contrast(1.04)!important;
+            pointer-events:none!important;
+        }
+        body.catalog-body .catalog-hero .catalog-hero-overlay{
+            position:absolute!important;
+            inset:0!important;
+            z-index:1!important;
+            background:linear-gradient(90deg,rgba(4,13,32,.92) 0%,rgba(9,36,84,.68) 42%,rgba(12,72,150,.10) 100%)!important;
+            pointer-events:none!important;
+        }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"]::before{
+            z-index:2!important;
+            opacity:.34!important;
+        }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"] .site-container{
+            position:relative!important;
+            z-index:3!important;
+            min-height:100%!important;
+            display:flex!important;
+            flex-direction:column!important;
+            justify-content:center!important;
+        }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"] h1,
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"] p,
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"] .hero-kicker{
+            text-shadow:0 14px 38px rgba(0,0,0,.42)!important;
+        }
+        @media (max-width:760px){
+            body.catalog-body .catalog-hero[style*="--catalog-hero-image"]{
+                min-height:390px!important;
+                height:390px!important;
+                background:#061631!important;
+            }
+            body.catalog-body .catalog-hero .catalog-hero-bg{
+                object-position:center center!important;
+            }
+            body.catalog-body .catalog-hero .catalog-hero-overlay{
+                background:linear-gradient(180deg,rgba(4,13,32,.90) 0%,rgba(9,36,84,.70) 58%,rgba(12,72,150,.20) 100%)!important;
+            }
+        }
+        body.catalog-body.popular-course-page .catalog-hero .catalog-hero-bg{
+            object-position:center right!important;
+        }
+        body.catalog-body.popular-course-page .catalog-hero .catalog-hero-overlay{
+            background:linear-gradient(90deg,rgba(4,13,32,.94) 0%,rgba(7,24,62,.80) 38%,rgba(8,35,96,.28) 72%,rgba(4,13,32,.12) 100%)!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-bg{
+            object-fit:contain!important;
+            object-position:center right!important;
+            background:#eef6ff!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-overlay{
+            background:linear-gradient(90deg,rgba(4,13,32,.94) 0%,rgba(9,36,84,.76) 38%,rgba(12,72,150,.26) 60%,rgba(238,246,255,.08) 100%)!important;
+        }
+        @media (max-width:760px){
+            body.catalog-body.popular-course-page .catalog-hero .catalog-hero-bg{
+                object-position:63% center!important;
+            }
+            body.catalog-body.popular-course-page .catalog-hero .catalog-hero-overlay{
+                background:linear-gradient(180deg,rgba(4,13,32,.94) 0%,rgba(7,24,62,.82) 54%,rgba(8,35,96,.38) 100%)!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-bg{
+                object-fit:cover!important;
+                object-position:62% center!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-overlay{
+                background:linear-gradient(180deg,rgba(4,13,32,.92) 0%,rgba(9,36,84,.74) 56%,rgba(12,72,150,.26) 100%)!important;
+            }
+        }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"]{
+            min-height:454px!important;
+            height:454px!important;
+            display:flex!important;
+            align-items:center!important;
+            isolation:isolate!important;
+        }
+        body.catalog-body .catalog-hero .catalog-hero-bg{
+            transform:scale(1.015)!important;
+            transform-origin:center right!important;
+            animation:catalogHeroImageDrift 12s ease-in-out infinite alternate!important;
+        }
+        body.catalog-body .catalog-hero .catalog-hero-overlay{
+            backdrop-filter:saturate(1.05)!important;
+        }
+        body.catalog-body .catalog-hero[style*="--catalog-hero-image"] .site-container{
+            width:min(1200px,calc(100% - 48px))!important;
+            min-height:0!important;
+            padding-top:10px!important;
+            animation:catalogHeroCopyIn .72s cubic-bezier(.16,1,.3,1) both!important;
+        }
+        body.catalog-body .catalog-hero .hero-kicker{
+            width:auto!important;
+            max-width:max-content!important;
+            min-height:36px!important;
+            margin:0 0 28px!important;
+            padding:0 18px!important;
+            display:inline-flex!important;
+            align-items:center!important;
+            gap:10px!important;
+            border-radius:999px!important;
+            background:rgba(255,255,255,.12)!important;
+            border:1px solid rgba(255,255,255,.28)!important;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 12px 30px rgba(0,0,0,.12)!important;
+            color:#64a5ff!important;
+            -webkit-text-fill-color:#64a5ff!important;
+            font-size:13px!important;
+            font-weight:900!important;
+            letter-spacing:.12em!important;
+            line-height:1!important;
+            white-space:nowrap!important;
+        }
+        body.catalog-body .catalog-hero .hero-kicker::before,
+        body.catalog-body .catalog-hero .hero-kicker::after{
+            display:none!important;
+            content:none!important;
+        }
+        body.catalog-body .catalog-hero h1{
+            max-width:720px!important;
+            margin:0 0 22px!important;
+            color:#fff!important;
+            -webkit-text-fill-color:#fff!important;
+            font-size:clamp(56px,6vw,86px)!important;
+            line-height:.98!important;
+            letter-spacing:0!important;
+            text-align:left!important;
+        }
+        body.catalog-body .catalog-hero p{
+            max-width:760px!important;
+            margin:0!important;
+            color:rgba(255,255,255,.94)!important;
+            -webkit-text-fill-color:rgba(255,255,255,.94)!important;
+            font-size:23px!important;
+            line-height:1.55!important;
+            font-weight:750!important;
+            text-align:left!important;
+        }
+        body.catalog-body .catalog-section{
+            padding:58px 0 72px!important;
+            background:linear-gradient(180deg,#eef6ff 0%,#f8fbff 100%)!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card{
+            animation:catalogCardIn .7s cubic-bezier(.16,1,.3,1) both!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card:nth-child(2n){
+            animation-delay:.06s!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card:nth-child(3n){
+            animation-delay:.12s!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card:hover{
+            transform:translateY(-8px)!important;
+            box-shadow:0 24px 58px rgba(15,23,42,.13)!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card .catalog-image img{
+            transition:transform .8s cubic-bezier(.16,1,.3,1),filter .3s ease!important;
+        }
+        body.catalog-body .catalog-grid>.catalog-card:hover .catalog-image img{
+            transform:scale(1.035)!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-bg{
+            transform:scale(1)!important;
+            animation:catalogAdvancedHeroDrift 12s ease-in-out infinite alternate!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero[style*="--catalog-hero-image"]{
+            min-height:520px!important;
+            height:auto!important;
+            padding:64px 0 58px!important;
+            align-items:center!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero[style*="--catalog-hero-image"] .site-container{
+            padding-top:0!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero .hero-kicker{
+            margin-bottom:24px!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero h1{
+            max-width:620px!important;
+            margin-bottom:20px!important;
+            font-size:clamp(48px,5.2vw,74px)!important;
+            line-height:1.04!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero p{
+            max-width:590px!important;
+            font-size:21px!important;
+            line-height:1.55!important;
+        }
+        body.catalog-body.advanced-course-page .catalog-hero .catalog-hero-overlay{
+            background:linear-gradient(90deg,rgba(4,13,32,.96) 0%,rgba(9,36,84,.84) 46%,rgba(12,72,150,.38) 67%,rgba(238,246,255,.10) 100%)!important;
+        }
+        @media (max-width:900px){
+            body.catalog-body .catalog-hero[style*="--catalog-hero-image"]{
+                min-height:410px!important;
+                height:410px!important;
+            }
+            body.catalog-body .catalog-hero h1{
+                font-size:clamp(42px,9vw,64px)!important;
+            }
+            body.catalog-body .catalog-hero p{
+                max-width:620px!important;
+                font-size:18px!important;
+            }
+            body.catalog-body .catalog-hero .hero-kicker{
+                max-width:100%!important;
+                white-space:normal!important;
+                line-height:1.25!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero[style*="--catalog-hero-image"]{
+                min-height:500px!important;
+                padding:56px 0 50px!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero h1{
+                max-width:560px!important;
+                font-size:clamp(42px,8vw,58px)!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero p{
+                max-width:540px!important;
+                font-size:18px!important;
+            }
+        }
+        @media (max-width:560px){
+            body.catalog-body .catalog-hero[style*="--catalog-hero-image"]{
+                min-height:380px!important;
+                height:380px!important;
+            }
+            body.catalog-body .catalog-hero[style*="--catalog-hero-image"] .site-container{
+                width:min(100% - 30px,420px)!important;
+            }
+            body.catalog-body .catalog-hero h1{
+                margin-bottom:16px!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero[style*="--catalog-hero-image"]{
+                min-height:460px!important;
+                padding:46px 0 42px!important;
+            }
+            body.catalog-body.advanced-course-page .catalog-hero h1{
+                font-size:clamp(38px,11vw,48px)!important;
+            }
+        }
+        @keyframes catalogHeroImageDrift{
+            from{transform:scale(1.015) translate3d(0,0,0)}
+            to{transform:scale(1.055) translate3d(-10px,0,0)}
+        }
+        @keyframes catalogAdvancedHeroDrift{
+            from{transform:scale(1) translate3d(0,0,0)}
+            to{transform:scale(1.025) translate3d(-8px,0,0)}
+        }
+        @keyframes catalogHeroCopyIn{
+            from{opacity:0;transform:translate3d(0,26px,0)}
+            to{opacity:1;transform:translate3d(0,0,0)}
+        }
+        @keyframes catalogCardIn{
+            from{opacity:0;transform:translate3d(0,26px,0)}
+            to{opacity:1;transform:translate3d(0,0,0)}
+        }
+        @media (prefers-reduced-motion:reduce){
+            body.catalog-body .catalog-hero .catalog-hero-bg,
+            body.catalog-body .catalog-hero[style*="--catalog-hero-image"] .site-container,
+            body.catalog-body .catalog-grid>.catalog-card{
+                animation:none!important;
+            }
+        }
     </style>
 </head>
 <body class="static-site catalog-body <?= ($coursePage['layout'] ?? '') === 'compact' ? 'compact-catalog' : '' ?> <?= htmlspecialchars($coursePage['body_class'] ?? '') ?>">
@@ -268,7 +545,17 @@ function tt_catalog_fallback_image(array $course): string
         </div>
     </header>
     <main class="page-main catalog-page">
-        <section class="catalog-hero">
+        <?php
+            $heroImage = trim((string)($coursePage['hero_image'] ?? ''));
+            $heroStyle = $heroImage !== ''
+                ? "--catalog-hero-image:url('" . htmlspecialchars($heroImage, ENT_QUOTES) . "')"
+                : '';
+        ?>
+        <section class="catalog-hero"<?= $heroStyle !== '' ? ' style="' . $heroStyle . '"' : '' ?>>
+            <?php if ($heroImage !== ''): ?>
+            <img class="catalog-hero-bg" src="<?= htmlspecialchars($heroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <span class="catalog-hero-overlay" aria-hidden="true"></span>
+            <?php endif; ?>
             <div class="site-container reveal">
                 <span class="hero-kicker"><i class="fa-solid fa-layer-group"></i> Talentteno Course Catalog</span>
                 <h1><?= htmlspecialchars($coursePage['title']) ?></h1>

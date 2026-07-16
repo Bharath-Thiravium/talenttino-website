@@ -37,7 +37,7 @@ if (!$courses) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-01">
     <style>
         body.course-list-page .course-showcase-card{position:relative!important;display:flex!important;flex-direction:column!important;aspect-ratio:auto!important;min-height:460px!important;padding:0 22px 82px!important;overflow:hidden!important;cursor:pointer!important}
         body.course-list-page .course-showcase-card .course-image{width:calc(100% + 44px)!important;height:190px!important;min-height:190px!important;max-height:190px!important;margin:0 -22px 18px!important;border-radius:8px 8px 0 0!important;overflow:hidden!important}
@@ -138,23 +138,106 @@ if (!$courses) {
                 border-radius:10px!important;
                 font-size:13px!important;
             }
+            body.course-list-page .course-showcase-card .course-image{
+                width:100%!important;
+                height:220px!important;
+                min-height:220px!important;
+                max-height:220px!important;
+                margin:0 0 22px!important;
+                border-radius:0!important;
+            }
         }
         body.course-list-page .course-showcase-card .course-image{
             background:#f4f8ff!important;
-            display:flex!important;
-            align-items:center!important;
-            justify-content:center!important;
+            display:block!important;
+            width:calc(100% + 44px)!important;
+            height:220px!important;
+            min-height:220px!important;
+            max-height:220px!important;
+            margin:0 -22px 22px!important;
         }
         body.course-list-page .course-showcase-card .course-image img{
+            display:block!important;
             width:100%!important;
             height:100%!important;
-            object-fit:contain!important;
+            object-fit:cover!important;
             object-position:center!important;
-            background:#f4f8ff!important;
+            background:transparent!important;
         }
         body.course-list-page .course-showcase-card:hover .course-image img{
             transform:none!important;
             filter:saturate(1.03) contrast(1.02)!important;
+        }
+        body.course-list-page .course-page-hero{
+            position:relative!important;
+            min-height:460px!important;
+            padding:0!important;
+            display:flex!important;
+            align-items:center!important;
+            overflow:hidden!important;
+            isolation:isolate!important;
+            background:#061631!important;
+            text-align:left!important;
+        }
+        body.course-list-page .course-page-hero .course-hero-bg{
+            position:absolute!important;
+            inset:0!important;
+            z-index:0!important;
+            width:100%!important;
+            height:100%!important;
+            object-fit:cover!important;
+            object-position:center right!important;
+            opacity:1!important;
+            filter:saturate(1.06) contrast(1.04)!important;
+            pointer-events:none!important;
+        }
+        body.course-list-page .course-page-hero .course-hero-overlay{
+            position:absolute!important;
+            inset:0!important;
+            z-index:1!important;
+            background:linear-gradient(90deg,rgba(5,15,38,.96) 0%,rgba(8,29,74,.86) 42%,rgba(8,42,112,.24) 72%,rgba(5,15,38,.08) 100%)!important;
+            pointer-events:none!important;
+        }
+        body.course-list-page .course-page-hero .site-container{
+            position:relative!important;
+            z-index:3!important;
+            width:min(1200px,calc(100% - 48px))!important;
+            margin:0 auto!important;
+        }
+        body.course-list-page .course-page-hero h1{
+            max-width:620px!important;
+            color:#fff!important;
+            -webkit-text-fill-color:#fff!important;
+            font-size:clamp(48px,5.8vw,82px)!important;
+            line-height:.98!important;
+            text-align:left!important;
+        }
+        body.course-list-page .course-page-hero p{
+            max-width:680px!important;
+            margin-left:0!important;
+            margin-right:0!important;
+            color:rgba(255,255,255,.94)!important;
+            -webkit-text-fill-color:rgba(255,255,255,.94)!important;
+            font-size:23px!important;
+            line-height:1.55!important;
+            text-align:left!important;
+        }
+        @media (max-width:900px){
+            body.course-list-page .course-page-hero{
+                min-height:430px!important;
+            }
+            body.course-list-page .course-page-hero .course-hero-bg{
+                object-position:62% center!important;
+            }
+            body.course-list-page .course-page-hero .course-hero-overlay{
+                background:linear-gradient(180deg,rgba(5,15,38,.96) 0%,rgba(8,29,74,.86) 54%,rgba(8,42,112,.52) 100%)!important;
+            }
+            body.course-list-page .course-page-hero h1{
+                font-size:clamp(42px,10vw,64px)!important;
+            }
+            body.course-list-page .course-page-hero p{
+                font-size:18px!important;
+            }
         }
     </style>
 </head>
@@ -175,7 +258,11 @@ if (!$courses) {
         </div>
     </header>
     <main class="page-main">
-        <section class="page-hero course-page-hero"><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-book-open"></i> Basic to Advanced IT Training</span><h1>Our Trending Courses</h1><p>Build your career with industry-oriented training, live projects, internships, certifications, and placement assistance.</p></div></section>
+        <section class="page-hero course-page-hero">
+            <img class="course-hero-bg" src="assets/images/our trending.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <span class="course-hero-overlay" aria-hidden="true"></span>
+            <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-book-open"></i> Basic to Advanced IT Training</span><h1>Our Trending Courses</h1><p>Build your career with industry-oriented training, live projects, internships, certifications, and placement assistance.</p></div>
+        </section>
         <section class="section course-showcase-section">
             <div class="site-container course-showcase-grid">
                 <?php foreach ($courses as $course): ?>

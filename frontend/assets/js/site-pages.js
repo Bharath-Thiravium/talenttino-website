@@ -250,7 +250,7 @@ document.querySelectorAll('[data-path-tabs]').forEach(pathTabs => {
     });
 });
 
-document.querySelectorAll('form:not(.whatsapp-enquiry-form)').forEach(form => {
+document.querySelectorAll('form:not(.whatsapp-enquiry-form):not([data-download-form]):not([data-ai-form])').forEach(form => {
     form.addEventListener('submit', () => {
         if (!form.checkValidity()) return;
         const button = form.querySelector('button[type="submit"]');
@@ -503,6 +503,7 @@ const closeWhatsappPanel = () => {
 };
 
 whatsappToggles.forEach(toggle => toggle.addEventListener('click', () => {
+    if (toggle.matches('a[href]')) return;
     const isOpen = !whatsappPanel?.classList.contains('is-open');
     whatsappPanel?.classList.toggle('is-open', isOpen);
     whatsappPanel?.setAttribute('aria-hidden', String(!isOpen));
@@ -535,6 +536,7 @@ document.querySelector('.whatsapp-enquiry-form')?.addEventListener('submit', eve
 const aiChat = document.querySelector('[data-ai-chat]');
 if (aiChat) {
     const aiToggle = aiChat.querySelector('[data-ai-toggle]');
+    const aiBack = aiChat.querySelector('[data-ai-back]');
     const aiClose = aiChat.querySelector('[data-ai-close]');
     const aiPanel = aiChat.querySelector('.home-ai-panel');
     const aiMessages = aiChat.querySelector('[data-ai-messages]');
@@ -551,48 +553,48 @@ if (aiChat) {
 
     const replies = [
         {
-            keys: ['company', 'institute', 'about', 'talentteno', 'details', 'detail', 'more'],
-            text: `${companyDetails.name} is an IT training institute in Madurai offering practical classroom training, free internship guidance, live project practice, certification support and placement preparation.`
+            keys: ['company', 'institute', 'about', 'talentteno', 'details', 'detail', 'more', 'who are you', 'what is talentteno', 'institute details', 'about institute'],
+            text: `About: ${companyDetails.name} is an IT training institute in Madurai offering practical classroom training, free internship guidance, live project practice, certification support and placement preparation.`
         },
         {
-            keys: ['course', 'courses', 'class', 'training', 'learn', 'program', 'programs'],
-            text: 'Courses available: Full Stack with AI, Data Science, Cyber Security, Digital Marketing, UI/UX Design, Tally, programming and short-term IT courses. Tell me your interest and I can suggest a suitable track.'
+            keys: ['course', 'courses', 'class', 'classes', 'training', 'learn', 'program', 'programs', 'syllabus', 'available', 'teach', 'study', 'enna course', 'course list', 'all course'],
+            text: 'Courses: Full Stack with AI, Data Science, Cyber Security, Digital Marketing, UI/UX Design, Tally, programming, short-term courses and advanced professional courses are available. Tell me your interest and I can suggest a suitable track.'
         },
         {
-            keys: ['fee', 'fees', 'cost', 'price', 'offer', 'discount', 'emi', 'payment'],
-            text: 'Course fees depend on the selected course, duration and current offer. For exact fee, discount, EMI and batch timing, submit the free counselling form or call our admission team.'
+            keys: ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'offer', 'discount', 'emi', 'payment', 'pay', 'how much', 'fees evlo', 'fee evlo'],
+            text: 'Fees: Course fees depend on selected course, duration and current offer. For exact fee, discount, EMI and batch timing, submit the free counselling form or call our admission team.'
         },
         {
-            keys: ['internship', 'project', 'live project', 'portfolio', 'practical'],
-            text: 'Yes. Talentteno provides free internship guidance and live project practice. Students work on practical tasks to build portfolio-ready confidence.'
+            keys: ['internship', 'intern', 'project', 'projects', 'live project', 'portfolio', 'practical', 'hands on', 'experience', 'internship iruka', 'project iruka'],
+            text: 'Internship & projects: Yes. Talentteno provides free internship guidance and live project practice. Students work on practical tasks to build portfolio-ready confidence.'
         },
         {
-            keys: ['placement', 'job', 'career', 'interview', 'resume'],
-            text: 'Placement support includes resume preparation, mock interview practice, job-readiness mentoring and hiring guidance for eligible students.'
+            keys: ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work'],
+            text: 'Placement: Support includes resume preparation, mock interview practice, job-readiness mentoring and hiring guidance for eligible students.'
         },
         {
-            keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo'],
-            text: 'You can book a free demo class or counselling session from the Sign Up form on the home page. Our counsellor will call and guide you.'
+            keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo', 'sample class', 'visit'],
+            text: 'Demo class: You can book a free demo class or counselling session from the Sign Up form on the home page. Our counsellor will call and guide you.'
         },
         {
-            keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map'],
-            text: `${companyDetails.name} address: ${companyDetails.address}.`
+            keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map', 'near', 'place', 'route', 'enga', 'where is'],
+            text: `Address: ${companyDetails.address}.`
         },
         {
-            keys: ['phone', 'contact', 'call', 'whatsapp', 'mobile', 'number', 'email'],
-            text: `Contact ${companyDetails.name}: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}. You can also use the WhatsApp button for quick enquiry.`
+            keys: ['phone', 'contact', 'call', 'whatsapp', 'mobile', 'number', 'email', 'mail', 'talk', 'reach'],
+            text: `Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}. You can also use the WhatsApp button for quick enquiry.`
         },
         {
-            keys: ['online', 'offline', 'batch', 'timing', 'time', 'schedule', 'mode'],
-            text: 'Batch timing and training mode depend on the course. Share your preferred course and timing; our team will confirm the available batch.'
+            keys: ['online', 'offline', 'batch', 'batches', 'timing', 'timings', 'time', 'schedule', 'mode', 'morning', 'evening', 'weekend', 'hours', 'open'],
+            text: 'Timing: Batch timing and training mode depend on the course. Share your preferred course and timing; our team will confirm the available batch.'
         },
         {
             keys: ['certificate', 'certification', 'certified'],
-            text: 'Certification support is available after course completion. Students also get guidance to complete practical tasks and project work.'
+            text: 'Certificate: Certification support is available after course completion. Students also get guidance to complete practical tasks and project work.'
         },
         {
             keys: ['admission', 'join', 'enroll', 'enrol', 'apply', 'register'],
-            text: 'To join Talentteno, submit the free counselling form, call the institute, or send a WhatsApp enquiry. The team will guide course selection, fee details and batch timing.'
+            text: 'Admission: To join Talentteno, submit the free counselling form, call the institute, or send a WhatsApp enquiry. The team will guide course selection, fee details and batch timing.'
         },
         {
             keys: ['full stack', 'fullstack', 'web development', 'frontend', 'backend'],
@@ -613,22 +615,94 @@ if (aiChat) {
         {
             keys: ['ui', 'ux', 'design', 'designing'],
             text: 'UI/UX Design training covers design fundamentals, practical tools, portfolio practice and career guidance.'
+        },
+        {
+            keys: ['tally', 'accounts', 'accounting', 'gst'],
+            text: 'Tally and accounting training helps students learn practical business entries, GST basics and office-ready accounting workflow.'
+        },
+        {
+            keys: ['short term', 'short-term', 'basic computer', 'computer course', 'ms office', 'excel'],
+            text: 'Short-term courses include computer basics, MS Office, programming foundations and other practical skill courses for students and working professionals.'
         }
     ];
 
+    const normalizeAiText = value => String(value || '')
+        .toLowerCase()
+        .replace(/full\s*stack/g, 'full stack')
+        .replace(/cyber\s*security/g, 'cyber security')
+        .replace(/ui\s*\/\s*ux/g, 'ui ux')
+        .replace(/[^\w\s/+.-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const hasAny = (text, keys) => keys.some(key => text.includes(key));
+
     const getAiReply = question => {
-        const text = question.toLowerCase();
-        const clean = text.replace(/[^\w\s/+.-]/g, ' ').replace(/\s+/g, ' ').trim();
+        const clean = normalizeAiText(question);
         if (['hi', 'hello', 'hey', 'hai', 'vanakkam'].includes(clean)) {
             return `Hi! Welcome to ${companyDetails.name}. I can help with courses, fees, internship, placement, demo class, address, contact number, timings and admission.`;
         }
         if (['thanks', 'thank you', 'ok', 'okay'].includes(clean)) {
             return 'You are welcome. For admission help, use the free counselling form or WhatsApp button.';
         }
-        const match = replies.find(item => item.keys.some(key => clean.includes(key)));
-        return match
-            ? match.text
-            : `I can answer about courses, fees, internship, placement, demo class, admission, certificate, timing, address and contact details. ${companyDetails.name}: ${companyDetails.phone1}, ${companyDetails.phone2}.`;
+
+        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment']);
+        const asksCourse = hasAny(clean, ['course', 'courses', 'class', 'training', 'syllabus', 'learn', 'teach', 'available']);
+        const asksContact = hasAny(clean, ['contact', 'phone', 'call', 'whatsapp', 'number', 'mobile', 'email', 'mail']);
+        const asksLocation = hasAny(clean, ['address', 'location', 'where', 'map', 'route', 'near']);
+        const asksInternship = hasAny(clean, ['internship', 'intern', 'project', 'portfolio', 'practical']);
+        const courseNames = [
+            ['full stack', 'Full Stack with AI'],
+            ['fullstack', 'Full Stack with AI'],
+            ['web development', 'Full Stack with AI'],
+            ['data science', 'Data Science and AI'],
+            ['python', 'Data Science and AI'],
+            ['ai', 'Data Science and AI'],
+            ['cyber', 'Cyber Security'],
+            ['digital marketing', 'Digital Marketing'],
+            ['ui ux', 'UI/UX Design'],
+            ['design', 'UI/UX Design'],
+            ['tally', 'Tally'],
+        ];
+        const mentionedCourse = courseNames.find(([key]) => clean.includes(key))?.[1];
+
+        if (mentionedCourse && asksFee) {
+            return `${mentionedCourse} fee depends on batch, duration and current offer. For the exact fee, EMI and discount, call ${companyDetails.phone1} or send a WhatsApp enquiry.`;
+        }
+        if (mentionedCourse && asksInternship) {
+            return `Yes, ${mentionedCourse} students get guided practical tasks, live project or internship support, and portfolio preparation.`;
+        }
+        if (mentionedCourse && asksCourse) {
+            return `${mentionedCourse} is available at ${companyDetails.name}. It includes practical training, mentor guidance, project work and career support.`;
+        }
+        if (asksContact && asksLocation) {
+            return `${companyDetails.name} is at ${companyDetails.address}. Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}.`;
+        }
+
+        const scoredMatches = replies
+            .map(item => ({
+                item,
+                score: item.keys.reduce((total, key) => total + (clean.includes(key) ? key.split(' ').length : 0), 0)
+            }))
+            .filter(match => match.score > 0)
+            .sort((a, b) => b.score - a.score);
+
+        const matchedAnswers = [];
+        scoredMatches.forEach(match => {
+            if (matchedAnswers.includes(match.item.text)) return;
+            matchedAnswers.push(match.item.text);
+        });
+
+        if (matchedAnswers.length > 1) {
+            const answerLimit = clean.length > 90 || /\b(and|also|with|plus|,)\b/.test(clean) ? 5 : 3;
+            return matchedAnswers
+                .slice(0, answerLimit)
+                .map((answer, index) => `${index + 1}. ${answer}`)
+                .join('\n\n');
+        }
+
+        return matchedAnswers[0]
+            || `Please ask about course names, fees, internship, placement, demo class, admission, certificate, timing, address or contact details. For direct help call ${companyDetails.phone1} or ${companyDetails.phone2}.`;
     };
 
     const appendAiMessage = (message, type = 'bot') => {
@@ -674,7 +748,16 @@ if (aiChat) {
         if (isOpen) closeAiChat();
         else openAiChat();
     });
+    aiBack?.addEventListener('click', closeAiChat);
     aiClose?.addEventListener('click', closeAiChat);
+    document.addEventListener('click', event => {
+        if (!aiPanel?.classList.contains('is-open')) return;
+        if (aiChat.contains(event.target)) return;
+        closeAiChat();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeAiChat();
+    });
     aiChat.querySelectorAll('[data-ai-question]').forEach(button => {
         button.addEventListener('click', () => submitAiQuestion(button.dataset.aiQuestion));
     });

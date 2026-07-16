@@ -7,13 +7,13 @@ $error = '';
 // Keep older installations compatible with the editable footer fields.
 $conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS footer_description VARCHAR(500) DEFAULT 'Practical IT training in Madurai with free internship, spoken English support, live projects, certification and placement assistance.'");
 $conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS footer_copyright VARCHAR(255) DEFAULT '© 2026 Talentteno Institute | All Rights Reserved'");
-$conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS seo_title VARCHAR(255) DEFAULT 'Best IT Training Institute in Madurai | Talentteno Institute'");
+$conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS seo_title VARCHAR(255) DEFAULT 'Talentteno Institute | Best IT Training Institute in Madurai'");
 $conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS seo_description VARCHAR(500) DEFAULT 'Talentteno Institute offers practical IT training in Madurai for Full Stack Development, Data Science, AI, Cyber Security, Digital Marketing, UI/UX, Tally and programming with live projects, free internship and placement assistance.'");
 $conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS seo_keywords VARCHAR(700) DEFAULT 'IT training institute in Madurai, best software training institute Madurai, full stack course Madurai, data science course Madurai, cyber security course Madurai, digital marketing course Madurai, UI UX course Madurai, Tally course Madurai'");
 $conn->query("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS business_hours VARCHAR(120) DEFAULT 'Monday to Saturday, 9:00 AM to 7:00 PM'");
 
 $seoDefaults = [
-    'seo_title' => 'Best IT Training Institute in Madurai | Talentteno Institute',
+    'seo_title' => 'Talentteno Institute | Best IT Training Institute in Madurai',
     'seo_description' => 'Talentteno Institute offers practical IT training in Madurai for Full Stack Development, Data Science, AI, Cyber Security, Digital Marketing, UI/UX, Tally and programming with live projects, free internship and placement assistance.',
     'seo_keywords' => 'IT training institute in Madurai, best software training institute Madurai, software training centre Madurai, full stack development course Madurai, data science course Madurai, data analyst course Madurai, artificial intelligence course Madurai, cyber security course Madurai, digital marketing course Madurai, UI UX design course Madurai, Python course Madurai, Java course Madurai, Tally GST course Madurai, web development course Madurai, internship training Madurai, placement training Madurai',
     'business_hours' => 'Monday to Saturday, 9:00 AM to 7:00 PM',

@@ -80,7 +80,7 @@ function normalizeSettings(row = {}) {
     linkedin_url: row.linkedin_url || '#',
     youtube_url: row.youtube_url || '#',
     footer_description: row.footer_description || 'Practical IT training in Madurai with free internship, spoken English support, live projects, certification and placement assistance.',
-    seo_title: row.seo_title || 'Best IT Training Institute in Madurai | Talentteno Institute',
+    seo_title: row.seo_title || 'Talentteno Institute | Best IT Training Institute in Madurai',
     seo_description: row.seo_description || 'Talentteno Institute offers practical IT training in Madurai for Full Stack Development, Data Science, AI, Cyber Security, Digital Marketing, UI/UX, Tally and programming with live projects, free internship and placement assistance.',
     seo_keywords: row.seo_keywords || 'IT training institute in Madurai, best software training institute Madurai, full stack course Madurai, data science course Madurai, cyber security course Madurai, digital marketing course Madurai, UI UX course Madurai, Tally course Madurai',
     business_hours: row.business_hours || 'Monday to Saturday, 9:00 AM to 7:00 PM'
@@ -261,7 +261,7 @@ app.get('/api/seo', asyncRoute(async (req, res) => {
   const page = String(req.query.page || 'home').trim().toLowerCase();
   const pages = {
     home: {
-      title: 'Best IT Training Institute in Madurai | Talentteno Institute',
+      title: 'Talentteno Institute | Best IT Training Institute in Madurai',
       description: 'Join Talentteno Institute in Madurai for practical IT courses, live projects, free internship, spoken English support, certification and placement assistance.',
       canonical: `${publicBaseUrl(req)}/frontend/index.php`,
       breadcrumbs: [

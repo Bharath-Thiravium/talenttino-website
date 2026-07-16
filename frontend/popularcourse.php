@@ -7,6 +7,8 @@ $coursePage = [
     'title' => 'Our Popular Courses',
     'subtitle' => 'Industry-oriented training programs with practical sessions, certification, internship support and placement assistance.',
     'layout' => 'compact',
+    'body_class' => 'popular-course-page',
+    'hero_image' => 'assets/images/our trending.png',
     'courses' => [
         ['icon' => 'fa-calculator', 'name' => 'Advanced Tally with GST', 'desc' => 'Accounting, GST and business finance workflow training.'],
         ['icon' => 'fa-user-tie', 'name' => 'Office Administration', 'desc' => 'Office tools, documentation and workplace process training.'],

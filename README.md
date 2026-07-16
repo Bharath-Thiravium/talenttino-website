@@ -61,7 +61,7 @@ You can also use environment variables:
 DB_HOST
 DB_PORT
 DB_USER
-DB_PASS
+DB_PASS or DB_PASSWORD
 DB_NAME
 DB_SOCKET
 ```

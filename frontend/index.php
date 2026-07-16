@@ -189,7 +189,7 @@ function tt_home_course_image(array $course): string
     return 'assets/images/home2.jpeg';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
     $homeFormResult = tt_submit_enquiry($_POST, 'enquiry');
 }
 ?>
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php tt_render_seo([
-        'title' => 'Best IT Training Institute in Madurai | Talentteno Institute',
+        'title' => 'Talentteno Institute | Best IT Training Institute in Madurai',
         'description' => 'Join Talentteno Institute in Madurai for practical IT courses, live projects, free internship, spoken English support, certification and placement assistance.',
         'canonical' => tt_abs_url('index.php'),
         'breadcrumbs' => [
@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-ai2">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
                             <label class="sr-only" for="home-name">Your full name</label>
                             <input id="home-name" type="text" name="name" placeholder="Your Full Name" autocomplete="name" minlength="2" maxlength="80" required>
                             <label class="sr-only" for="home-phone">Phone number</label>
-                            <input id="home-phone" type="tel" name="phone" placeholder="Phone Number" autocomplete="tel" inputmode="tel" pattern="[0-9+() -]{10,20}" required>
+                            <input id="home-phone" type="tel" name="phone" placeholder="10 Digit Mobile Number" autocomplete="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required>
                             <label class="sr-only" for="home-email">Email address</label>
                             <input id="home-email" type="email" name="email" placeholder="Email Address" autocomplete="email" maxlength="190" required>
                             <label class="sr-only" for="home-course">Course of interest</label>
@@ -387,7 +387,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
                 <div class="model-center-head reveal"><span class="model-label">Our Team</span><h2>Meet our training mentors</h2></div>
                 <div class="model-team-grid">
                     <?php foreach ($modelTeam as $member): ?>
-                    <article class="model-team-card reveal"><img src="<?= tt_h($member['image']) ?>" alt="<?= tt_h($member['name']) ?>" loading="lazy" decoding="async"><div><strong><?= tt_h($member['name']) ?></strong><span><?= tt_h($member['role']) ?></span></div><a href="contact.php" aria-label="Contact <?= tt_h($member['name']) ?>"><i class="fa-solid fa-share-nodes"></i></a></article>
+                    <article class="model-team-card reveal"><img src="<?= tt_h($member['image']) ?>" alt="<?= tt_h($member['name']) ?>" loading="lazy" decoding="async"><div><strong><?= tt_h($member['name']) ?></strong><span><?= tt_h($member['role']) ?></span></div><a href="contact.php" aria-label="Contact <?= tt_h($member['name']) ?>"><i class="fa-solid fa-address-book"></i></a></article>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -512,8 +512,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
         </button>
         <section class="home-ai-panel" id="homeAiPanel" aria-hidden="true">
             <div class="home-ai-head">
+                <button class="home-ai-back" type="button" data-ai-back aria-label="Back to chat button"><i class="fa-solid fa-arrow-left"></i></button>
                 <div><span><i class="fa-solid fa-robot"></i></span><strong>Talentteno AI Assistant</strong><small>Auto reply</small></div>
-                <button type="button" data-ai-close aria-label="Close AI chat"><i class="fa-solid fa-xmark"></i></button>
+                <button class="home-ai-close" type="button" data-ai-close aria-label="Close AI chat"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="home-ai-messages" data-ai-messages>
                 <div class="ai-message bot">Hi! I am Talentteno AI Assistant. Ask me about courses, fees, internship, placement, demo class, address, phone number, timings or admission.</div>
@@ -533,6 +534,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['form_source'] ?? 
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260715-04" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-ai2" defer></script>
 </body>
 </html>

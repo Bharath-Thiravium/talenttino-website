@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
     instagram_url VARCHAR(255) DEFAULT '#',
     linkedin_url VARCHAR(255) DEFAULT '#',
     youtube_url VARCHAR(255) DEFAULT '#',
-    seo_title VARCHAR(255) DEFAULT 'Best IT Training Institute in Madurai | Talentteno Institute',
+    seo_title VARCHAR(255) DEFAULT 'Talentteno Institute | Best IT Training Institute in Madurai',
     seo_description VARCHAR(500) DEFAULT 'Talentteno Institute offers practical IT training in Madurai for Full Stack Development, Data Science, AI, Cyber Security, Digital Marketing, UI/UX, Tally and programming with live projects, free internship and placement assistance.',
     seo_keywords VARCHAR(700) DEFAULT 'IT training institute in Madurai, best software training institute Madurai, full stack course Madurai, data science course Madurai, cyber security course Madurai, digital marketing course Madurai, UI UX course Madurai, Tally course Madurai',
     business_hours VARCHAR(120) DEFAULT 'Monday to Saturday, 9:00 AM to 7:00 PM',

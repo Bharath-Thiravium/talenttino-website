@@ -38,9 +38,9 @@ usort($uploadedGalleryImages, static fn($a, $b) => $b['modified'] <=> $a['modifi
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-09">
 </head>
-<body class="static-site">
+<body class="static-site gallery-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
@@ -57,7 +57,11 @@ usort($uploadedGalleryImages, static fn($a, $b) => $b['modified'] <=> $a['modifi
         </div>
     </header>
     <main class="page-main">
-        <section class="page-hero"><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-images"></i> Poster, Flyer and Institute Visuals</span><h1>Gallery</h1><p>Visuals from Talentteno Board, Poster and Flyer, plus learning environment images for training, projects and career support.</p></div></section>
+        <section class="page-hero has-page-hero-image">
+            <img class="page-hero-bg" src="assets/images/gallery.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <span class="page-hero-overlay" aria-hidden="true"></span>
+            <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-images"></i> Poster, Flyer and Institute Visuals</span><h1>Gallery</h1><p>Visuals from Talentteno Board, Poster and Flyer, plus learning environment images for training, projects and career support.</p></div>
+        </section>
         <section class="section">
             <div class="site-container poster-pair">
                 <div class="pdf-frame reveal"><img src="assets/images/talentteno-flyer-1.png" alt="Talentteno flyer page one with basic to advanced courses" loading="lazy" decoding="async"></div>

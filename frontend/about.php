@@ -40,7 +40,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-15">
 </head>
 <body class="static-site about-page">
 <div class="site-shell">
@@ -59,7 +59,9 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
         </div>
     </header>
     <main class="page-main">
-        <section class="page-hero">
+        <section class="page-hero has-page-hero-image">
+            <img class="page-hero-bg" src="assets/images/about.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <span class="page-hero-overlay" aria-hidden="true"></span>
             <div class="site-container reveal">
                 <span class="hero-kicker"><i class="fa-solid fa-graduation-cap"></i> Practical IT Institute</span>
                 <h1><?= tt_h($settings['about_title']) ?></h1>

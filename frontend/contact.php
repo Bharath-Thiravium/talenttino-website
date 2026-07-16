@@ -12,7 +12,7 @@ $isFranchiseTopic = strtolower($selectedTopic) === 'franchise';
 $topicLabel = $isFranchiseTopic ? 'Talentteno franchise / institute partnership' : $selectedTopic;
 $contactCourses = tt_courses();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_source'] ?? '') === 'contact') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?? '') === 'contact') {
     $contactFormResult = tt_submit_enquiry($_POST, 'enquiry');
     $selectedCourse = trim((string)($_POST['course'] ?? $selectedCourse));
 }
@@ -42,7 +42,7 @@ foreach ($contactCourses as $course) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-12">
 </head>
 <body class="static-site contact-page">
 <div class="site-shell">
@@ -61,7 +61,9 @@ foreach ($contactCourses as $course) {
         </div>
     </header>
     <main class="page-main">
-        <section class="page-hero contact-page-hero">
+        <section class="page-hero contact-page-hero has-page-hero-image">
+            <img class="page-hero-bg" src="assets/images/conect.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <span class="page-hero-overlay" aria-hidden="true"></span>
             <div class="site-container contact-hero-layout">
                 <div class="contact-hero-copy reveal">
                     <span class="hero-kicker"><i class="fa-solid <?= $isFranchiseTopic ? 'fa-handshake' : 'fa-headset' ?>"></i> <?= $isFranchiseTopic ? 'Franchise and Partnership Enquiry' : 'Admission and Course Counselling' ?></span>
@@ -97,7 +99,7 @@ foreach ($contactCourses as $course) {
                     <?php endif; ?>
                     <div class="field-grid">
                         <label class="form-field"><span>Full name <b aria-hidden="true">*</b></span><input type="text" name="name" placeholder="e.g. Priya Kumar" autocomplete="name" minlength="2" maxlength="80" required></label>
-                        <label class="form-field"><span>Phone number <b aria-hidden="true">*</b></span><input type="tel" name="phone" placeholder="10–15 digit number" autocomplete="tel" inputmode="tel" pattern="[0-9+() -]{10,20}" required></label>
+                        <label class="form-field"><span>Phone number <b aria-hidden="true">*</b></span><input type="tel" name="phone" placeholder="10 digit mobile number" autocomplete="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required></label>
                     </div>
                     <div class="field-grid">
                         <label class="form-field"><span>Email address</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="190"></label>

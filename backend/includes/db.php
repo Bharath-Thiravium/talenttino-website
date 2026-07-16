@@ -1,7 +1,33 @@
 <?php
 // Database Configuration
-// Override these without editing code by setting DB_HOST, DB_USER, DB_PASS,
-// DB_NAME, DB_PORT, DB_SOCKET, and DB_OPTIONAL in your server environment.
+// Override these without editing code by setting DB_HOST, DB_USER, DB_PASS
+// or DB_PASSWORD, DB_NAME, DB_PORT, DB_SOCKET, and DB_OPTIONAL in your server environment.
+$loadEnvFile = static function (string $file): void {
+    if (!is_file($file) || !is_readable($file)) {
+        return;
+    }
+
+    foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+            continue;
+        }
+
+        [$key, $value] = array_map('trim', explode('=', $line, 2));
+        if ($key === '' || getenv($key) !== false) {
+            continue;
+        }
+
+        $value = trim($value, "\"'");
+        putenv($key . '=' . $value);
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+    }
+};
+
+$loadEnvFile(dirname(__DIR__, 2) . '/.env');
+$loadEnvFile(dirname(__DIR__) . '/node/.env');
+
 $env = static function (string $key, string $default = ''): string {
     $value = getenv($key);
     return $value === false ? $default : $value;
@@ -23,7 +49,7 @@ if (!defined('DB_USER')) {
     define('DB_USER', $env('DB_USER', 'u494785662_talentwebsite'));
 }
 if (!defined('DB_PASS')) {
-    define('DB_PASS', $env('DB_PASS', 'Talenttino@2026'));
+    define('DB_PASS', $env('DB_PASS', $env('DB_PASSWORD', 'Talenttino@2026')));
 }
 if (!defined('DB_NAME')) {
     define('DB_NAME', $env('DB_NAME', 'u494785662_talentwebsite'));
@@ -43,6 +69,10 @@ mysqli_report(MYSQLI_REPORT_OFF);
 $conn = null;
 $socket = DB_SOCKET !== '' && is_readable(DB_SOCKET) ? DB_SOCKET : null;
 $conn = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, $socket);
+
+if ($conn->connect_error && $socket === null && in_array(DB_HOST, ['localhost', '::1'], true)) {
+    $conn = @new mysqli('127.0.0.1', DB_USER, DB_PASS, DB_NAME, DB_PORT);
+}
 
 if ($conn->connect_error) {
     error_log('MySQL connection failed: ' . $conn->connect_error);

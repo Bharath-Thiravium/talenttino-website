@@ -577,15 +577,15 @@ $mapQuery = rawurlencode((string)($settings['address'] ?? ''));
         <p>Share your details and continue on WhatsApp.</p>
         <form class="whatsapp-enquiry-form" data-whatsapp-number="<?= tt_h($phone1Link) ?>">
             <label><span>Name</span><input type="text" name="name" placeholder="Your name" maxlength="80" required></label>
-            <label><span>Phone</span><input type="tel" name="phone" placeholder="Your phone number" inputmode="tel" pattern="[0-9+() -]{10,20}" required></label>
+            <label><span>Phone</span><input type="tel" name="phone" placeholder="10 digit mobile number" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required></label>
             <label><span>Course</span><input type="text" name="course" placeholder="Course interested in" maxlength="120" required></label>
             <label><span>Message</span><textarea name="message" placeholder="Your learning goal" maxlength="500"></textarea></label>
             <button type="submit"><i class="fa-brands fa-whatsapp"></i> Continue on WhatsApp</button>
         </form>
     </div>
-    <button class="whatsapp-float" type="button" data-toggle-whatsapp aria-controls="whatsappEnquiryPanel" aria-expanded="false" aria-label="Open WhatsApp quick enquiry">
+    <a class="whatsapp-float" href="https://wa.me/<?= tt_h($phone1Link) ?>?text=<?= rawurlencode('Hello Talentteno, I would like course information.') ?>" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat">
         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-    </button>
+    </a>
     <button class="scroll-top" type="button" aria-label="Scroll back to top" title="Back to top">
         <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
     </button>

@@ -7,6 +7,7 @@ $coursePage = [
     'title' => 'Designing Courses',
     'subtitle' => 'Creative design programs covering 3D animation, VFX, video editing, motion graphics, graphic design and AI-assisted creative workflows.',
     'body_class' => 'designing-course-page',
+    'hero_image' => 'assets/images/design .png',
     'courses' => [
         [
             'icon' => 'fa-cube',

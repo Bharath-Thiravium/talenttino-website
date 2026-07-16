@@ -38,12 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($form['email'] !== '' && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+    if ($form['email'] !== '' && (!filter_var($form['email'], FILTER_VALIDATE_EMAIL) || !preg_match('/^[^@\s]+@[^@\s]+\.[^@\s]+$/', $form['email']))) {
         $errors['email'] = 'Enter a valid email address';
     }
 
-    if ($form['phone'] !== '' && !preg_match('/^[0-9+\-\s]{8,20}$/', $form['phone'])) {
-        $errors['phone'] = 'Enter a valid mobile number';
+    if ($form['phone'] !== '' && !preg_match('/^[6-9][0-9]{9}$/', preg_replace('/\D+/', '', $form['phone']))) {
+        $errors['phone'] = 'Enter a valid 10 digit mobile number';
     }
 
     if ($form['study_year'] !== '' && !in_array($form['study_year'], $allowedYears, true)) {
@@ -196,7 +196,7 @@ function tt_pdf_escape(string $text): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-14">
 </head>
 <body class="static-site download-page">
 <div class="site-shell">
@@ -227,12 +227,12 @@ function tt_pdf_escape(string $text): string
                     <input type="hidden" name="course_title" value="<?= tt_h($courseTitle) ?>">
                     <h2>Student Details</h2>
                     <?php if ($errors): ?><div class="form-alert error">Please fill all required details correctly.</div><?php endif; ?>
-                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" required></label>
-                    <label>Email ID<input type="email" name="email" value="<?= tt_h($form['email']) ?>" required></label>
-                    <label>Mobile Number<input type="tel" name="phone" value="<?= tt_h($form['phone']) ?>" required></label>
-                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" required></label>
-                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" required></label>
-                    <label>Address<textarea name="address" rows="3" required><?= tt_h($form['address']) ?></textarea></label>
+                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" required><?php if (isset($errors['name'])): ?><span class="field-error"><?= tt_h($errors['name']) ?></span><?php endif; ?></label>
+                    <label>Email ID<input type="email" name="email" value="<?= tt_h($form['email']) ?>" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" data-error-message="Enter a valid email address, example: name@example.com" required><?php if (isset($errors['email'])): ?><span class="field-error"><?= tt_h($errors['email']) ?></span><?php endif; ?></label>
+                    <label>Mobile Number<input type="tel" name="phone" value="<?= tt_h($form['phone']) ?>" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" data-error-message="Enter a valid 10 digit mobile number" required><?php if (isset($errors['phone'])): ?><span class="field-error"><?= tt_h($errors['phone']) ?></span><?php endif; ?></label>
+                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" required><?php if (isset($errors['degree'])): ?><span class="field-error"><?= tt_h($errors['degree']) ?></span><?php endif; ?></label>
+                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" required><?php if (isset($errors['college'])): ?><span class="field-error"><?= tt_h($errors['college']) ?></span><?php endif; ?></label>
+                    <label>Address<textarea name="address" rows="3" required><?= tt_h($form['address']) ?></textarea><?php if (isset($errors['address'])): ?><span class="field-error"><?= tt_h($errors['address']) ?></span><?php endif; ?></label>
                     <label>Current Year / Status
                         <select name="study_year" required>
                             <option value="">Select year/status</option>
@@ -240,6 +240,7 @@ function tt_pdf_escape(string $text): string
                             <option value="<?= tt_h($year) ?>" <?= $form['study_year'] === $year ? 'selected' : '' ?>><?= tt_h($year) ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <?php if (isset($errors['study_year'])): ?><span class="field-error"><?= tt_h($errors['study_year']) ?></span><?php endif; ?>
                     </label>
                     <button class="btn btn-primary" type="submit" data-download-submit><i class="fa-solid fa-download"></i> Submit & Download</button>
                 </form>
@@ -248,27 +249,42 @@ function tt_pdf_escape(string $text): string
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260715-04" defer></script>
+<script src="assets/js/site-pages.js?v=20260715-14" defer></script>
 <script>
 document.querySelectorAll('[data-download-form]').forEach((form) => {
-    form.addEventListener('submit', () => {
+    const button = form.querySelector('[data-download-submit]');
+    const originalText = button ? button.innerHTML : '';
+    const showFieldError = (field) => {
+        let error = field.parentElement.querySelector('.field-error.client-error');
+        if (!error) {
+            error = document.createElement('span');
+            error.className = 'field-error client-error';
+            field.insertAdjacentElement('afterend', error);
+        }
+        error.textContent = field.dataset.errorMessage || field.validationMessage || 'Please enter a valid value';
+    };
+    const clearFieldError = (field) => {
+        field.parentElement.querySelector('.field-error.client-error')?.remove();
+    };
+
+    form.querySelectorAll('input, select, textarea').forEach((field) => {
+        field.addEventListener('input', () => {
+            if (field.checkValidity()) clearFieldError(field);
+        });
+        field.addEventListener('invalid', () => showFieldError(field));
+    });
+
+    form.addEventListener('submit', (event) => {
         if (!form.checkValidity()) {
+            event.preventDefault();
+            form.reportValidity();
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) {
+                showFieldError(firstInvalid);
+                firstInvalid.focus();
+            }
             return;
         }
-
-        const button = form.querySelector('[data-download-submit]');
-        const originalText = button ? button.innerHTML : '';
-        const iframeName = 'brochure-download-frame';
-        let iframe = document.querySelector(`iframe[name="${iframeName}"]`);
-
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.name = iframeName;
-            iframe.hidden = true;
-            document.body.appendChild(iframe);
-        }
-
-        form.target = iframeName;
 
         if (button) {
             button.disabled = true;
@@ -276,18 +292,11 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
         }
 
         window.setTimeout(() => {
-            form.reset();
             if (button) {
                 button.disabled = false;
                 button.innerHTML = originalText;
             }
-
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = 'course.php';
-            }
-        }, 1200);
+        }, 2500);
     });
 });
 </script>

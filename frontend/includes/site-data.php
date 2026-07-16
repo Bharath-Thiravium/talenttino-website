@@ -91,7 +91,7 @@ function tt_settings(): array
         'youtube_url' => '#',
         'footer_description' => 'Practical IT training in Madurai with free internship, spoken English support, live projects, certification and placement assistance.',
         'footer_copyright' => '© 2026 Talentteno Institute | All Rights Reserved',
-        'seo_title' => 'Best IT Training Institute in Madurai | Talentteno Institute',
+        'seo_title' => 'Talentteno Institute | Best IT Training Institute in Madurai',
         'seo_description' => 'Talentteno Institute offers practical IT training in Madurai for Full Stack Development, Data Science, AI, Cyber Security, Digital Marketing, UI/UX, Tally and programming with live projects, free internship and placement assistance.',
         'seo_keywords' => 'IT training institute in Madurai, best software training institute Madurai, full stack course Madurai, data science course Madurai, cyber security course Madurai, digital marketing course Madurai, UI UX course Madurai, Tally course Madurai',
         'business_hours' => 'Monday to Saturday, 9:00 AM to 7:00 PM',
@@ -104,8 +104,16 @@ function tt_settings(): array
         if (is_string($value)) {
             $oldBrand = 'Athen' . 'a Solutions';
             $settings[$key] = trim(str_ireplace(
-                ['powered by ' . $oldBrand . ', ', $oldBrand],
-                '',
+                [
+                    'Best IT Training Institute in Madurai | Talentteno Institute',
+                    'powered by ' . $oldBrand . ', ',
+                    $oldBrand,
+                ],
+                [
+                    'Talentteno Institute | Best IT Training Institute in Madurai',
+                    '',
+                    '',
+                ],
                 $value
             ));
         }
@@ -282,6 +290,8 @@ function tt_render_seo(array $page = []): void
     }
     echo '    <meta name="robots" content="' . tt_h($robots) . '">' . PHP_EOL;
     echo '    <meta name="theme-color" content="#11143d">' . PHP_EOL;
+    echo '    <link rel="icon" type="image/png" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png')) . '">' . PHP_EOL;
+    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png')) . '">' . PHP_EOL;
     echo '    <link rel="canonical" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="en-IN" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="x-default" href="' . tt_h($canonical) . '">' . PHP_EOL;
@@ -586,9 +596,10 @@ function tt_submit_enquiry(array $input, string $source = 'enquiry'): array
     }
 
     $phoneDigits = preg_replace('/\D+/', '', $phone);
-    if (strlen($phoneDigits) < 10 || strlen($phoneDigits) > 15) {
-        return ['ok' => false, 'message' => 'Please enter a valid phone number with 10–15 digits.'];
+    if (!preg_match('/^[6-9][0-9]{9}$/', $phoneDigits)) {
+        return ['ok' => false, 'message' => 'Please enter a valid 10 digit mobile number.'];
     }
+    $phone = $phoneDigits;
 
     if ($type === 'callback' && ($email === '' || $courseName === '')) {
         return ['ok' => false, 'message' => 'Please fill name, phone, email and course to get free counselling.'];

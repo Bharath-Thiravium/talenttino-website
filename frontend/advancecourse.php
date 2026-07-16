@@ -6,6 +6,8 @@ if (!defined('TT_CATALOG_DATA_ONLY')) {
 $coursePage = [
     'title' => 'Advanced Professional Courses',
     'subtitle' => 'Upgrade your skills with industry-focused advanced programs designed for higher-paying IT careers, certification, live projects, internship and placement support.',
+    'body_class' => 'advanced-course-page',
+    'hero_image' => 'assets/images/Advanced Professional Courses.png',
     'courses' => [
         ['icon' => 'fa-atom', 'name' => 'MERN Stack', 'desc' => 'MongoDB, Express, React and Node project training.'],
         ['icon' => 'fa-mug-hot', 'name' => 'Java Full Stack', 'desc' => 'Java backend with frontend and database integration.'],

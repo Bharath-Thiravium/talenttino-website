@@ -36,6 +36,8 @@ function tt_short_course_icon(string $title, string $category = ''): string
 $coursePage = [
     'title' => 'Short Term Courses',
     'subtitle' => 'Fast, practical modules for students and job seekers who want focused skill development.',
+    'body_class' => 'shortterm-course-page',
+    'hero_image' => 'assets/images/short term.png',
     'courses' => [
         ['icon' => 'fa-desktop', 'name' => 'Computer Courses', 'desc' => 'Foundation computer training for daily office and study needs.', 'items' => ['Basic Computer', 'Computer Fundamentals', 'MS Office', 'Internet & Email', 'Typing Course']],
         ['icon' => 'fa-calculator', 'name' => 'Accounting', 'desc' => 'Practical accounting and tax workflow training.', 'items' => ['Tally Prime', 'GST Practical', 'Payroll & Income Tax']],
