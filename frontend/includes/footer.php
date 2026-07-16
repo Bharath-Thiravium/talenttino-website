@@ -5,7 +5,9 @@ if (!isset($settings) || !is_array($settings)) {
 
 $phone1Link = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
 $phone2Link = preg_replace('/\D+/', '', (string)($settings['phone2'] ?? ''));
-$mapQuery = rawurlencode((string)($settings['address'] ?? ''));
+$mapUrl = function_exists('tt_google_maps_url')
+    ? tt_google_maps_url($settings)
+    : 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
 ?>
 <style>
     html body .site-footer {
@@ -552,7 +554,7 @@ $mapQuery = rawurlencode((string)($settings['address'] ?? ''));
         <div class="footer-panel">
             <h3>Contact</h3>
             <ul class="footer-contact-list">
-                <li><a href="https://www.google.com/maps/search/?api=1&amp;query=<?= tt_h($mapQuery) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i> <?= tt_h($settings['address']) ?></a></li>
+                <li><a href="<?= tt_h($mapUrl) ?>" target="_blank" rel="noopener noreferrer" title="Open Talentteno Institute location in Google Maps"><i class="fa-solid fa-location-dot"></i> <?= tt_h($settings['address']) ?></a></li>
                 <li><a href="tel:+<?= tt_h($phone1Link) ?>"><i class="fa-solid fa-phone"></i> <?= tt_h($settings['phone1']) ?></a></li>
                 <?php if (($settings['phone2'] ?? '') !== ''): ?><li><a href="tel:+<?= tt_h($phone2Link) ?>"><i class="fa-solid fa-phone"></i> <?= tt_h($settings['phone2']) ?></a></li><?php endif; ?>
                 <li><a href="mailto:<?= tt_h($settings['email']) ?>"><i class="fa-solid fa-envelope"></i> <?= tt_h($settings['email']) ?></a></li>

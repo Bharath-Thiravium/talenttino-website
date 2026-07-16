@@ -2,9 +2,9 @@
 require_once __DIR__ . '/includes/site-data.php';
 
 $items = [
-    ['icon' => 'fa-laptop-code', 'title' => 'Practical IT Training', 'short_desc' => 'Learn by building tasks, labs and live projects.', 'description' => 'Training focuses on real workflow, not only theory, so students can explain and apply what they learn.', 'image' => 'assets/images/home.jpeg'],
+    ['icon' => 'fa-laptop-code', 'title' => 'Practical IT Training', 'short_desc' => 'Learn by building tasks, labs and live projects.', 'description' => 'Training focuses on real workflow, not only theory, so students can explain and apply what they learn.', 'image' => 'assets/images/home.png'],
     ['icon' => 'fa-user-tie', 'title' => 'Mentor Guidance', 'short_desc' => 'Get support from trainers during practice.', 'description' => 'Students receive structured guidance, doubt clarification, project review and career direction.', 'image' => 'assets/images/contact-counsellor-hero.png'],
-    ['icon' => 'fa-briefcase', 'title' => 'Career Support', 'short_desc' => 'Resume, interview and placement preparation.', 'description' => 'The institute supports job readiness through portfolio projects, mock interviews and placement guidance.', 'image' => 'assets/images/home2.jpeg'],
+    ['icon' => 'fa-briefcase', 'title' => 'Career Support', 'short_desc' => 'Resume, interview and placement preparation.', 'description' => 'The institute supports job readiness through portfolio projects, mock interviews and placement guidance.', 'image' => 'assets/images/home2.png'],
 ];
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $items = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
 </head>
 <body class="static-site why-page">
 <div class="site-shell">
@@ -33,4 +33,4 @@ $items = [
         </div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260715-04" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script></body></html>

@@ -13158,17 +13158,17 @@ body.static-site:not(.home-page) .nav-item > a {
 }
 
 .home-page .home-bg-slide-1 {
-    background-image: url("../images/home.jpeg");
+    background-image: url("../images/home.png");
     animation-delay: 0s, 0s;
 }
 
 .home-page .home-bg-slide-2 {
-    background-image: url("../images/home1.webp");
+    background-image: url("../images/home1.png");
     animation-delay: 6s, 0s;
 }
 
 .home-page .home-bg-slide-3 {
-    background-image: url("../images/home2.jpeg");
+    background-image: url("../images/home2.png");
     animation-delay: 12s, 0s;
 }
 
@@ -15902,17 +15902,17 @@ body.home-page .home-hero-photo::after {
 }
 
 body.home-page .home-hero-photo-1 {
-    background-image: url("../images/home1.webp");
+    background-image: url("../images/home1.png");
     animation-delay: 0s;
 }
 
 body.home-page .home-hero-photo-2 {
-    background-image: url("../images/home2.jpeg");
+    background-image: url("../images/home2.png");
     animation-delay: 5s;
 }
 
 body.home-page .home-hero-photo-3 {
-    background-image: url("../images/home.jpeg");
+    background-image: url("../images/home.png");
     animation-delay: 10s;
 }
 
@@ -16599,7 +16599,7 @@ body.home-page .home-process-section {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.92), rgba(36, 36, 55, 0.92)),
-        url("../images/home2.jpeg") center / cover fixed !important;
+        url("../images/home2.png") center / cover fixed !important;
 }
 
 body.home-page .home-process-section .section-label,
@@ -16996,7 +16996,7 @@ button[type="submit"]:not(.course-detail-close):hover {
     color: #ffffff !important;
     background:
         linear-gradient(112deg, rgba(36, 36, 55, 0.96) 0%, rgba(36, 36, 55, 0.86) 45%, rgba(79, 141, 247, 0.86) 100%),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 .page-hero::before {
@@ -17185,7 +17185,7 @@ button[type="submit"]:not(.course-detail-close):hover {
 .catalog-hero {
     background:
         linear-gradient(112deg, rgba(36, 36, 55, 0.96) 0%, rgba(36, 36, 55, 0.88) 45%, rgba(217, 28, 246, 0.78) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 .catalog-grid,
@@ -17267,7 +17267,7 @@ textarea:focus {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.96), rgba(36, 36, 55, 0.96)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
     color: #ffffff !important;
 }
 
@@ -18519,7 +18519,7 @@ body.home-page .model-projects {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.92), rgba(36, 36, 55, 0.94)),
-        url("../images/home2.jpeg") center/cover !important;
+        url("../images/home2.png") center/cover !important;
 }
 
 body.home-page .model-dark-head {
@@ -19032,7 +19032,7 @@ body.home-page .model-blog-card time {
 body.home-page .site-footer {
     background:
         linear-gradient(rgba(36, 36, 55, 0.96), rgba(36, 36, 55, 0.97)),
-        url("../images/home2.jpeg") center/cover !important;
+        url("../images/home2.png") center/cover !important;
 }
 
 body.home-page .site-footer::before {
@@ -21632,7 +21632,7 @@ body.about-page .page-hero {
     padding: 120px 0 90px !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero h1 {
@@ -21725,7 +21725,7 @@ body.about-page .about-value > i {
 body.about-page .about-image-band {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-band-copy {
@@ -21819,7 +21819,7 @@ body.about-page .page-hero {
     padding: 120px 0 90px !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -22133,7 +22133,7 @@ body.about-page .about-image-band {
     padding: clamp(84px, 7vw, 116px) 0 !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -22382,7 +22382,7 @@ body.about-page .page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.92) 0%, rgba(34, 34, 50, 0.72) 38%, rgba(34, 34, 50, 0.24) 72%, rgba(217, 28, 246, 0.22) 100%),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -22597,7 +22597,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.16), rgba(38, 38, 58, 0.20)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -22816,7 +22816,7 @@ body.about-page .page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.90) 0%, rgba(34, 34, 50, 0.72) 36%, rgba(34, 34, 50, 0.22) 70%, rgba(217, 28, 246, 0.20) 100%),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -23100,7 +23100,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.18), rgba(38, 38, 58, 0.22)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -24297,7 +24297,7 @@ body.home-page .review-scroll-content strong {
     min-height: clamp(420px, 58vh, 620px) !important;
     background:
         linear-gradient(105deg, rgba(7, 14, 36, 0.96) 0%, rgba(12, 38, 79, 0.9) 46%, rgba(11, 94, 215, 0.68) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 .about-page .page-hero .site-container {
@@ -24490,7 +24490,7 @@ body.home-page .review-scroll-content strong {
     overflow: hidden !important;
     background:
         linear-gradient(110deg, rgba(7, 22, 47, 0.96), rgba(8, 48, 111, 0.92)),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 .about-page .about-image-band .site-container {
@@ -28497,7 +28497,7 @@ body.about-page .page-hero {
     align-items: center !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.92) 0%, rgba(34, 34, 50, 0.72) 38%, rgba(34, 34, 50, 0.24) 72%, rgba(217, 28, 246, 0.22) 100%),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -28679,7 +28679,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.16), rgba(38, 38, 58, 0.20)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container { grid-template-columns: minmax(0, 0.9fr) minmax(420px, 0.78fr) !important; }
@@ -28717,7 +28717,7 @@ body.about-page .timeline-card::before { content: counter(aboutStepPost, decimal
 body.about-page .page-hero {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero h1 {
@@ -28803,7 +28803,7 @@ body.about-page .about-value > i {
 body.about-page .about-image-band {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.about-page .about-band-copy {
@@ -28913,7 +28913,7 @@ body.home-page .page-main {
 body.home-page .home-hero {
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.88), rgba(16, 43, 88, 0.68), rgba(79, 140, 255, 0.30)),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.home-page .model-section,
@@ -28928,7 +28928,7 @@ body.home-page .model-blog-section {
 body.home-page .model-about {
     background:
         linear-gradient(90deg, rgba(255, 255, 255, 0.96), rgba(246, 249, 255, 0.88)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.home-page .model-services {
@@ -28942,7 +28942,7 @@ body.home-page .model-projects,
 body.home-page .model-path-section {
     background:
         linear-gradient(180deg, rgba(238, 246, 255, 0.93), rgba(255, 255, 255, 0.92)),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 body.home-page .model-team-section,
@@ -28956,7 +28956,7 @@ body.home-page .model-hire-section {
 body.home-page .model-review-section {
     background:
         linear-gradient(180deg, rgba(247, 250, 255, 0.94), rgba(255, 255, 255, 0.96)),
-        url("../images/home1.webp") center / cover no-repeat !important;
+        url("../images/home1.png") center / cover no-repeat !important;
 }
 
 body.home-page .model-blog-section {
@@ -28970,7 +28970,7 @@ body.home-page .model-blog-section {
 body.home-page .model-video-section {
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.68), rgba(7, 19, 38, 0.40)),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 @media (max-width: 900px) {
@@ -29142,7 +29142,7 @@ body.home-page .home-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.92) 0%, rgba(14, 38, 78, 0.82) 44%, rgba(38, 121, 224, 0.62) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.home-page .home-hero::before {
@@ -29804,17 +29804,17 @@ body.home-page .home-hero-photo {
 }
 
 body.home-page .home-hero-photo-1 {
-    background-image: url("../images/home.jpeg") !important;
+    background-image: url("../images/home.png") !important;
     animation-delay: 0s !important;
 }
 
 body.home-page .home-hero-photo-2 {
-    background-image: url("../images/home1.webp") !important;
+    background-image: url("../images/home1.png") !important;
     animation-delay: 6s !important;
 }
 
 body.home-page .home-hero-photo-3 {
-    background-image: url("../images/home2.jpeg") !important;
+    background-image: url("../images/home2.png") !important;
     animation-delay: 12s !important;
 }
 
@@ -29877,7 +29877,7 @@ body.static-site.contact-page .contact-page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.80) 48%, rgba(47, 132, 229, 0.58) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.static-site:not(.home-page) .page-hero::before,
@@ -29915,14 +29915,14 @@ body.static-site.contact-page .contact-page-hero .site-container {
 body.about-page .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.92) 0%, rgba(24, 55, 103, 0.76) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../images/home.jpeg") center / cover no-repeat !important;
+        url("../images/home.png") center / cover no-repeat !important;
 }
 
 body.course-list-page .course-page-hero,
 body.course-list-page .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.78) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../uploads/media/programming-languages-20260703-133210-630417.png") center / cover no-repeat !important;
+        url("../../uploads/media/programming-languages-20260703-133210-630417.png") center / cover no-repeat !important;
 }
 
 body.contact-page .contact-page-hero {
@@ -29935,26 +29935,26 @@ body.services-page .page-hero,
 body.career-page .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.78) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../uploads/media/full-stack-development-20260703-133158-761383.png") center / cover no-repeat !important;
+        url("../../uploads/media/full-stack-development-20260703-133158-761383.png") center / cover no-repeat !important;
 }
 
 body.project-page .page-hero,
 body.blog-page .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.78) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../uploads/media/data-science-ai-20260703-133112-527863.png") center / cover no-repeat !important;
+        url("../../uploads/media/data-science-ai-20260703-133112-527863.png") center / cover no-repeat !important;
 }
 
 body.static-site:not(.home-page):not(.about-page):not(.course-list-page):not(.contact-page):not(.services-page):not(.career-page):not(.project-page):not(.blog-page) .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.78) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../images/home2.jpeg") center / cover no-repeat !important;
+        url("../images/home2.png") center / cover no-repeat !important;
 }
 
 body.cyber-security-course-page .catalog-hero {
     background:
         linear-gradient(92deg, rgba(7, 17, 38, 0.96) 0%, rgba(15, 49, 101, 0.86) 48%, rgba(37, 99, 235, 0.66) 100%),
-        url("../uploads/media/cyber-security-20260703-133329-242125.png") center / cover no-repeat !important;
+        url("../../uploads/media/cyber-security-20260703-133329-242125.png") center / cover no-repeat !important;
 }
 
 body.cyber-security-course-page .catalog-card {
@@ -37946,6 +37946,35 @@ html body.download-page .download-form textarea:invalid:not(:placeholder-shown) 
     box-shadow: 0 0 0 3px rgba(220, 38, 38, .10) !important;
 }
 
+/* Download page: square, stricter student-details form styling. */
+html body.download-page .download-copy,
+html body.download-page .download-form {
+    border-radius: 4px !important;
+}
+
+html body.download-page .download-form input,
+html body.download-page .download-form select,
+html body.download-page .download-form textarea,
+html body.download-page .download-form .btn,
+html body.download-page .download-form button[type="submit"],
+html body.download-page .form-alert {
+    border-radius: 4px !important;
+}
+
+html body.download-page .download-form input:user-invalid,
+html body.download-page .download-form select:user-invalid,
+html body.download-page .download-form textarea:user-invalid {
+    border-color: rgba(220, 38, 38, .72) !important;
+    background: #fff8f8 !important;
+}
+
+@media (max-width: 560px) {
+    html body.download-page .download-copy,
+    html body.download-page .download-form {
+        border-radius: 4px !important;
+    }
+}
+
 /* About page cards: remove decorative numbers and center icons. */
 html body.about-page .feature-card::before,
 html body.about-page .timeline-card::before,
@@ -37977,6 +38006,58 @@ html body.about-page .timeline-card p {
     max-width: 28ch !important;
 }
 
+/* Home service center CTA: readable compact gradient button. */
+html body.home-page .model-service-center > a,
+html body.home-page .model-services .model-service-center > a {
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-height: 46px !important;
+    padding: 0 22px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 9px !important;
+    border-radius: 9px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: linear-gradient(135deg, #4f8cff 0%, #825cff 48%, #d91cf6 100%) !important;
+    border: 0 !important;
+    box-shadow: 0 16px 34px rgba(124, 92, 255, .28) !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+html body.home-page .model-service-center > a i[class*="fa-arrow"],
+html body.home-page .model-services .model-service-center > a i[class*="fa-arrow"] {
+    display: inline-block !important;
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+}
+
+html body.home-page .model-service-center > a:hover,
+html body.home-page .model-services .model-service-center > a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 22px 42px rgba(124, 92, 255, .34) !important;
+}
+
+@media (max-width: 560px) {
+    html body.home-page .model-service-center > a,
+    html body.home-page .model-services .model-service-center > a {
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 0 16px !important;
+        font-size: 12px !important;
+    }
+}
+
 /* Home hero left visual: keep the tilted-card model, but use the uploaded artwork. */
 html body.home-page .home-hero-copy h1.home-image-title,
 html body.home-page .home-hero .home-hero-copy h1.home-image-title {
@@ -37990,33 +38071,20 @@ html body.home-page .home-hero .home-hero-copy h1.home-image-title {
     aspect-ratio: 3 / 2 !important;
     color: transparent !important;
     -webkit-text-fill-color: transparent !important;
-    background:
-        linear-gradient(135deg, rgba(16, 185, 255, .18), rgba(124, 92, 255, .08)),
-        #061631 !important;
-    border: 1px solid rgba(56, 189, 248, .72) !important;
+    background: transparent !important;
+    border: 0 !important;
     border-radius: 8px !important;
     overflow: hidden !important;
     transform: perspective(900px) rotateZ(-3deg) skewX(-2deg) !important;
     box-shadow:
-        -18px 22px 0 rgba(255, 255, 255, .98),
-        -19px 22px 0 rgba(15, 23, 42, .95),
-        0 0 0 5px rgba(14, 165, 233, .08),
         0 28px 70px rgba(15, 23, 42, .18),
         0 0 44px rgba(14, 165, 233, .18) !important;
     animation: homeLeftArtIn .82s cubic-bezier(.16, 1, .3, 1) both !important;
 }
 
 html body.home-page .home-hero-copy h1.home-image-title::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 10px !important;
-    z-index: 2 !important;
-    border: 1px solid rgba(56, 189, 248, .64) !important;
-    border-radius: 6px !important;
-    box-shadow:
-        inset 0 0 28px rgba(14, 165, 233, .14),
-        0 0 24px rgba(14, 165, 233, .12) !important;
-    pointer-events: none !important;
+    content: none !important;
+    display: none !important;
 }
 
 html body.home-page .home-hero-copy h1.home-image-title::after {
@@ -38050,9 +38118,6 @@ html body.home-page .home-hero-copy h1.home-image-title:hover img {
 html body.home-page .home-hero-copy h1.home-image-title:hover,
 html body.home-page .home-hero .home-hero-copy h1.home-image-title:hover {
     box-shadow:
-        -18px 22px 0 rgba(255, 255, 255, .98),
-        -19px 22px 0 rgba(15, 23, 42, .95),
-        0 0 0 5px rgba(14, 165, 233, .10),
         0 34px 82px rgba(15, 23, 42, .22),
         0 0 58px rgba(14, 165, 233, .25) !important;
 }
@@ -38082,9 +38147,6 @@ html body.home-page .home-hero .home-hero-copy h1.home-image-title:hover {
         width: min(100%, 420px) !important;
         transform: perspective(700px) rotateZ(-2deg) skewX(-1deg) !important;
         box-shadow:
-            -8px 12px 0 rgba(255, 255, 255, .96),
-            -9px 12px 0 rgba(6, 18, 52, .92),
-            0 0 0 4px rgba(14, 165, 233, .08),
             0 20px 46px rgba(15, 23, 42, .14) !important;
     }
 
@@ -38214,4 +38276,35 @@ html body.course-list-page .course-page-hero p {
     html body.course-list-page .course-page-hero .site-container {
         width: min(100% - 30px, 420px) !important;
     }
+}
+
+/* Home hero uploaded image: no background/black backing box. */
+html body.home-page .home-hero-copy::before,
+html body.home-page .home-hero .home-hero-copy::before {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title,
+html body.home-page .home-hero-copy h1.home-image-title:hover,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title:hover {
+    background: transparent !important;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title::before,
+html body.home-page .home-hero-copy h1.home-image-title::after,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title::before,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }

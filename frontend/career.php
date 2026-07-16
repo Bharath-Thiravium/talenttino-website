@@ -4,8 +4,8 @@ require_once __DIR__ . '/includes/site-data.php';
 $items = tt_careers();
 $items = $items ?: [
     ['icon' => 'fa-user-tie', 'title' => 'Placement Preparation', 'short_desc' => 'Resume, mock interview and job-readiness guidance.', 'description' => 'Practice interview questions, resume structure, LinkedIn profile improvement and job-readiness steps.', 'image' => 'assets/images/contact-counsellor-hero.png'],
-    ['icon' => 'fa-briefcase', 'title' => 'Internship to Career Path', 'short_desc' => 'Build confidence through real project practice.', 'description' => 'Move from training to internship work with guided tasks, project reviews and portfolio preparation.', 'image' => 'assets/images/home1.webp'],
-    ['icon' => 'fa-handshake', 'title' => 'Hiring Support', 'short_desc' => 'Get guided towards suitable IT career opportunities.', 'description' => 'Get counselling for suitable roles, interview readiness and placement follow-up support.', 'image' => 'assets/images/home2.jpeg'],
+    ['icon' => 'fa-briefcase', 'title' => 'Internship to Career Path', 'short_desc' => 'Build confidence through real project practice.', 'description' => 'Move from training to internship work with guided tasks, project reviews and portfolio preparation.', 'image' => 'assets/images/home1.png'],
+    ['icon' => 'fa-handshake', 'title' => 'Hiring Support', 'short_desc' => 'Get guided towards suitable IT career opportunities.', 'description' => 'Get counselling for suitable roles, interview readiness and placement follow-up support.', 'image' => 'assets/images/home2.png'],
 ];
 ?>
 <!DOCTYPE html>
@@ -18,7 +18,7 @@ $items = $items ?: [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
 </head>
 <body class="static-site career-page">
 <div class="site-shell">
@@ -35,4 +35,4 @@ $items = $items ?: [
         <section class="section"><div class="site-container detail-grid rich-detail-grid"><?php foreach ($items as $item): ?><?php $image = tt_item_image($item, 'career'); ?><article class="detail-tile rich-detail-card reveal"><div class="rich-detail-image"><img src="<?= tt_h($image) ?>" alt="<?= tt_h($item['title'] ?? 'Talentteno career support') ?>" loading="lazy" decoding="async"></div><div class="rich-detail-body"><i class="fa-solid <?= tt_h($item['icon'] ?? 'fa-briefcase') ?>"></i><h3><?= tt_h($item['title']) ?></h3><p class="rich-detail-short"><?= tt_h(($item['short_desc'] ?? '') ?: ($item['description'] ?? '')) ?></p><?php if (!empty($item['description']) && ($item['description'] !== ($item['short_desc'] ?? ''))): ?><p class="rich-detail-more"><?= tt_h($item['description']) ?></p><?php endif; ?><a class="rich-detail-link" href="contact.php?topic=<?= rawurlencode($item['title'] ?? 'career') ?>">More Details <i class="fa-solid fa-arrow-right"></i></a></div></article><?php endforeach; ?></div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260715-04" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script></body></html>

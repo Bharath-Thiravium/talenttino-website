@@ -37,14 +37,14 @@ $homeHighlights = [
     ['icon' => 'fa-certificate', 'title' => 'Certification support', 'text' => 'Complete course certification with project evaluation and internship guidance.'],
 ];
 $modelTeam = [
-    ['name' => 'Senior Full Stack Mentor', 'role' => 'Web Development Trainer', 'image' => 'assets/images/home1.webp'],
+    ['name' => 'Senior Full Stack Mentor', 'role' => 'Web Development Trainer', 'image' => 'assets/images/home1.png'],
     ['name' => 'Data & AI Coach', 'role' => 'Python and Analytics Mentor', 'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png'],
-    ['name' => 'Career Guidance Lead', 'role' => 'Interview Preparation Mentor', 'image' => 'assets/images/home2.jpeg'],
-    ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home.jpeg'],
+    ['name' => 'Career Guidance Lead', 'role' => 'Interview Preparation Mentor', 'image' => 'assets/images/home2.png'],
+    ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home.png'],
 ];
 $learningNotes = [
-    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/home1.webp', 'tag' => 'Career Guide'],
-    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/home2.jpeg', 'tag' => 'Project Practice'],
+    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/home1.png', 'tag' => 'Career Guide'],
+    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/home2.png', 'tag' => 'Project Practice'],
     ['title' => 'Interview preparation checklist for IT roles', 'image' => 'assets/images/contact-counsellor-hero.png', 'tag' => 'Placement'],
 ];
 $reviewItems = $testimonials ?: [
@@ -186,7 +186,7 @@ function tt_home_course_image(array $course): string
         }
     }
 
-    return 'assets/images/home2.jpeg';
+    return 'assets/images/home2.png';
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
@@ -210,7 +210,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-homeleft2">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-homebox3">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -310,7 +310,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 </div>
                 <div class="model-about-visual reveal reveal-right">
                     <img class="model-about-main" src="uploads/media/full-stack-development-20260703-133158-761383.png" alt="Full stack project training visual" loading="lazy" decoding="async">
-                    <img class="model-about-float" src="assets/images/home2.jpeg" alt="Students learning with mentor" loading="lazy" decoding="async">
+                    <img class="model-about-float" src="assets/images/home2.png" alt="Students learning with mentor" loading="lazy" decoding="async">
                     <button class="model-play" type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
                 </div>
             </div>
@@ -332,7 +332,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         </article>
                         <?php endforeach; ?>
                     </div>
-                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="assets/images/home1.webp" alt="IT training discussion" loading="lazy" decoding="async"></div>
+                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="assets/images/home1.png" alt="IT training discussion" loading="lazy" decoding="async"></div>
                     <div class="model-service-stack">
                         <?php foreach (array_slice($popularTracks, 2, 2) as $course): ?>
                         <article class="model-service-card reveal">
@@ -401,29 +401,29 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-center-head reveal"><span class="model-label">Course Path</span><h2>What learning tracks we serve</h2></div>
                 <div class="model-path-grid">
                     <div class="model-path-visual reveal">
-                        <img src="assets/images/home2.jpeg" alt="Students collaborating during IT training" loading="lazy" decoding="async">
+                        <img src="assets/images/home2.png" alt="Students collaborating during IT training" loading="lazy" decoding="async">
                         <div><span>Step 01</span><h3>Practical course selection</h3><p>Start with counselling, choose the right course and follow a clear project-based learning path.</p></div>
                     </div>
                     <div class="model-path-list reveal" data-path-tabs>
-                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="assets/images/home2.jpeg"><strong>01</strong><span>Full Stack Development</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="assets/images/home1.webp"><strong>02</strong><span>Data Science & AI</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="assets/images/home.jpeg"><strong>03</strong><span>Cyber Security</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="assets/images/home1.webp"><strong>04</strong><span>Digital Marketing</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="assets/images/home2.jpeg"><strong>05</strong><span>UI / UX and Design</span></button>
+                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="assets/images/home2.png"><strong>01</strong><span>Full Stack Development</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="assets/images/home1.png"><strong>02</strong><span>Data Science & AI</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="assets/images/home.png"><strong>03</strong><span>Cyber Security</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="assets/images/home1.png"><strong>04</strong><span>Digital Marketing</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="assets/images/home2.png"><strong>05</strong><span>UI / UX and Design</span></button>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="model-video-section" aria-label="Talentteno training preview">
-            <img src="assets/images/home.jpeg" alt="Hands-on IT project planning" loading="lazy" decoding="async">
+            <img src="assets/images/home.png" alt="Hands-on IT project planning" loading="lazy" decoding="async">
             <button type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
         </section>
 
         <section class="model-section model-hire-section" id="hire">
             <div class="site-container">
                 <div class="model-hire-hero reveal">
-                    <img src="assets/images/home2.jpeg" alt="Students discussing project work" loading="lazy" decoding="async">
+                    <img src="assets/images/home2.png" alt="Students discussing project work" loading="lazy" decoding="async">
                     <div class="model-hire-title"><span>Why students choose</span><h2>Talentteno Institute</h2></div>
                     <aside><ul><li><i class="fa-solid fa-circle-check"></i> Mentor-led classes</li><li><i class="fa-solid fa-circle-check"></i> Project practice</li><li><i class="fa-solid fa-circle-check"></i> Interview guidance</li><li><i class="fa-solid fa-circle-check"></i> Placement support</li></ul><strong>90%</strong><span>Skill confidence improvement through practice-led learning</span></aside>
                 </div>
@@ -503,7 +503,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         <div class="training-video-backdrop" data-video-close></div>
         <div class="training-video-panel" role="dialog" aria-modal="true" aria-label="Talentteno training preview video">
             <button class="training-video-close" type="button" data-video-close aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
-            <video controls preload="metadata" playsinline poster="assets/images/home.jpeg">
+            <video controls preload="metadata" playsinline poster="assets/images/home.png">
                 <source src="assets/videos/talentteno-training-preview.mp4" type="video/mp4">
             </video>
         </div>
@@ -537,6 +537,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-homeleft2" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script>
 </body>
 </html>

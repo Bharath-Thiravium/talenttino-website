@@ -42,8 +42,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['email'] = 'Enter a valid email address';
     }
 
-    if ($form['phone'] !== '' && !preg_match('/^[6-9][0-9]{9}$/', preg_replace('/\D+/', '', $form['phone']))) {
+    if ($form['name'] !== '' && !tt_is_realistic_text($form['name'], 3, true)) {
+        $errors['name'] = 'Enter your real full name';
+    }
+
+    if ($form['email'] !== '' && tt_looks_fake_email($form['email'])) {
+        $errors['email'] = 'Enter your real email address';
+    }
+
+    $cleanPhone = preg_replace('/\D+/', '', $form['phone']);
+    if ($form['phone'] !== '' && (!preg_match('/^[6-9][0-9]{9}$/', $cleanPhone) || tt_looks_fake_phone($cleanPhone))) {
         $errors['phone'] = 'Enter a valid 10 digit mobile number';
+    }
+
+    if ($form['degree'] !== '' && !tt_is_realistic_text($form['degree'], 3, false)) {
+        $errors['degree'] = 'Enter your actual degree';
+    }
+
+    if ($form['college'] !== '' && !tt_is_realistic_text($form['college'], 4, false)) {
+        $errors['college'] = 'Enter your actual college name';
+    }
+
+    if ($form['address'] !== '' && !tt_is_realistic_address($form['address'])) {
+        $errors['address'] = 'Enter your actual address';
     }
 
     if ($form['study_year'] !== '' && !in_array($form['study_year'], $allowedYears, true)) {
@@ -176,6 +197,72 @@ function tt_pdf_escape(string $text): string
 {
     return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
 }
+
+function tt_has_fake_words(string $value): bool
+{
+    return (bool)preg_match('/\b(test|testing|dummy|fake|sample|example|asdf|qwerty|abcd|xyz|none|null|na|n\/a|admin|user)\b/i', $value);
+}
+
+function tt_is_realistic_text(string $value, int $minLength, bool $requireSpace): bool
+{
+    $clean = trim(preg_replace('/\s+/', ' ', $value) ?? '');
+    if (strlen($clean) < $minLength || tt_has_fake_words($clean)) {
+        return false;
+    }
+
+    if (!preg_match('/[a-zA-Z]{2,}/', $clean)) {
+        return false;
+    }
+
+    if ($requireSpace && !preg_match('/^[a-zA-Z][a-zA-Z.\' -]*\s+[a-zA-Z][a-zA-Z.\' -]*$/', $clean)) {
+        return false;
+    }
+
+    if (preg_match('/(.)\1{4,}/i', preg_replace('/\s+/', '', $clean))) {
+        return false;
+    }
+
+    return true;
+}
+
+function tt_is_realistic_address(string $value): bool
+{
+    $clean = trim(preg_replace('/\s+/', ' ', $value) ?? '');
+    if (strlen($clean) < 10 || tt_has_fake_words($clean)) {
+        return false;
+    }
+
+    return (bool)preg_match('/[a-zA-Z]{3,}/', $clean) && str_word_count($clean) >= 3;
+}
+
+function tt_looks_fake_email(string $email): bool
+{
+    $email = strtolower(trim($email));
+    [$local, $domain] = array_pad(explode('@', $email, 2), 2, '');
+    if ($local === '' || $domain === '') {
+        return true;
+    }
+
+    if (tt_has_fake_words($local) || preg_match('/^(test|demo|fake|dummy|sample)[0-9._-]*@/i', $email)) {
+        return true;
+    }
+
+    return preg_match('/(.)\1{5,}/', $local) === 1;
+}
+
+function tt_looks_fake_phone(string $phone): bool
+{
+    if (preg_match('/(\d)\1{4,}/', $phone)) {
+        return true;
+    }
+
+    $blocked = ['9876543210', '9123456789', '9999999999', '8888888888', '7777777777', '6666666666', '1234567890'];
+    if (in_array($phone, $blocked, true)) {
+        return true;
+    }
+
+    return false;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -196,7 +283,7 @@ function tt_pdf_escape(string $text): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-14">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-downloadfix1">
 </head>
 <body class="static-site download-page">
 <div class="site-shell">
@@ -227,12 +314,12 @@ function tt_pdf_escape(string $text): string
                     <input type="hidden" name="course_title" value="<?= tt_h($courseTitle) ?>">
                     <h2>Student Details</h2>
                     <?php if ($errors): ?><div class="form-alert error">Please fill all required details correctly.</div><?php endif; ?>
-                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" required><?php if (isset($errors['name'])): ?><span class="field-error"><?= tt_h($errors['name']) ?></span><?php endif; ?></label>
+                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" minlength="3" data-real-check="name" data-error-message="Enter your real full name" required><?php if (isset($errors['name'])): ?><span class="field-error"><?= tt_h($errors['name']) ?></span><?php endif; ?></label>
                     <label>Email ID<input type="email" name="email" value="<?= tt_h($form['email']) ?>" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" data-error-message="Enter a valid email address, example: name@example.com" required><?php if (isset($errors['email'])): ?><span class="field-error"><?= tt_h($errors['email']) ?></span><?php endif; ?></label>
                     <label>Mobile Number<input type="tel" name="phone" value="<?= tt_h($form['phone']) ?>" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" data-error-message="Enter a valid 10 digit mobile number" required><?php if (isset($errors['phone'])): ?><span class="field-error"><?= tt_h($errors['phone']) ?></span><?php endif; ?></label>
-                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" required><?php if (isset($errors['degree'])): ?><span class="field-error"><?= tt_h($errors['degree']) ?></span><?php endif; ?></label>
-                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" required><?php if (isset($errors['college'])): ?><span class="field-error"><?= tt_h($errors['college']) ?></span><?php endif; ?></label>
-                    <label>Address<textarea name="address" rows="3" required><?= tt_h($form['address']) ?></textarea><?php if (isset($errors['address'])): ?><span class="field-error"><?= tt_h($errors['address']) ?></span><?php endif; ?></label>
+                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" minlength="3" data-real-check="text" data-error-message="Enter your actual degree" required><?php if (isset($errors['degree'])): ?><span class="field-error"><?= tt_h($errors['degree']) ?></span><?php endif; ?></label>
+                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" minlength="4" data-real-check="text" data-error-message="Enter your actual college name" required><?php if (isset($errors['college'])): ?><span class="field-error"><?= tt_h($errors['college']) ?></span><?php endif; ?></label>
+                    <label>Address<textarea name="address" rows="3" minlength="10" data-real-check="address" data-error-message="Enter your actual address" required><?= tt_h($form['address']) ?></textarea><?php if (isset($errors['address'])): ?><span class="field-error"><?= tt_h($errors['address']) ?></span><?php endif; ?></label>
                     <label>Current Year / Status
                         <select name="study_year" required>
                             <option value="">Select year/status</option>
@@ -249,11 +336,41 @@ function tt_pdf_escape(string $text): string
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260715-14" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script>
 <script>
 document.querySelectorAll('[data-download-form]').forEach((form) => {
     const button = form.querySelector('[data-download-submit]');
     const originalText = button ? button.innerHTML : '';
+    const fakeWords = /\b(test|testing|dummy|fake|sample|example|asdf|qwerty|abcd|xyz|none|null|na|n\/a|admin|user)\b/i;
+    const normalizeValue = (value) => String(value || '').trim().replace(/\s+/g, ' ');
+    const looksFakePhone = (value) => {
+        const phone = String(value || '').replace(/\D+/g, '');
+        return !/^[6-9][0-9]{9}$/.test(phone)
+            || /(\d)\1{4,}/.test(phone)
+            || ['9876543210', '9123456789', '9999999999', '8888888888', '7777777777', '6666666666', '1234567890'].includes(phone);
+    };
+    const looksFakeValue = (field) => {
+        const value = normalizeValue(field.value);
+        const compact = value.replace(/\s+/g, '');
+        if (!value || fakeWords.test(value) || /(.)\1{4,}/i.test(compact)) return true;
+
+        if (field.name === 'phone') return looksFakePhone(value);
+        if (field.name === 'email') {
+            const local = value.split('@')[0] || '';
+            return fakeWords.test(local) || /(.)\1{5,}/i.test(local);
+        }
+        if (field.dataset.realCheck === 'name') {
+            return value.length < 3 || !/^[a-zA-Z][a-zA-Z.' -]*\s+[a-zA-Z][a-zA-Z.' -]*$/.test(value);
+        }
+        if (field.dataset.realCheck === 'address') {
+            return value.length < 10 || !/[a-zA-Z]{3,}/.test(value) || value.split(/\s+/).length < 3;
+        }
+        if (field.dataset.realCheck === 'text') {
+            return value.length < Number(field.getAttribute('minlength') || 3) || !/[a-zA-Z]{2,}/.test(value);
+        }
+
+        return false;
+    };
     const showFieldError = (field) => {
         let error = field.parentElement.querySelector('.field-error.client-error');
         if (!error) {
@@ -269,12 +386,20 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
 
     form.querySelectorAll('input, select, textarea').forEach((field) => {
         field.addEventListener('input', () => {
-            if (field.checkValidity()) clearFieldError(field);
+            field.setCustomValidity('');
+            if (field.checkValidity() && !looksFakeValue(field)) clearFieldError(field);
         });
         field.addEventListener('invalid', () => showFieldError(field));
     });
 
     form.addEventListener('submit', (event) => {
+        form.querySelectorAll('input, textarea').forEach((field) => {
+            field.setCustomValidity('');
+            if (looksFakeValue(field)) {
+                field.setCustomValidity(field.dataset.errorMessage || 'Please enter real details');
+            }
+        });
+
         if (!form.checkValidity()) {
             event.preventDefault();
             form.reportValidity();

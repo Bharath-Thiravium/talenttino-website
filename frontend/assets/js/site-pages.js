@@ -138,12 +138,31 @@ function closeMobileNav() {
 
 window.addEventListener('pageshow', closeMobileNav);
 
-menuButton?.addEventListener('click', () => {
+let menuPointerHandled = false;
+function toggleMobileNav(event) {
+    event?.preventDefault();
+    event?.stopPropagation();
     const isOpen = nav?.classList.toggle('open') || false;
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    menuButton?.setAttribute('aria-expanded', String(isOpen));
+    if (menuButton) menuButton.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
     document.body.classList.toggle('nav-open', isOpen);
     document.documentElement.classList.toggle('nav-open', isOpen);
+}
+
+menuButton?.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse') return;
+    menuPointerHandled = true;
+    toggleMobileNav(event);
+}, { capture: true });
+
+menuButton?.addEventListener('click', event => {
+    if (menuPointerHandled) {
+        menuPointerHandled = false;
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+    }
+    toggleMobileNav(event);
 });
 
 document.addEventListener('click', event => {

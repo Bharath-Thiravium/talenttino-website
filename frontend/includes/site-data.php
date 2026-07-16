@@ -85,6 +85,7 @@ function tt_settings(): array
         'phone1' => '+91 82484 15023',
         'phone2' => '+91 63836 43141',
         'email' => 'talentteno.socials@gmail.com',
+        'map_embed_url' => '',
         'facebook_url' => '#',
         'instagram_url' => '#',
         'linkedin_url' => '#',
@@ -120,6 +121,30 @@ function tt_settings(): array
     }
 
     return $settings;
+}
+
+function tt_google_maps_url(?array $settings = null): string
+{
+    $settings = $settings ?? tt_settings();
+    $savedMapUrl = trim((string)($settings['map_embed_url'] ?? ''));
+    if ($savedMapUrl !== '' && preg_match('#^https?://#i', $savedMapUrl)) {
+        return $savedMapUrl;
+    }
+
+    $query = rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
+    return 'https://www.google.com/maps/search/?api=1&query=' . $query;
+}
+
+function tt_google_maps_embed_url(?array $settings = null): string
+{
+    $settings = $settings ?? tt_settings();
+    $savedMapUrl = trim((string)($settings['map_embed_url'] ?? ''));
+    if ($savedMapUrl !== '' && preg_match('#^https?://#i', $savedMapUrl)) {
+        return $savedMapUrl;
+    }
+
+    $query = rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
+    return 'https://www.google.com/maps?q=' . $query . '&output=embed';
 }
 
 function tt_company_profile(?array $settings = null): array
@@ -455,9 +480,9 @@ function tt_item_image(array $item, string $type = 'general'): string
         'career' => 'assets/images/contact-counsellor-hero.png',
         'placement' => 'assets/images/contact-counsellor-hero.png',
         'interview' => 'assets/images/contact-counsellor-hero.png',
-        'blog' => 'assets/images/home1.webp',
-        'project' => 'assets/images/home2.jpeg',
-        'service' => 'assets/images/home.jpeg',
+        'blog' => 'assets/images/home1.png',
+        'project' => 'assets/images/home2.png',
+        'service' => 'assets/images/home.png',
     ];
 
     foreach ($map as $needle => $image) {
@@ -466,7 +491,7 @@ function tt_item_image(array $item, string $type = 'general'): string
         }
     }
 
-    return 'assets/images/home2.jpeg';
+    return 'assets/images/home2.png';
 }
 
 function tt_careers(int $limit = 0): array

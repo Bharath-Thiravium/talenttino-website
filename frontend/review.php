@@ -7,7 +7,7 @@ $reviews = $reviews ?: [
     ['student_name' => 'Career Switcher', 'course' => 'Data Science', 'review' => 'Mentor guidance, assignments and interview support made the learning path clear.', 'rating' => 5],
     ['student_name' => 'Final Year Student', 'course' => 'Cyber Security', 'review' => 'The lab practice and career support helped me build confidence for interviews.', 'rating' => 5],
 ];
-$images = ['assets/images/home.jpeg', 'assets/images/home1.webp', 'assets/images/home2.jpeg', 'assets/images/contact-counsellor-hero.png'];
+$images = ['assets/images/home.png', 'assets/images/home1.png', 'assets/images/home2.png', 'assets/images/contact-counsellor-hero.png'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,7 @@ $images = ['assets/images/home.jpeg', 'assets/images/home1.webp', 'assets/images
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
 </head>
 <body class="static-site review-page">
 <div class="site-shell">
@@ -38,4 +38,4 @@ $images = ['assets/images/home.jpeg', 'assets/images/home1.webp', 'assets/images
         </div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260715-04" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script></body></html>

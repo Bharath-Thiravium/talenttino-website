@@ -3,8 +3,8 @@ require_once __DIR__ . '/includes/site-data.php';
 
 $items = [
     ['icon' => 'fa-handshake', 'title' => 'Institute Partnership', 'short_desc' => 'Discuss Talentteno training centre partnership.', 'description' => 'Share your city, space and plan. Our team will explain the partnership workflow and next steps.', 'image' => 'assets/images/contact-counsellor-hero.png'],
-    ['icon' => 'fa-chalkboard-teacher', 'title' => 'Training Model', 'short_desc' => 'Course structure, counselling and student support.', 'description' => 'Understand how practical course content, counselling, trainer coordination and student support are handled.', 'image' => 'assets/images/home.jpeg'],
-    ['icon' => 'fa-bullhorn', 'title' => 'Brand Support', 'short_desc' => 'Guidance for local admissions and promotion.', 'description' => 'Get clarity on brand usage, enquiry handling, admission process and local centre operations.', 'image' => 'assets/images/home1.webp'],
+    ['icon' => 'fa-chalkboard-teacher', 'title' => 'Training Model', 'short_desc' => 'Course structure, counselling and student support.', 'description' => 'Understand how practical course content, counselling, trainer coordination and student support are handled.', 'image' => 'assets/images/home.png'],
+    ['icon' => 'fa-bullhorn', 'title' => 'Brand Support', 'short_desc' => 'Guidance for local admissions and promotion.', 'description' => 'Get clarity on brand usage, enquiry handling, admission process and local centre operations.', 'image' => 'assets/images/home1.png'],
 ];
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $items = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
 </head>
 <body class="static-site franchise-page">
 <div class="site-shell">
@@ -33,4 +33,4 @@ $items = [
         </div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260715-04" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script></body></html>

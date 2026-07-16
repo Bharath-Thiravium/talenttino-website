@@ -4,8 +4,8 @@ require_once __DIR__ . '/includes/site-data.php';
 $settings = tt_settings();
 $services = tt_services();
 $fallbackServices = [
-    ['icon' => 'fa-laptop-code', 'title' => 'IT Skill Training', 'short_desc' => 'Basic to advanced hands-on IT training.', 'description' => 'Practical training across development, data, security, marketing and design tracks.', 'image' => 'assets/images/home.jpeg'],
-    ['icon' => 'fa-id-badge', 'title' => 'Free Internship Program', 'short_desc' => 'Build real project exposure after training.', 'description' => 'Guided internship support helps students turn learning into portfolio-ready work.', 'image' => 'assets/images/home1.webp'],
+    ['icon' => 'fa-laptop-code', 'title' => 'IT Skill Training', 'short_desc' => 'Basic to advanced hands-on IT training.', 'description' => 'Practical training across development, data, security, marketing and design tracks.', 'image' => 'assets/images/home.png'],
+    ['icon' => 'fa-id-badge', 'title' => 'Free Internship Program', 'short_desc' => 'Build real project exposure after training.', 'description' => 'Guided internship support helps students turn learning into portfolio-ready work.', 'image' => 'assets/images/home1.png'],
     ['icon' => 'fa-briefcase', 'title' => 'Placement Assistance', 'short_desc' => 'Resume, interview and hiring support.', 'description' => 'Career preparation, mock interviews and placement guidance for job-ready learners.', 'image' => 'assets/images/contact-counsellor-hero.png'],
 ];
 $services = $services ?: $fallbackServices;
@@ -28,7 +28,7 @@ $services = $services ?: $fallbackServices;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260715-04">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
 </head>
 <body class="static-site services-page">
 <div class="site-shell">
@@ -76,6 +76,6 @@ $services = $services ?: $fallbackServices;
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260715-04" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script>
 </body>
 </html>
