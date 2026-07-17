@@ -40902,6 +40902,11 @@ html body.home-page .hero-slider .slider-slide {
     opacity: 1 !important;
     pointer-events: auto !important;
     transition: none !important;
+    background-color: #102d5f !important;
+    background-image: var(--hero-slide-image) !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
 }
 
 html body.home-page .hero-slider .slider-slide img {
@@ -40912,6 +40917,8 @@ html body.home-page .hero-slider .slider-slide img {
     object-fit: cover !important;
     object-position: center center !important;
     border-radius: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -12,23 +12,6 @@ $homeHeroSlides = tt_home_slider_images();
 if (empty($homeHeroSlides)) {
     $homeHeroSlides = [['image' => 'assets/images/home.webp', 'title' => '']];
 }
-$homeSlideSeen = [];
-foreach ($homeHeroSlides as $slide) {
-    $homeSlideSeen[$slide['image'] ?? ''] = true;
-}
-foreach ([
-    ['image' => 'assets/images/home.webp', 'title' => 'Talentteno practical training'],
-    ['image' => 'assets/images/home1.webp', 'title' => 'Talentteno classroom learning'],
-    ['image' => 'assets/images/home2.webp', 'title' => 'Talentteno student projects'],
-] as $fallbackSlide) {
-    if (count($homeHeroSlides) >= 3) {
-        break;
-    }
-    if (!isset($homeSlideSeen[$fallbackSlide['image']])) {
-        $homeHeroSlides[] = $fallbackSlide;
-        $homeSlideSeen[$fallbackSlide['image']] = true;
-    }
-}
 $homeSliderCount = count($homeHeroSlides);
 $homeFormResult = null;
 $fallbackCourses = [
@@ -234,7 +217,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-smoothslide2">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-bgslide2">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -282,7 +265,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                     <div class="hero-slider" id="heroSlider" data-hero-slider aria-label="Course highlights slider">
                         <div class="slider-track" data-slider-track>
                             <?php foreach ($homeHeroSlides as $index => $slide): ?>
-                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>">
+                            <?php $slideBgImage = str_replace("'", '%27', tt_abs_url((string)($slide['image'] ?? ''))); ?>
+                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>" style="--hero-slide-image: url('<?= tt_h($slideBgImage) ?>');">
                                 <img
                                     src="<?= tt_h($slide['image']) ?>"
                                     alt="<?= tt_h($slide['title'] ?: 'Talentteno course highlight ' . ($index + 1)) ?>"
@@ -577,6 +561,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260717-chatfix1" defer></script>
+<script src="assets/js/site-pages.js?v=20260717-bgslide2" defer></script>
 </body>
 </html>
