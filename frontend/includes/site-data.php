@@ -419,7 +419,7 @@ function tt_testimonials(int $limit = 3): array
 
 function tt_content_items(string $table, int $limit = 0): array
 {
-    if (!in_array($table, ['careers', 'blog_posts', 'projects'], true)) {
+    if (!in_array($table, ['careers', 'blog_posts', 'projects', 'why_items', 'hiring_items', 'franchise_items'], true)) {
         return [];
     }
 
@@ -547,6 +547,21 @@ function tt_blog_posts(int $limit = 0): array
 function tt_projects(int $limit = 0): array
 {
     return tt_content_items('projects', $limit);
+}
+
+function tt_why_items(int $limit = 0): array
+{
+    return tt_content_items('why_items', $limit);
+}
+
+function tt_hiring_items(int $limit = 0): array
+{
+    return tt_content_items('hiring_items', $limit);
+}
+
+function tt_franchise_items(int $limit = 0): array
+{
+    return tt_content_items('franchise_items', $limit);
 }
 
 function tt_money($value): string

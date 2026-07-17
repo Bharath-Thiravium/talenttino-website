@@ -39,6 +39,15 @@
         <a href="projects.php" class="<?= basename($_SERVER['PHP_SELF']) === 'projects.php' ? 'active' : '' ?>">
             <i class="fas fa-diagram-project"></i> Manage Projects
         </a>
+        <a href="why_items.php" class="<?= basename($_SERVER['PHP_SELF']) === 'why_items.php' ? 'active' : '' ?>">
+            <i class="fas fa-graduation-cap"></i> Why Talentteno
+        </a>
+        <a href="hiring_items.php" class="<?= basename($_SERVER['PHP_SELF']) === 'hiring_items.php' ? 'active' : '' ?>">
+            <i class="fas fa-user-plus"></i> Hiring Items
+        </a>
+        <a href="franchise_items.php" class="<?= basename($_SERVER['PHP_SELF']) === 'franchise_items.php' ? 'active' : '' ?>">
+            <i class="fas fa-handshake"></i> Franchise Items
+        </a>
         <a href="process.php" class="<?= basename($_SERVER['PHP_SELF']) === 'process.php' ? 'active' : '' ?>">
             <i class="fas fa-route"></i> Manage Process Steps
         </a>

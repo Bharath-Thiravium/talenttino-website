@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/site-data.php';
 
-$items = [
+$items = tt_franchise_items();
+$items = $items ?: [
     ['icon' => 'fa-handshake', 'title' => 'Institute Partnership', 'short_desc' => 'Discuss Talentteno training centre partnership.', 'description' => 'Share your city, space and plan. Our team will explain the partnership workflow and next steps.', 'image' => 'assets/images/contact-counsellor-hero.png'],
     ['icon' => 'fa-chalkboard-teacher', 'title' => 'Training Model', 'short_desc' => 'Course structure, counselling and student support.', 'description' => 'Understand how practical course content, counselling, trainer coordination and student support are handled.', 'image' => 'assets/images/home.webp'],
     ['icon' => 'fa-bullhorn', 'title' => 'Brand Support', 'short_desc' => 'Guidance for local admissions and promotion.', 'description' => 'Get clarity on brand usage, enquiry handling, admission process and local centre operations.', 'image' => 'assets/images/home1.webp'],

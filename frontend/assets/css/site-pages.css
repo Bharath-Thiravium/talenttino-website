@@ -41262,3 +41262,144 @@ html body.home-page .floating-actions .whatsapp-float {
         height: 44px !important;
     }
 }
+
+/* Final scoped alignment for homepage Why Talentteno section. */
+html body.home-page .model-hire-section {
+    width: 100% !important;
+    overflow-x: clip !important;
+    padding: clamp(78px, 7vw, 110px) 0 !important;
+}
+
+html body.home-page .model-hire-section > .site-container {
+    width: min(1200px, calc(100% - 48px)) !important;
+    max-width: 1200px !important;
+    margin-inline: auto !important;
+    padding-inline: 0 !important;
+}
+
+html body.home-page .model-hire-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.46fr) !important;
+    align-items: stretch !important;
+    gap: 28px !important;
+    padding: 28px !important;
+}
+
+html body.home-page .model-hire-hero > img {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 420px !important;
+}
+
+html body.home-page .model-hire-title {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+html body.home-page .model-hire-hero aside {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+html body.home-page .model-hire-hero aside ul {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+html body.home-page .model-hire-points {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 34px auto 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+}
+
+html body.home-page .model-hire-points div {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 120px !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    justify-content: start !important;
+    gap: 14px !important;
+    margin: 0 !important;
+}
+
+html body.home-page .model-hire-points i {
+    flex: 0 0 auto !important;
+}
+
+html body.home-page .model-hire-points span {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.28 !important;
+}
+
+@media (max-width: 1100px) {
+    html body.home-page .model-hire-hero {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-hire-hero aside {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-hire-hero aside ul,
+    html body.home-page .model-hire-points {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 700px) {
+    html body.home-page .model-hire-section {
+        padding: 64px 0 !important;
+    }
+
+    html body.home-page .model-hire-section > .site-container {
+        width: min(100% - 28px, 520px) !important;
+    }
+
+    html body.home-page .model-hire-hero {
+        padding: 16px !important;
+        gap: 16px !important;
+        border-radius: 20px !important;
+    }
+
+    html body.home-page .model-hire-hero > img {
+        height: 260px !important;
+    }
+
+    html body.home-page .model-hire-title,
+    html body.home-page .model-hire-hero aside {
+        padding: 22px !important;
+    }
+
+    html body.home-page .model-hire-hero aside ul,
+    html body.home-page .model-hire-points {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-hire-points {
+        gap: 14px !important;
+        margin-top: 22px !important;
+    }
+
+    html body.home-page .model-hire-points div {
+        min-height: 86px !important;
+        padding: 16px !important;
+    }
+}

@@ -6,7 +6,7 @@ $contentTitle = $contentTitle ?? 'Content';
 $contentIcon = $contentIcon ?? 'fa-file-lines';
 $contentSingular = $contentSingular ?? 'Item';
 
-if (!in_array($contentTable, ['careers', 'blog_posts', 'projects'], true)) {
+if (!in_array($contentTable, ['careers', 'blog_posts', 'projects', 'why_items', 'hiring_items', 'franchise_items'], true)) {
     http_response_code(500);
     die('Invalid content table.');
 }
@@ -106,6 +106,22 @@ function tt_admin_content_default_items(string $table): array
             ['fa-diagram-project', 'Live Website Project', 'uploads/media/full-stack-development-20260703-133158-761383.png', 'Build a complete responsive business website.', 'Plan pages, create responsive sections, connect enquiry forms and publish portfolio-ready work.', 1],
             ['fa-database', 'Data Dashboard Project', 'uploads/media/data-analyst-20260703-133130-702998.png', 'Practice data cleaning, reporting and visualization.', 'Use real datasets to clean data, prepare charts and explain business insights clearly.', 2],
             ['fa-shield-halved', 'Cyber Lab Project', 'uploads/media/cyber-security-20260703-133329-242125.png', 'Learn practical security workflows in guided labs.', 'Practice security basics, scanning workflow, reporting and safe lab documentation.', 3],
+        ],
+        'why_items' => [
+            ['fa-laptop-code', 'Practical IT Training', 'assets/images/home.webp', 'Learn by building tasks, labs and live projects.', 'Training focuses on real workflow, not only theory, so students can explain and apply what they learn.', 1],
+            ['fa-user-tie', 'Mentor Guidance', 'assets/images/contact-counsellor-hero.png', 'Get support from trainers during practice.', 'Students receive structured guidance, doubt clarification, project review and career direction.', 2],
+            ['fa-briefcase', 'Career Support', 'assets/images/home2.webp', 'Resume, interview and placement preparation.', 'The institute supports job readiness through portfolio projects, mock interviews and placement guidance.', 3],
+        ],
+        'hiring_items' => [
+            ['fa-chart-line', 'Data Science', 'assets/images/home1.webp', 'Data science and analytics trainer needed.', 'Python, statistics, machine learning, dashboards and practical project mentoring experience preferred.', 1],
+            ['fa-pen-nib', 'UI/UX Designer', 'assets/images/home2.webp', 'UI/UX design trainer and mentor needed.', 'Figma, wireframing, prototyping, design systems and portfolio guidance experience preferred.', 2],
+            ['fa-vial-circle-check', 'Software Tester', 'assets/images/contact-counsellor-hero.png', 'Manual and automation testing trainer needed.', 'Testing concepts, test cases, Selenium, API testing and real-time QA workflow experience preferred.', 3],
+            ['fa-users-gear', 'Staffs Needed', 'assets/images/home.webp', 'Office, counselling and support staff needed.', 'Apply for student counselling, admission support, coordination and institute operations roles.', 4],
+        ],
+        'franchise_items' => [
+            ['fa-handshake', 'Institute Partnership', 'assets/images/contact-counsellor-hero.png', 'Discuss Talentteno training centre partnership.', 'Share your city, space and plan. Our team will explain the partnership workflow and next steps.', 1],
+            ['fa-chalkboard-teacher', 'Training Model', 'assets/images/home.webp', 'Course structure, counselling and student support.', 'Understand how practical course content, counselling, trainer coordination and student support are handled.', 2],
+            ['fa-bullhorn', 'Brand Support', 'assets/images/home1.webp', 'Guidance for local admissions and promotion.', 'Get clarity on brand usage, enquiry handling, admission process and local centre operations.', 3],
         ],
     ];
 

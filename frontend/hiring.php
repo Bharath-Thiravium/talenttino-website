@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/site-data.php';
 
-$items = [
+$items = tt_hiring_items();
+$items = $items ?: [
     [
         'icon' => 'fa-chart-line',
         'title' => 'Data Science',

@@ -30,8 +30,9 @@ $images = ['assets/images/home.webp', 'assets/images/home1.webp', 'assets/images
         <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="assets/images/review.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-star"></i> Student Reviews</span><h1>What learners say about Talentteno</h1><p>Real student feedback about practical training, project work, mentor support and career guidance.</p></div></section>
         <section class="section"><div class="site-container detail-grid rich-detail-grid">
             <?php foreach ($reviews as $index => $review): ?>
+            <?php $reviewImage = tt_content_image_url($review['image'] ?? '') ?: $images[$index % count($images)]; ?>
             <article class="detail-tile rich-detail-card review-detail-card reveal">
-                <div class="rich-detail-image"><img src="<?= tt_h($images[$index % count($images)]) ?>" alt="<?= tt_h($review['student_name'] ?? 'Talentteno student') ?> review" loading="lazy" decoding="async"></div>
+                <div class="rich-detail-image"><img src="<?= tt_h($reviewImage) ?>" alt="<?= tt_h($review['student_name'] ?? 'Talentteno student') ?> review" loading="lazy" decoding="async"></div>
                 <div class="rich-detail-body"><i class="fa-solid fa-star"></i><h3><?= tt_h($review['student_name'] ?? 'Talentteno Student') ?></h3><p class="rich-detail-short"><?= tt_h($review['course'] ?? 'Talentteno Training') ?></p><p class="rich-detail-more"><?= tt_h($review['review'] ?? '') ?></p><a class="rich-detail-link" href="contact.php?topic=student%20review">Join Like Them <i class="fa-solid fa-arrow-right"></i></a></div>
             </article>
             <?php endforeach; ?>

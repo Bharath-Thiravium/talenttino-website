@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/site-data.php';
 
-$items = [
+$items = tt_why_items();
+$items = $items ?: [
     ['icon' => 'fa-laptop-code', 'title' => 'Practical IT Training', 'short_desc' => 'Learn by building tasks, labs and live projects.', 'description' => 'Training focuses on real workflow, not only theory, so students can explain and apply what they learn.', 'image' => 'assets/images/home.webp'],
     ['icon' => 'fa-user-tie', 'title' => 'Mentor Guidance', 'short_desc' => 'Get support from trainers during practice.', 'description' => 'Students receive structured guidance, doubt clarification, project review and career direction.', 'image' => 'assets/images/contact-counsellor-hero.png'],
     ['icon' => 'fa-briefcase', 'title' => 'Career Support', 'short_desc' => 'Resume, interview and placement preparation.', 'description' => 'The institute supports job readiness through portfolio projects, mock interviews and placement guidance.', 'image' => 'assets/images/home2.webp'],
