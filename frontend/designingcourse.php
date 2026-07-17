@@ -46,7 +46,7 @@ $coursePage = [
             'name' => 'Graphic Design',
             'category' => 'Designing',
             'desc' => 'Master visual design fundamentals for posters, branding, social creatives and marketing assets.',
-            'image' => 'assets/images/home.png',
+            'image' => 'assets/images/home.webp',
             'items' => ['Brand design', 'Poster and social creatives', 'Layout and typography'],
         ],
         [
@@ -54,7 +54,7 @@ $coursePage = [
             'name' => 'Specialization Program',
             'category' => 'Designing',
             'desc' => 'A focused creative specialization path for learners who want a deeper design portfolio.',
-            'image' => 'assets/images/home2.png',
+            'image' => 'assets/images/home2.webp',
             'items' => ['Advanced creative practice', 'Portfolio review', 'Career guidance'],
         ],
         [

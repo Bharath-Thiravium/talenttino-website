@@ -24,6 +24,9 @@
         <a href="media.php" class="<?= basename($_SERVER['PHP_SELF']) === 'media.php' ? 'active' : '' ?>">
             <i class="fas fa-photo-film"></i> Gallery / Media
         </a>
+        <a href="home_slider.php" class="<?= basename($_SERVER['PHP_SELF']) === 'home_slider.php' ? 'active' : '' ?>">
+            <i class="fas fa-images"></i> Home Slider
+        </a>
         <a href="services.php" class="<?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
             <i class="fas fa-concierge-bell"></i> Manage Services
         </a>

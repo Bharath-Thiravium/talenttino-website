@@ -5,6 +5,7 @@ if (!isset($settings) || !is_array($settings)) {
 
 $phone1Link = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
 $phone2Link = preg_replace('/\D+/', '', (string)($settings['phone2'] ?? ''));
+$whatsappUrl = 'https://web.whatsapp.com/send?phone=' . $phone1Link . '&text=' . rawurlencode('Hello Talentteno, I would like course information.');
 $mapUrl = function_exists('tt_google_maps_url')
     ? tt_google_maps_url($settings)
     : 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
@@ -571,21 +572,7 @@ $mapUrl = function_exists('tt_google_maps_url')
     <div class="footer-bottom"><div class="site-container"><p><?= tt_h($settings['footer_copyright']) ?></p></div></div>
 </footer>
 <div class="floating-actions" aria-label="Quick actions">
-    <div class="whatsapp-enquiry-panel" id="whatsappEnquiryPanel" aria-hidden="true">
-        <div class="whatsapp-enquiry-head">
-            <span><i class="fa-brands fa-whatsapp"></i> Quick Enquiry</span>
-            <button type="button" data-close-whatsapp aria-label="Close WhatsApp enquiry"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <p>Share your details and continue on WhatsApp.</p>
-        <form class="whatsapp-enquiry-form" data-whatsapp-number="<?= tt_h($phone1Link) ?>">
-            <label><span>Name</span><input type="text" name="name" placeholder="Your name" maxlength="80" required></label>
-            <label><span>Phone</span><input type="tel" name="phone" placeholder="10 digit mobile number" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required></label>
-            <label><span>Course</span><input type="text" name="course" placeholder="Course interested in" maxlength="120" required></label>
-            <label><span>Message</span><textarea name="message" placeholder="Your learning goal" maxlength="500"></textarea></label>
-            <button type="submit"><i class="fa-brands fa-whatsapp"></i> Continue on WhatsApp</button>
-        </form>
-    </div>
-    <a class="whatsapp-float" href="https://wa.me/<?= tt_h($phone1Link) ?>?text=<?= rawurlencode('Hello Talentteno, I would like course information.') ?>" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat">
+    <a class="whatsapp-float" href="<?= tt_h($whatsappUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat">
         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
     </a>
     <button class="scroll-top" type="button" aria-label="Scroll back to top" title="Back to top">

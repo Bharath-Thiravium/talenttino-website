@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS enquiries (
     course_id INT,
     course_name VARCHAR(255),
     message TEXT,
+    resume_path VARCHAR(255),
     type ENUM('enquiry', 'download', 'callback') DEFAULT 'enquiry',
     status ENUM('new', 'contacted', 'enrolled', 'closed') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -149,6 +150,17 @@ CREATE TABLE IF NOT EXISTS projects (
     image VARCHAR(255),
     short_desc VARCHAR(500),
     description TEXT,
+    sort_order INT DEFAULT 0,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Home Slider Table (managed dynamically from Admin -> shown on Homepage hero)
+CREATE TABLE IF NOT EXISTS home_slides (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) DEFAULT '',
+    image VARCHAR(255) NOT NULL,
     sort_order INT DEFAULT 0,
     is_active TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

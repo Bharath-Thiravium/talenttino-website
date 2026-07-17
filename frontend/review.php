@@ -7,7 +7,7 @@ $reviews = $reviews ?: [
     ['student_name' => 'Career Switcher', 'course' => 'Data Science', 'review' => 'Mentor guidance, assignments and interview support made the learning path clear.', 'rating' => 5],
     ['student_name' => 'Final Year Student', 'course' => 'Cyber Security', 'review' => 'The lab practice and career support helped me build confidence for interviews.', 'rating' => 5],
 ];
-$images = ['assets/images/home.png', 'assets/images/home1.png', 'assets/images/home2.png', 'assets/images/contact-counsellor-hero.png'];
+$images = ['assets/images/home.webp', 'assets/images/home1.webp', 'assets/images/home2.webp', 'assets/images/contact-counsellor-hero.png'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,7 @@ $images = ['assets/images/home.png', 'assets/images/home1.png', 'assets/images/h
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-pagebg1">
 </head>
 <body class="static-site review-page">
 <div class="site-shell">
@@ -27,7 +27,7 @@ $images = ['assets/images/home.png', 'assets/images/home1.png', 'assets/images/h
         <a href="index.php">Home</a><a href="about.php">About</a><div class="nav-item has-menu"><a href="course.php">Course <i class="fa-solid fa-chevron-down"></i></a><div class="nav-menu"><a href="shorttermcourse.php">Short Term Course</a><a href="popularcourse.php">Popular Course</a><a href="advancecourse.php">Advance Course</a></div></div><a href="gallery.php">Gallery</a><a href="contact.php">Contact</a><div class="nav-item has-menu more-menu"><a href="#">More <i class="fa-solid fa-chevron-down"></i></a><div class="nav-menu"><a href="services.php">Services</a><a href="career.php">Career</a><a href="blog.php">Blog</a><a href="project.php">Project</a></div></div>
     </nav><button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button></div></header>
     <main class="page-main">
-        <section class="page-hero"><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-star"></i> Student Reviews</span><h1>What learners say about Talentteno</h1><p>Real student feedback about practical training, project work, mentor support and career guidance.</p></div></section>
+        <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="assets/images/review.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-star"></i> Student Reviews</span><h1>What learners say about Talentteno</h1><p>Real student feedback about practical training, project work, mentor support and career guidance.</p></div></section>
         <section class="section"><div class="site-container detail-grid rich-detail-grid">
             <?php foreach ($reviews as $index => $review): ?>
             <article class="detail-tile rich-detail-card review-detail-card reveal">
@@ -38,4 +38,4 @@ $images = ['assets/images/home.png', 'assets/images/home1.png', 'assets/images/h
         </div></section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script></body></html>
+</div><script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script></body></html>

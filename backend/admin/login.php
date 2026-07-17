@@ -40,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login — Talentteno Institute</title>
+    <link rel="icon" type="image/png" href="../../frontend/assets/images/logot-transparent.png">
+    <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0F172A, #1E3A8A); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-card { background: white; border-radius: 20px; padding: 48px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
         .login-logo { text-align: center; margin-bottom: 32px; }
-        .login-logo i { font-size: 40px; color: #1D4ED8; }
+        .login-logo img { width: 70px; height: 70px; object-fit: contain; border-radius: 14px; border: 1px solid #DBEAFE; box-shadow: 0 12px 26px rgba(29,78,216,0.12); }
         .login-logo h1 { font-size: 22px; font-weight: 700; color: #1E293B; margin-top: 10px; }
         .login-logo p { color: #64748B; font-size: 13px; margin-top: 4px; }
         .form-group { margin-bottom: 16px; }
@@ -67,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <div class="login-card">
     <div class="login-logo">
-        <i class="fas fa-graduation-cap"></i>
+        <img src="../../frontend/assets/images/logot-transparent.png" alt="Talentteno Institute logo">
         <h1>Talentteno Admin</h1>
         <p>Institute Management Panel</p>
     </div>

@@ -38,7 +38,7 @@ usort($uploadedGalleryImages, static fn($a, $b) => $b['modified'] <=> $a['modifi
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-imagefix1">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-rightslider7">
 </head>
 <body class="static-site gallery-page">
 <div class="site-shell">
@@ -60,30 +60,26 @@ usort($uploadedGalleryImages, static fn($a, $b) => $b['modified'] <=> $a['modifi
         <section class="page-hero has-page-hero-image">
             <img class="page-hero-bg" src="assets/images/gallery.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
             <span class="page-hero-overlay" aria-hidden="true"></span>
-            <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-images"></i> Poster, Flyer and Institute Visuals</span><h1>Gallery</h1><p>Visuals from Talentteno Board, Poster and Flyer, plus learning environment images for training, projects and career support.</p></div>
-        </section>
-        <section class="section">
-            <div class="site-container poster-pair">
-                <div class="pdf-frame reveal"><img src="assets/images/talentteno-flyer-1.png" alt="Talentteno flyer page one with basic to advanced courses" loading="lazy" decoding="async"></div>
-                <div class="pdf-frame reveal"><img src="assets/images/talentteno-flyer-2.png" alt="Talentteno flyer page two with cyber security combo pack" loading="lazy" decoding="async"></div>
-            </div>
+            <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-images"></i> Admin Gallery</span><h1>Gallery</h1><p>Images uploaded from the admin Media Library appear here automatically.</p></div>
         </section>
         <section class="section alt">
-            <div class="site-container gallery-grid">
-                <div class="gallery-card tall reveal"><img src="assets/images/talentteno-poster.png" alt="Talentteno poster with benefits and courses" loading="lazy" decoding="async"></div>
-                <div class="gallery-card reveal"><img src="assets/images/logot-transparent.png" alt="Talentteno board logo" loading="lazy" decoding="async"></div>
-                <div class="gallery-card reveal"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=520&q=80" alt="Technology learning on laptop" loading="lazy" decoding="async"></div>
-                <div class="gallery-card reveal"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=640&q=80" alt="Instructor mentoring students" loading="lazy" decoding="async"></div>
-                <div class="gallery-card reveal"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=640&q=80" alt="Students in presentation discussion" loading="lazy" decoding="async"></div>
-                <div class="gallery-card reveal"><img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=640&q=80" alt="Career guidance discussion" loading="lazy" decoding="async"></div>
+            <?php if ($uploadedGalleryImages): ?>
+            <div class="site-container gallery-grid admin-gallery-grid">
                 <?php foreach ($uploadedGalleryImages as $image): ?>
-                <div class="gallery-card reveal"><img src="<?= htmlspecialchars($image['src']) ?>" alt="<?= htmlspecialchars($image['alt']) ?>" loading="lazy" decoding="async"></div>
+                <figure class="gallery-card admin-gallery-card reveal"><img src="<?= htmlspecialchars($image['src']) ?>" alt="<?= htmlspecialchars($image['alt']) ?>" loading="lazy" decoding="async"></figure>
                 <?php endforeach; ?>
             </div>
+            <?php else: ?>
+            <div class="site-container gallery-empty reveal">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <h2>No gallery images uploaded yet</h2>
+                <p>Add gallery images from the backend Media Library. Only admin-uploaded gallery images will appear on this page.</p>
+            </div>
+            <?php endif; ?>
         </section>
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script>
+<script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script>
 </body>
 </html>

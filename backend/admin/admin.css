@@ -185,6 +185,8 @@ body.modal-open { overflow: hidden; }
 .course-current-image { position: relative; display: inline-block; margin-top: 10px; }
 .course-current-image[hidden] { display: none; }
 .course-image-preview { display: block; width: 180px; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--border); border-radius: 8px; }
+.home-slider-preview { width: min(100%, 220px); aspect-ratio: 3 / 2; object-fit: contain; background: #F8FAFC; }
+.home-slider-table-preview { width: 96px; aspect-ratio: 3 / 2; object-fit: contain; border: 1px solid var(--border); border-radius: 7px; background: #F8FAFC; }
 .course-admin-thumb, .course-admin-placeholder { display: flex; width: 58px; height: 42px; align-items: center; justify-content: center; object-fit: cover; border-radius: 6px; background: var(--bg); color: #94A3B8; }
 .btn-media-choose { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--blue); border-radius: 8px; color: var(--blue); background: #EEF2FF; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .btn-media-choose:hover { background: #DBEAFE; }

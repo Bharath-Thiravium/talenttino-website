@@ -70,6 +70,7 @@ if (nav) {
         const otherLinks = [
             ['review.php', 'Student Reviews', 'fa-star'],
             ['why-talentteno.php', 'Why Talentteno', 'fa-graduation-cap'],
+            ['hiring.php', 'Hiring', 'fa-user-plus'],
             ['franchise.php', 'Franchise Enquiry', 'fa-handshake'],
         ];
         otherLinks.forEach(([href, label, icon]) => {
@@ -82,7 +83,7 @@ if (nav) {
         });
     }
     const currentPage = window.location.pathname.split('/').pop() || 'index.php';
-    const morePages = ['services.php', 'career.php', 'blog.php', 'project.php', 'review.php', 'why-talentteno.php', 'franchise.php'];
+    const morePages = ['services.php', 'career.php', 'blog.php', 'project.php', 'review.php', 'why-talentteno.php', 'hiring.php', 'franchise.php'];
     nav.querySelectorAll('a[href]').forEach(link => {
         if (link.classList.contains('nav-enroll-cta')) return;
         const targetHref = link.getAttribute('href');
@@ -511,46 +512,6 @@ document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeTrainingVideo();
 });
 
-// Shared WhatsApp quick-enquiry panel.
-const whatsappPanel = document.getElementById('whatsappEnquiryPanel');
-const whatsappToggles = document.querySelectorAll('[data-toggle-whatsapp]');
-const closeWhatsappPanel = () => {
-    if (!whatsappPanel) return;
-    whatsappPanel.classList.remove('is-open');
-    whatsappPanel.setAttribute('aria-hidden', 'true');
-    whatsappToggles.forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
-};
-
-whatsappToggles.forEach(toggle => toggle.addEventListener('click', () => {
-    if (toggle.matches('a[href]')) return;
-    const isOpen = !whatsappPanel?.classList.contains('is-open');
-    whatsappPanel?.classList.toggle('is-open', isOpen);
-    whatsappPanel?.setAttribute('aria-hidden', String(!isOpen));
-    whatsappToggles.forEach(item => item.setAttribute('aria-expanded', String(isOpen)));
-    if (isOpen) whatsappPanel?.querySelector('input')?.focus();
-}));
-document.querySelector('[data-close-whatsapp]')?.addEventListener('click', closeWhatsappPanel);
-
-document.querySelector('.whatsapp-enquiry-form')?.addEventListener('submit', event => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    const data = new FormData(form);
-    const lines = [
-        'Hello Talentteno, I would like course information.',
-        `Name: ${data.get('name')}`,
-        `Phone: ${data.get('phone')}`,
-        `Course: ${data.get('course')}`,
-    ];
-    if (String(data.get('message') || '').trim()) lines.push(`Message: ${data.get('message')}`);
-    const url = `https://wa.me/${form.dataset.whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-    closeWhatsappPanel();
-});
-
 // Home page local AI-style assistant. No external API required.
 const aiChat = document.querySelector('[data-ai-chat]');
 if (aiChat) {
@@ -576,27 +537,27 @@ if (aiChat) {
             text: `About: ${companyDetails.name} is an IT training institute in Madurai offering practical classroom training, free internship guidance, live project practice, certification support and placement preparation.`
         },
         {
-            keys: ['course', 'courses', 'class', 'classes', 'training', 'learn', 'program', 'programs', 'syllabus', 'available', 'teach', 'study', 'enna course', 'course list', 'all course'],
-            text: 'Courses: Full Stack with AI, Data Science, Cyber Security, Digital Marketing, UI/UX Design, Tally, programming, short-term courses and advanced professional courses are available. Tell me your interest and I can suggest a suitable track.'
+            keys: ['course', 'courses', 'class', 'classes', 'training', 'learn', 'program', 'programs', 'syllabus', 'available', 'teach', 'study', 'enna course', 'course list', 'all course', 'enna courses', 'what course', 'which course'],
+            text: 'Courses available: Full Stack with AI, Data Science and AI, Cyber Security, Digital Marketing, UI/UX Design, Tally, basic computer, MS Office, programming, short-term courses and advanced professional courses. Tell me your interest, education level or goal and I can suggest a suitable course.'
         },
         {
-            keys: ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'offer', 'discount', 'emi', 'payment', 'pay', 'how much', 'fees evlo', 'fee evlo'],
-            text: 'Fees: Course fees depend on selected course, duration and current offer. For exact fee, discount, EMI and batch timing, submit the free counselling form or call our admission team.'
+            keys: ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'offer', 'discount', 'emi', 'payment', 'pay', 'how much', 'fees evlo', 'fee evlo', 'evlo', 'rate', 'fees details'],
+            text: `Fees: Fees change based on course, duration, batch and current offer. For the correct fee, discount or EMI details, call ${companyDetails.phone1} / ${companyDetails.phone2} or submit the free counselling form.`
         },
         {
-            keys: ['internship', 'intern', 'project', 'projects', 'live project', 'portfolio', 'practical', 'hands on', 'experience', 'internship iruka', 'project iruka'],
+            keys: ['internship', 'intern', 'project', 'projects', 'live project', 'portfolio', 'practical', 'hands on', 'experience', 'internship iruka', 'project iruka', 'iruka', 'practical class', 'real time project'],
             text: 'Internship & projects: Yes. Talentteno provides free internship guidance and live project practice. Students work on practical tasks to build portfolio-ready confidence.'
         },
         {
-            keys: ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work'],
+            keys: ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work', 'job support', 'job assistance', 'velai'],
             text: 'Placement: Support includes resume preparation, mock interview practice, job-readiness mentoring and hiring guidance for eligible students.'
         },
         {
-            keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo', 'sample class', 'visit'],
+            keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo', 'sample class', 'visit', 'demo class', 'free demo class'],
             text: 'Demo class: You can book a free demo class or counselling session from the Sign Up form on the home page. Our counsellor will call and guide you.'
         },
         {
-            keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map', 'near', 'place', 'route', 'enga', 'where is'],
+            keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map', 'near', 'place', 'route', 'enga', 'where is', 'office', 'branch'],
             text: `Address: ${companyDetails.address}.`
         },
         {
@@ -604,15 +565,15 @@ if (aiChat) {
             text: `Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}. You can also use the WhatsApp button for quick enquiry.`
         },
         {
-            keys: ['online', 'offline', 'batch', 'batches', 'timing', 'timings', 'time', 'schedule', 'mode', 'morning', 'evening', 'weekend', 'hours', 'open'],
-            text: 'Timing: Batch timing and training mode depend on the course. Share your preferred course and timing; our team will confirm the available batch.'
+            keys: ['online', 'offline', 'batch', 'batches', 'timing', 'timings', 'time', 'schedule', 'mode', 'morning', 'evening', 'weekend', 'hours', 'open', 'class time', 'duration', 'how many days', 'month', 'months'],
+            text: 'Timing & duration: Batch timing, duration and online/offline mode depend on the selected course. Morning, evening or weekend availability can be confirmed by the admission team after you choose a course.'
         },
         {
             keys: ['certificate', 'certification', 'certified'],
             text: 'Certificate: Certification support is available after course completion. Students also get guidance to complete practical tasks and project work.'
         },
         {
-            keys: ['admission', 'join', 'enroll', 'enrol', 'apply', 'register'],
+            keys: ['admission', 'join', 'enroll', 'enrol', 'apply', 'register', 'joining', 'epdi join', 'how to join', 'join panna'],
             text: 'Admission: To join Talentteno, submit the free counselling form, call the institute, or send a WhatsApp enquiry. The team will guide course selection, fee details and batch timing.'
         },
         {
@@ -650,6 +611,8 @@ if (aiChat) {
         .replace(/full\s*stack/g, 'full stack')
         .replace(/cyber\s*security/g, 'cyber security')
         .replace(/ui\s*\/\s*ux/g, 'ui ux')
+        .replace(/fees?/g, 'fees')
+        .replace(/evvalavu/g, 'evlo')
         .replace(/[^\w\s/+.-]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
@@ -665,11 +628,14 @@ if (aiChat) {
             return 'You are welcome. For admission help, use the free counselling form or WhatsApp button.';
         }
 
-        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment']);
+        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment', 'evlo', 'rate', 'discount', 'offer']);
         const asksCourse = hasAny(clean, ['course', 'courses', 'class', 'training', 'syllabus', 'learn', 'teach', 'available']);
         const asksContact = hasAny(clean, ['contact', 'phone', 'call', 'whatsapp', 'number', 'mobile', 'email', 'mail']);
         const asksLocation = hasAny(clean, ['address', 'location', 'where', 'map', 'route', 'near']);
         const asksInternship = hasAny(clean, ['internship', 'intern', 'project', 'portfolio', 'practical']);
+        const asksPlacement = hasAny(clean, ['placement', 'job', 'career', 'interview', 'resume', 'hiring']);
+        const asksTiming = hasAny(clean, ['timing', 'time', 'batch', 'duration', 'morning', 'evening', 'weekend', 'online', 'offline']);
+        const asksAdmission = hasAny(clean, ['admission', 'join', 'enroll', 'enrol', 'apply', 'register']);
         const courseNames = [
             ['full stack', 'Full Stack with AI'],
             ['fullstack', 'Full Stack with AI'],
@@ -682,20 +648,32 @@ if (aiChat) {
             ['ui ux', 'UI/UX Design'],
             ['design', 'UI/UX Design'],
             ['tally', 'Tally'],
+            ['basic computer', 'Basic Computer'],
+            ['ms office', 'MS Office'],
+            ['excel', 'MS Office and Excel'],
         ];
         const mentionedCourse = courseNames.find(([key]) => clean.includes(key))?.[1];
 
         if (mentionedCourse && asksFee) {
-            return `${mentionedCourse} fee depends on batch, duration and current offer. For the exact fee, EMI and discount, call ${companyDetails.phone1} or send a WhatsApp enquiry.`;
+            return `${mentionedCourse} fee depends on batch, duration and current offer. For the correct fee, EMI and discount, call ${companyDetails.phone1} / ${companyDetails.phone2} or send a WhatsApp enquiry.`;
         }
         if (mentionedCourse && asksInternship) {
             return `Yes, ${mentionedCourse} students get guided practical tasks, live project or internship support, and portfolio preparation.`;
+        }
+        if (mentionedCourse && asksPlacement) {
+            return `${mentionedCourse} includes career support such as resume guidance, mock interview preparation and placement assistance for eligible students.`;
+        }
+        if (mentionedCourse && asksTiming) {
+            return `${mentionedCourse} batch timing and duration depend on the current schedule. Call ${companyDetails.phone1} or submit the free counselling form to confirm the next available batch.`;
         }
         if (mentionedCourse && asksCourse) {
             return `${mentionedCourse} is available at ${companyDetails.name}. It includes practical training, mentor guidance, project work and career support.`;
         }
         if (asksContact && asksLocation) {
             return `${companyDetails.name} is at ${companyDetails.address}. Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}.`;
+        }
+        if (asksAdmission && asksFee) {
+            return `Admission and fees: Submit the free counselling form or call ${companyDetails.phone1}. Our team will explain the right course, current fee, offer, EMI option and batch timing.`;
         }
 
         const scoredMatches = replies
@@ -785,3 +763,105 @@ if (aiChat) {
         submitAiQuestion(aiInput?.value);
     });
 }
+
+
+// Hero slider — auto-play, arrows, dots, pause on hover
+(function () {
+    const slider = document.querySelector('[data-hero-slider]');
+    if (!slider) return;
+
+    const slides = [...slider.querySelectorAll('[data-slide]')];
+    const dots = [...slider.querySelectorAll('[data-slider-dots] .slider-dot')];
+    const prevBtn = slider.querySelector('[data-slider-prev]');
+    const nextBtn = slider.querySelector('[data-slider-next]');
+
+    let current = 0;
+    let timer = null;
+    const INTERVAL = 4000;
+
+    function updateTrack() {
+        var track = slider.querySelector('[data-slider-track]');
+        if (!track) return;
+        track.style.transform = 'translate3d(-' + (current * 100) + '%, 0, 0)';
+    }
+
+    function syncAspectRatio(index) {
+        const img = slides[index]?.querySelector('img');
+        if (!img) return;
+
+        function applyRatio() {
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                slider.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+            }
+        }
+
+        if (img.complete) {
+            applyRatio();
+        } else {
+            img.addEventListener('load', applyRatio, { once: true });
+        }
+    }
+
+    if (slides.length <= 1) {
+        syncAspectRatio(current);
+        return;
+    }
+
+    function goTo(index) {
+        slides[current].classList.remove('is-active');
+        slides[current].setAttribute('aria-hidden', 'true');
+        if (dots[current]) {
+            dots[current].classList.remove('is-active');
+            dots[current].setAttribute('aria-pressed', 'false');
+        }
+
+        current = (index + slides.length) % slides.length;
+        updateTrack();
+
+        slides[current].classList.add('is-active');
+        slides[current].setAttribute('aria-hidden', 'false');
+        syncAspectRatio(current);
+        if (dots[current]) {
+            dots[current].classList.add('is-active');
+            dots[current].setAttribute('aria-pressed', 'true');
+        }
+    }
+
+    function startAuto() {
+        stopAuto();
+        timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
+    }
+
+    function stopAuto() {
+        if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); startAuto(); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); startAuto(); });
+
+    dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () { goTo(i); startAuto(); });
+    });
+
+    slider.addEventListener('mouseenter', stopAuto);
+    slider.addEventListener('mouseleave', startAuto);
+    slider.addEventListener('focusin', stopAuto);
+    slider.addEventListener('focusout', startAuto);
+
+    // Touch swipe support
+    var touchStartX = 0;
+    slider.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    slider.addEventListener('touchend', function (e) {
+        var diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+            goTo(diff > 0 ? current + 1 : current - 1);
+            startAuto();
+        }
+    }, { passive: true });
+
+    syncAspectRatio(current);
+    updateTrack();
+    startAuto();
+}());

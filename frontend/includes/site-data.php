@@ -480,9 +480,9 @@ function tt_item_image(array $item, string $type = 'general'): string
         'career' => 'assets/images/contact-counsellor-hero.png',
         'placement' => 'assets/images/contact-counsellor-hero.png',
         'interview' => 'assets/images/contact-counsellor-hero.png',
-        'blog' => 'assets/images/home1.png',
-        'project' => 'assets/images/home2.png',
-        'service' => 'assets/images/home.png',
+        'blog' => 'assets/images/home1.webp',
+        'project' => 'assets/images/home2.webp',
+        'service' => 'assets/images/home.webp',
     ];
 
     foreach ($map as $needle => $image) {
@@ -491,7 +491,47 @@ function tt_item_image(array $item, string $type = 'general'): string
         }
     }
 
-    return 'assets/images/home2.png';
+    return 'assets/images/home2.webp';
+}
+
+function tt_home_slider_images(): array
+{
+    $fallback = [
+        'assets/images/home.webp',
+        'assets/images/home1.webp',
+        'assets/images/home2.webp',
+        'assets/images/home3.webp',
+        'assets/images/home4.webp',
+    ];
+
+    $hasTable = tt_fetch_one("SHOW TABLES LIKE 'home_slides'");
+    $hasDisplayOrder = $hasTable ? tt_fetch_one("SHOW COLUMNS FROM home_slides LIKE 'display_order'") : null;
+    $orderSql = $hasDisplayOrder
+        ? 'display_order ASC, sort_order ASC, updated_at DESC, id DESC'
+        : 'sort_order ASC, updated_at DESC, id DESC';
+    $rows = $hasTable ? tt_fetch_all("SELECT image, title FROM home_slides WHERE is_active = 1 ORDER BY $orderSql") : [];
+    $images = [];
+    $seenImages = [];
+    foreach ($rows as $row) {
+        $image = tt_content_image_url($row['image'] ?? '');
+        if ($image === '' || isset($seenImages[$image])) {
+            continue;
+        }
+        $seenImages[$image] = true;
+        $images[] = [
+            'image' => $image,
+            'title' => trim((string)($row['title'] ?? '')),
+        ];
+    }
+
+    if ($images) {
+        return $images;
+    }
+
+    return array_map(static fn(string $image): array => [
+        'image' => $image,
+        'title' => '',
+    ], $fallback);
 }
 
 function tt_careers(int $limit = 0): array
@@ -643,13 +683,28 @@ function tt_submit_enquiry(array $input, string $source = 'enquiry'): array
     $phone = mb_substr($phone, 0, 24);
     $courseName = mb_substr($courseName, 0, 150);
     $message = mb_substr($message, 0, 2000);
+    $resumePath = mb_substr(trim((string)($input['resume_path'] ?? '')), 0, 255);
 
-    $stmt = $db->prepare('INSERT INTO enquiries (name, email, phone, course_name, message, type, status) VALUES (?, ?, ?, ?, ?, ?, "new")');
+    $hasResumeColumn = false;
+    $resumeColumnResult = @$db->query("SHOW COLUMNS FROM enquiries LIKE 'resume_path'");
+    if ($resumeColumnResult && $resumeColumnResult->num_rows > 0) {
+        $hasResumeColumn = true;
+    }
+
+    if ($hasResumeColumn) {
+        $stmt = $db->prepare('INSERT INTO enquiries (name, email, phone, course_name, message, type, resume_path, status) VALUES (?, ?, ?, ?, ?, ?, ?, "new")');
+    } else {
+        $stmt = $db->prepare('INSERT INTO enquiries (name, email, phone, course_name, message, type, status) VALUES (?, ?, ?, ?, ?, ?, "new")');
+    }
     if (!$stmt) {
         return ['ok' => false, 'message' => 'Unable to save enquiry.'];
     }
 
-    $stmt->bind_param('ssssss', $name, $email, $phone, $courseName, $message, $type);
+    if ($hasResumeColumn) {
+        $stmt->bind_param('sssssss', $name, $email, $phone, $courseName, $message, $type, $resumePath);
+    } else {
+        $stmt->bind_param('ssssss', $name, $email, $phone, $courseName, $message, $type);
+    }
     if (!$stmt->execute()) {
         return ['ok' => false, 'message' => 'Unable to save enquiry.'];
     }

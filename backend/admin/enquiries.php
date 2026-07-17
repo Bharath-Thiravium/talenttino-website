@@ -1,6 +1,8 @@
 <?php
 require_once 'auth_check.php';
 
+$conn->query("ALTER TABLE enquiries ADD COLUMN IF NOT EXISTS resume_path VARCHAR(255) NULL AFTER message");
+
 $allowedTypes = ['enquiry', 'download', 'callback'];
 $allowedStatuses = ['new', 'contacted', 'enrolled', 'closed'];
 
@@ -385,6 +387,8 @@ $exportQuery = tt_admin_filter_query($filters, ['export' => 'pdf']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enquiries — Talentteno Admin</title>
+    <link rel="icon" type="image/png" href="../../frontend/assets/images/logot-transparent.png">
+    <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
@@ -452,6 +456,7 @@ $exportQuery = tt_admin_filter_query($filters, ['export' => 'pdf']);
                             <th>Course</th>
                             <th>Type</th>
                             <th>Student Details</th>
+                            <th>Resume</th>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -462,6 +467,11 @@ $exportQuery = tt_admin_filter_query($filters, ['export' => 'pdf']);
                         <?php
                             $phoneDigits = preg_replace('/[^0-9]/', '', $e['phone'] ?? '');
                             $courseName = ($e['course_name'] ?: $e['course_title']) ?: '—';
+                            $resumePath = trim((string)($e['resume_path'] ?? ''));
+                            $resumeHref = '';
+                            if ($resumePath !== '' && preg_match('#^uploads/resumes/[a-z0-9._/-]+$#i', $resumePath)) {
+                                $resumeHref = '../../frontend/' . $resumePath;
+                            }
                         ?>
                         <tr>
                             <td><?= $offset + $i + 1 ?></td>
@@ -471,6 +481,13 @@ $exportQuery = tt_admin_filter_query($filters, ['export' => 'pdf']);
                             <td class="cell-course"><?= htmlspecialchars($courseName) ?></td>
                             <td><span class="badge badge-<?= $e['type'] === 'download' ? 'green' : ($e['type'] === 'callback' ? 'orange' : 'blue') ?>"><?= ucfirst($e['type']) ?></span></td>
                             <td class="cell-details"><?= nl2br(htmlspecialchars($e['message'] ?: '—')) ?></td>
+                            <td class="cell-resume">
+                                <?php if ($resumeHref !== ''): ?>
+                                <a class="btn-xs btn-blue" href="<?= htmlspecialchars($resumeHref) ?>" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i> View</a>
+                                <?php else: ?>
+                                —
+                                <?php endif; ?>
+                            </td>
                             <td class="cell-date"><?= date('d M Y', strtotime($e['created_at'])) ?><span><?= date('h:i A', strtotime($e['created_at'])) ?></span></td>
                             <td>
                                 <select class="status-select" onchange="updateStatus(<?= (int)$e['id'] ?>, this.value)">
@@ -487,7 +504,7 @@ $exportQuery = tt_admin_filter_query($filters, ['export' => 'pdf']);
                         </tr>
                         <?php endforeach; ?>
                         <?php if (empty($enquiries)): ?>
-                        <tr><td colspan="10" style="text-align:center;padding:40px;color:#64748B;">No enquiries found.</td></tr>
+                        <tr><td colspan="11" style="text-align:center;padding:40px;color:#64748B;">No enquiries found.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

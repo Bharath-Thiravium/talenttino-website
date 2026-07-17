@@ -4896,7 +4896,7 @@ body.home-page .home-hero-media::after {
     to { transform: translateY(8px); }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
     .home-page .home-hero .hero-grid {
         grid-template-columns: minmax(0, 1fr) minmax(360px, .8fr);
     }
@@ -4976,9 +4976,9 @@ body.home-page .home-hero-media::after {
     }
 }
 
-/* Screenshot-driven home hero alignment correction */
+/* Home hero alignment */
 .home-page .home-hero {
-    min-height: 820px;
+    min-height: 0;
     padding: 54px 0 0;
 }
 
@@ -4987,8 +4987,8 @@ body.home-page .home-hero-media::after {
 }
 
 .home-page .home-hero .hero-grid {
-    min-height: 766px;
-    grid-template-columns: minmax(520px, .94fr) minmax(560px, 1.06fr);
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
     gap: 26px;
 }
@@ -12546,7 +12546,7 @@ body.static-site.download-page .download-hero .hero-kicker {
     background: rgba(255, 255, 255, 0.96) !important;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
     .course-showcase-grid,
     .home-course-grid,
     .feature-grid,
@@ -13158,17 +13158,17 @@ body.static-site:not(.home-page) .nav-item > a {
 }
 
 .home-page .home-bg-slide-1 {
-    background-image: url("../images/home.png");
+    background-image: url("../images/home.webp");
     animation-delay: 0s, 0s;
 }
 
 .home-page .home-bg-slide-2 {
-    background-image: url("../images/home1.png");
+    background-image: url("../images/home1.webp");
     animation-delay: 6s, 0s;
 }
 
 .home-page .home-bg-slide-3 {
-    background-image: url("../images/home2.png");
+    background-image: url("../images/home2.webp");
     animation-delay: 12s, 0s;
 }
 
@@ -15902,17 +15902,17 @@ body.home-page .home-hero-photo::after {
 }
 
 body.home-page .home-hero-photo-1 {
-    background-image: url("../images/home1.png");
+    background-image: url("../images/home1.webp");
     animation-delay: 0s;
 }
 
 body.home-page .home-hero-photo-2 {
-    background-image: url("../images/home2.png");
+    background-image: url("../images/home2.webp");
     animation-delay: 5s;
 }
 
 body.home-page .home-hero-photo-3 {
-    background-image: url("../images/home.png");
+    background-image: url("../images/home.webp");
     animation-delay: 10s;
 }
 
@@ -16599,7 +16599,7 @@ body.home-page .home-process-section {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.92), rgba(36, 36, 55, 0.92)),
-        url("../images/home2.png") center / cover fixed !important;
+        url("../images/home2.webp") center / cover fixed !important;
 }
 
 body.home-page .home-process-section .section-label,
@@ -16996,7 +16996,7 @@ button[type="submit"]:not(.course-detail-close):hover {
     color: #ffffff !important;
     background:
         linear-gradient(112deg, rgba(36, 36, 55, 0.96) 0%, rgba(36, 36, 55, 0.86) 45%, rgba(79, 141, 247, 0.86) 100%),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 .page-hero::before {
@@ -17185,7 +17185,7 @@ button[type="submit"]:not(.course-detail-close):hover {
 .catalog-hero {
     background:
         linear-gradient(112deg, rgba(36, 36, 55, 0.96) 0%, rgba(36, 36, 55, 0.88) 45%, rgba(217, 28, 246, 0.78) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 .catalog-grid,
@@ -17267,7 +17267,7 @@ textarea:focus {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.96), rgba(36, 36, 55, 0.96)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
     color: #ffffff !important;
 }
 
@@ -18519,7 +18519,7 @@ body.home-page .model-projects {
     overflow: hidden !important;
     background:
         linear-gradient(rgba(36, 36, 55, 0.92), rgba(36, 36, 55, 0.94)),
-        url("../images/home2.png") center/cover !important;
+        url("../images/home2.webp") center/cover !important;
 }
 
 body.home-page .model-dark-head {
@@ -19032,7 +19032,7 @@ body.home-page .model-blog-card time {
 body.home-page .site-footer {
     background:
         linear-gradient(rgba(36, 36, 55, 0.96), rgba(36, 36, 55, 0.97)),
-        url("../images/home2.png") center/cover !important;
+        url("../images/home2.webp") center/cover !important;
 }
 
 body.home-page .site-footer::before {
@@ -21632,7 +21632,7 @@ body.about-page .page-hero {
     padding: 120px 0 90px !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero h1 {
@@ -21725,7 +21725,7 @@ body.about-page .about-value > i {
 body.about-page .about-image-band {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-band-copy {
@@ -21819,7 +21819,7 @@ body.about-page .page-hero {
     padding: 120px 0 90px !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -22133,7 +22133,7 @@ body.about-page .about-image-band {
     padding: clamp(84px, 7vw, 116px) 0 !important;
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -22382,7 +22382,7 @@ body.about-page .page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.92) 0%, rgba(34, 34, 50, 0.72) 38%, rgba(34, 34, 50, 0.24) 72%, rgba(217, 28, 246, 0.22) 100%),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -22597,7 +22597,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.16), rgba(38, 38, 58, 0.20)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -22816,7 +22816,7 @@ body.about-page .page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.90) 0%, rgba(34, 34, 50, 0.72) 36%, rgba(34, 34, 50, 0.22) 70%, rgba(217, 28, 246, 0.20) 100%),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -23100,7 +23100,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.18), rgba(38, 38, 58, 0.22)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container {
@@ -24297,7 +24297,7 @@ body.home-page .review-scroll-content strong {
     min-height: clamp(420px, 58vh, 620px) !important;
     background:
         linear-gradient(105deg, rgba(7, 14, 36, 0.96) 0%, rgba(12, 38, 79, 0.9) 46%, rgba(11, 94, 215, 0.68) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 .about-page .page-hero .site-container {
@@ -24490,7 +24490,7 @@ body.home-page .review-scroll-content strong {
     overflow: hidden !important;
     background:
         linear-gradient(110deg, rgba(7, 22, 47, 0.96), rgba(8, 48, 111, 0.92)),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 .about-page .about-image-band .site-container {
@@ -28497,7 +28497,7 @@ body.about-page .page-hero {
     align-items: center !important;
     background:
         linear-gradient(90deg, rgba(34, 34, 50, 0.92) 0%, rgba(34, 34, 50, 0.72) 38%, rgba(34, 34, 50, 0.24) 72%, rgba(217, 28, 246, 0.22) 100%),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero::before {
@@ -28679,7 +28679,7 @@ body.about-page .about-image-band {
     padding: clamp(94px, 8vw, 132px) 0 !important;
     background:
         linear-gradient(90deg, rgba(38, 38, 58, 0.16), rgba(38, 38, 58, 0.20)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-image-band .site-container { grid-template-columns: minmax(0, 0.9fr) minmax(420px, 0.78fr) !important; }
@@ -28717,7 +28717,7 @@ body.about-page .timeline-card::before { content: counter(aboutStepPost, decimal
 body.about-page .page-hero {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.94) 0%, rgba(31, 35, 62, 0.82) 44%, rgba(79, 140, 255, 0.36) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.about-page .page-hero h1 {
@@ -28803,7 +28803,7 @@ body.about-page .about-value > i {
 body.about-page .about-image-band {
     background:
         linear-gradient(90deg, rgba(18, 18, 35, 0.74), rgba(18, 18, 35, 0.58)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.about-page .about-band-copy {
@@ -28913,7 +28913,7 @@ body.home-page .page-main {
 body.home-page .home-hero {
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.88), rgba(16, 43, 88, 0.68), rgba(79, 140, 255, 0.30)),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.home-page .model-section,
@@ -28928,7 +28928,7 @@ body.home-page .model-blog-section {
 body.home-page .model-about {
     background:
         linear-gradient(90deg, rgba(255, 255, 255, 0.96), rgba(246, 249, 255, 0.88)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.home-page .model-services {
@@ -28942,7 +28942,7 @@ body.home-page .model-projects,
 body.home-page .model-path-section {
     background:
         linear-gradient(180deg, rgba(238, 246, 255, 0.93), rgba(255, 255, 255, 0.92)),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 body.home-page .model-team-section,
@@ -28956,7 +28956,7 @@ body.home-page .model-hire-section {
 body.home-page .model-review-section {
     background:
         linear-gradient(180deg, rgba(247, 250, 255, 0.94), rgba(255, 255, 255, 0.96)),
-        url("../images/home1.png") center / cover no-repeat !important;
+        url("../images/home1.webp") center / cover no-repeat !important;
 }
 
 body.home-page .model-blog-section {
@@ -28970,7 +28970,7 @@ body.home-page .model-blog-section {
 body.home-page .model-video-section {
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.68), rgba(7, 19, 38, 0.40)),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 @media (max-width: 900px) {
@@ -29142,7 +29142,7 @@ body.home-page .home-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(7, 19, 38, 0.92) 0%, rgba(14, 38, 78, 0.82) 44%, rgba(38, 121, 224, 0.62) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.home-page .home-hero::before {
@@ -29804,17 +29804,17 @@ body.home-page .home-hero-photo {
 }
 
 body.home-page .home-hero-photo-1 {
-    background-image: url("../images/home.png") !important;
+    background-image: url("../images/home.webp") !important;
     animation-delay: 0s !important;
 }
 
 body.home-page .home-hero-photo-2 {
-    background-image: url("../images/home1.png") !important;
+    background-image: url("../images/home1.webp") !important;
     animation-delay: 6s !important;
 }
 
 body.home-page .home-hero-photo-3 {
-    background-image: url("../images/home2.png") !important;
+    background-image: url("../images/home2.webp") !important;
     animation-delay: 12s !important;
 }
 
@@ -29877,7 +29877,7 @@ body.static-site.contact-page .contact-page-hero {
     overflow: hidden !important;
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.80) 48%, rgba(47, 132, 229, 0.58) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.static-site:not(.home-page) .page-hero::before,
@@ -29915,7 +29915,7 @@ body.static-site.contact-page .contact-page-hero .site-container {
 body.about-page .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.92) 0%, rgba(24, 55, 103, 0.76) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../images/home.png") center / cover no-repeat !important;
+        url("../images/home.webp") center / cover no-repeat !important;
 }
 
 body.course-list-page .course-page-hero,
@@ -29948,7 +29948,7 @@ body.blog-page .page-hero {
 body.static-site:not(.home-page):not(.about-page):not(.course-list-page):not(.contact-page):not(.services-page):not(.career-page):not(.project-page):not(.blog-page) .page-hero {
     background:
         linear-gradient(90deg, rgba(10, 24, 49, 0.94) 0%, rgba(24, 55, 103, 0.78) 48%, rgba(47, 132, 229, 0.54) 100%),
-        url("../images/home2.png") center / cover no-repeat !important;
+        url("../images/home2.webp") center / cover no-repeat !important;
 }
 
 body.cyber-security-course-page .catalog-hero {
@@ -37656,6 +37656,39 @@ html body.contact-page .contact-hero-copy p {
     text-align: left !important;
 }
 
+html body.services-page .page-hero.has-page-hero-image,
+html body.franchise-page .page-hero.has-page-hero-image,
+html body.hiring-page .page-hero.has-page-hero-image,
+html body.career-page .page-hero.has-page-hero-image,
+html body.review-page .page-hero.has-page-hero-image,
+html body.blog-page .page-hero.has-page-hero-image,
+html body.project-page .page-hero.has-page-hero-image {
+    background: #071832 !important;
+}
+
+html body.services-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.franchise-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.hiring-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.career-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.review-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.blog-page .page-hero.has-page-hero-image .page-hero-bg,
+html body.project-page .page-hero.has-page-hero-image .page-hero-bg {
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+html body.services-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.franchise-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.hiring-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.career-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.review-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.blog-page .page-hero.has-page-hero-image .page-hero-overlay,
+html body.project-page .page-hero.has-page-hero-image .page-hero-overlay {
+    background: linear-gradient(90deg, rgba(4, 10, 24, .74) 0%, rgba(4, 10, 24, .42) 46%, rgba(4, 10, 24, .12) 100%) !important;
+}
+
 @media (max-width: 760px) {
     html body .page-hero.has-page-hero-image {
         min-height: 390px !important;
@@ -38307,4 +38340,2794 @@ html body.home-page .home-hero .home-hero-copy h1.home-image-title::after {
     background: none !important;
     border: 0 !important;
     box-shadow: none !important;
+}
+
+/* Home featured course cards: keep image and content separate, no overlap. */
+html body.home-page .model-project-track {
+    align-items: stretch !important;
+}
+
+html body.home-page .model-course-showcase-card,
+html body.home-page .model-project-card.model-course-showcase-card {
+    min-height: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, .10) !important;
+    box-shadow: 0 22px 54px rgba(15, 23, 42, .10) !important;
+}
+
+html body.home-page .model-course-showcase-card::after,
+html body.home-page .model-project-card.model-course-showcase-card::after {
+    content: none !important;
+    display: none !important;
+}
+
+html body.home-page .model-course-showcase-card > img,
+html body.home-page .model-project-card.model-course-showcase-card > img {
+    position: static !important;
+    width: 100% !important;
+    height: clamp(210px, 17vw, 250px) !important;
+    min-height: 0 !important;
+    display: block !important;
+    flex: 0 0 auto !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: none !important;
+    filter: saturate(1.02) contrast(1.02) !important;
+}
+
+html body.home-page .model-course-card-content {
+    position: static !important;
+    inset: auto !important;
+    z-index: 2 !important;
+    min-height: 230px !important;
+    padding: 22px 24px 24px !important;
+    display: grid !important;
+    grid-template-rows: auto auto 1fr auto !important;
+    gap: 10px !important;
+    background: #ffffff !important;
+}
+
+html body.home-page .model-course-card-content span {
+    width: max-content !important;
+    max-width: 100% !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    color: #0b5ed7 !important;
+    -webkit-text-fill-color: #0b5ed7 !important;
+    background: #eaf4ff !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+}
+
+html body.home-page .model-course-card-content h3 {
+    margin: 0 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: clamp(20px, 1.5vw, 24px) !important;
+    line-height: 1.18 !important;
+    text-shadow: none !important;
+}
+
+html body.home-page .model-course-card-content p {
+    margin: 0 !important;
+    display: -webkit-box !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    text-shadow: none !important;
+}
+
+html body.home-page .model-course-card-content .model-course-enquire,
+html body.home-page .model-course-card-content button.model-course-enquire {
+    width: 100% !important;
+    min-height: 44px !important;
+    margin: 6px 0 0 !important;
+    padding: 0 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: linear-gradient(135deg, #0b8ff0, #20c7d9) !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+}
+
+@media (max-width: 900px) {
+    html body.home-page .model-course-showcase-card > img,
+    html body.home-page .model-project-card.model-course-showcase-card > img {
+        height: 220px !important;
+    }
+
+    html body.home-page .model-course-card-content {
+        min-height: 210px !important;
+    }
+}
+
+/* Why Talentteno cards: consistent full-width image crop. */
+html body.why-page .rich-detail-card,
+html body.static-site.why-page .rich-detail-card {
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+}
+
+html body.why-page .rich-detail-image,
+html body.static-site.why-page .rich-detail-image {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    margin: 0 !important;
+    border-radius: 8px 8px 0 0 !important;
+    background: #eaf4ff !important;
+}
+
+html body.why-page .rich-detail-image img,
+html body.static-site.why-page .rich-detail-image img {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: none !important;
+}
+
+html body.why-page .rich-detail-card:hover .rich-detail-image img,
+html body.static-site.why-page .rich-detail-card:hover .rich-detail-image img {
+    transform: scale(1.035) !important;
+}
+
+html body.why-page .rich-detail-body,
+html body.static-site.why-page .rich-detail-body {
+    padding: 30px 36px 34px !important;
+}
+
+/* Gallery page: show only admin uploads in a clean animated grid. */
+html body.gallery-page .admin-gallery-grid {
+    width: min(1240px, calc(100% - 48px)) !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 24px !important;
+    align-items: stretch !important;
+}
+
+html body.gallery-page .admin-gallery-card {
+    position: relative !important;
+    min-height: 0 !important;
+    aspect-ratio: 4 / 3 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+    background: #eaf4ff !important;
+    border: 1px solid rgba(37, 99, 235, .16) !important;
+    box-shadow: 0 22px 52px rgba(15, 23, 42, .10) !important;
+    transform: translateY(18px) scale(.985) !important;
+    opacity: 0 !important;
+    transition:
+        opacity .68s cubic-bezier(.16, 1, .3, 1),
+        transform .68s cubic-bezier(.16, 1, .3, 1),
+        box-shadow .28s ease,
+        border-color .28s ease !important;
+}
+
+html body.gallery-page .admin-gallery-card.is-visible,
+html body.gallery-page .admin-gallery-card.reveal.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+html body.gallery-page .admin-gallery-card:nth-child(3n + 1) {
+    transition-delay: .04s !important;
+}
+
+html body.gallery-page .admin-gallery-card:nth-child(3n + 2) {
+    transition-delay: .12s !important;
+}
+
+html body.gallery-page .admin-gallery-card:nth-child(3n) {
+    transition-delay: .20s !important;
+}
+
+html body.gallery-page .admin-gallery-card img {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.01) !important;
+    transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .7s ease !important;
+}
+
+html body.gallery-page .admin-gallery-card::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    background: linear-gradient(135deg, rgba(11, 143, 240, .18), rgba(217, 28, 246, .14)) !important;
+    transition: opacity .3s ease !important;
+}
+
+html body.gallery-page .admin-gallery-card:hover,
+html body.gallery-page .admin-gallery-card:focus-within {
+    border-color: rgba(37, 99, 235, .36) !important;
+    box-shadow: 0 30px 72px rgba(37, 99, 235, .16) !important;
+    transform: translateY(-6px) scale(1.01) !important;
+}
+
+html body.gallery-page .admin-gallery-card:hover img,
+html body.gallery-page .admin-gallery-card:focus-within img {
+    transform: scale(1.075) !important;
+    filter: saturate(1.08) contrast(1.04) !important;
+}
+
+html body.gallery-page .admin-gallery-card:hover::after,
+html body.gallery-page .admin-gallery-card:focus-within::after {
+    opacity: 1 !important;
+}
+
+html body.gallery-page .gallery-empty {
+    width: min(760px, calc(100% - 48px)) !important;
+    min-height: 320px !important;
+    display: grid !important;
+    place-items: center !important;
+    align-content: center !important;
+    gap: 14px !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    border: 1px dashed rgba(37, 99, 235, .35) !important;
+    box-shadow: 0 22px 54px rgba(15, 23, 42, .08) !important;
+}
+
+html body.gallery-page .gallery-empty i {
+    width: 64px !important;
+    height: 64px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0b8ff0, #d91cf6) !important;
+    font-size: 26px !important;
+}
+
+html body.gallery-page .gallery-empty h2 {
+    margin: 0 !important;
+    color: #0f172a !important;
+    font-size: clamp(24px, 3vw, 34px) !important;
+    line-height: 1.15 !important;
+}
+
+html body.gallery-page .gallery-empty p {
+    max-width: 560px !important;
+    margin: 0 !important;
+    color: #475569 !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+}
+
+@media (max-width: 980px) {
+    html body.gallery-page .admin-gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 18px !important;
+    }
+}
+
+@media (max-width: 620px) {
+    html body.gallery-page .admin-gallery-grid {
+        width: min(100% - 30px, 460px) !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Hiring page enquiry form and role layout. */
+html body.hiring-page .rich-detail-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+}
+
+html body.hiring-page .rich-detail-card {
+    min-height: 560px !important;
+    display: grid !important;
+    grid-template-rows: auto 1fr !important;
+    border-radius: 8px !important;
+}
+
+html body.hiring-page .rich-detail-image {
+    aspect-ratio: 16 / 10 !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+html body.hiring-page .rich-detail-body {
+    padding: 26px 28px 30px !important;
+    display: grid !important;
+    grid-template-rows: auto auto auto 1fr auto !important;
+    align-content: start !important;
+    min-height: 0 !important;
+}
+
+html body.hiring-page .rich-detail-body > i {
+    margin-top: -54px !important;
+    margin-bottom: 16px !important;
+}
+
+html body.hiring-page .rich-detail-body h3 {
+    min-height: 64px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+}
+
+html body.hiring-page .rich-detail-short {
+    min-height: 52px !important;
+}
+
+html body.hiring-page .rich-detail-more {
+    min-height: 112px !important;
+}
+
+html body.hiring-page .rich-detail-link {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 18px !important;
+}
+
+html body.hiring-page .hiring-form-section {
+    background:
+        radial-gradient(circle at 16% 0%, rgba(37, 99, 235, .10), transparent 32%),
+        linear-gradient(180deg, #eef6ff 0%, #ffffff 100%) !important;
+}
+
+html body.hiring-page .hiring-form-layout {
+    width: min(1180px, calc(100% - 48px)) !important;
+    display: grid !important;
+    grid-template-columns: minmax(280px, .78fr) minmax(420px, 1fr) !important;
+    gap: clamp(28px, 4vw, 56px) !important;
+    align-items: start !important;
+}
+
+html body.hiring-page .hiring-form-copy {
+    position: sticky !important;
+    top: 110px !important;
+    padding: 34px !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(37, 99, 235, .16) !important;
+    box-shadow: 0 24px 62px rgba(15, 23, 42, .10) !important;
+}
+
+html body.hiring-page .hiring-form-copy h2 {
+    margin: 12px 0 12px !important;
+    color: #0f172a !important;
+    font-size: clamp(30px, 3vw, 46px) !important;
+    line-height: 1.06 !important;
+}
+
+html body.hiring-page .hiring-form-copy p {
+    margin: 0 0 24px !important;
+    color: #475569 !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+}
+
+html body.hiring-page .hiring-form-copy ul {
+    display: grid !important;
+    gap: 12px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+html body.hiring-page .hiring-form-copy li {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+html body.hiring-page .hiring-form-copy li i {
+    color: #0b8ff0 !important;
+}
+
+html body.hiring-page .hiring-enquiry-form {
+    width: 100% !important;
+    border-radius: 8px !important;
+    border-top: 5px solid #0b8ff0 !important;
+}
+
+html body.hiring-page .hiring-resume-field {
+    padding: 16px !important;
+    border: 1px dashed rgba(37, 99, 235, .35) !important;
+    border-radius: 8px !important;
+    background: #f8fbff !important;
+}
+
+html body.hiring-page .hiring-resume-field input[type="file"] {
+    width: 100% !important;
+    padding: 13px !important;
+    border: 1px solid rgba(37, 99, 235, .20) !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+html body.hiring-page .hiring-resume-field small {
+    display: block !important;
+    margin-top: 8px !important;
+    color: #64748b !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+html body.hiring-page .hiring-enquiry-form button[type="submit"] {
+    width: 100% !important;
+    min-height: 52px !important;
+    justify-content: center !important;
+}
+
+@media (max-width: 1180px) {
+    html body.hiring-page .rich-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    html body.hiring-page .hiring-form-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.hiring-page .hiring-form-copy {
+        position: relative !important;
+        top: auto !important;
+    }
+}
+
+@media (max-width: 620px) {
+    html body.hiring-page .rich-detail-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.hiring-page .hiring-form-layout {
+        width: min(100% - 30px, 460px) !important;
+    }
+}
+
+/* Hiring cards final: two-row large rectangle layout. */
+html body.hiring-page .section > .rich-detail-grid,
+html body.hiring-page .site-container.rich-detail-grid {
+    width: min(1180px, calc(100% - 48px)) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px !important;
+}
+
+html body.hiring-page .rich-detail-card {
+    min-height: 330px !important;
+    display: grid !important;
+    grid-template-columns: minmax(220px, 42%) minmax(0, 1fr) !important;
+    grid-template-rows: 1fr !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+html body.hiring-page .rich-detail-image {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 330px !important;
+    aspect-ratio: auto !important;
+    border-radius: 8px 0 0 8px !important;
+}
+
+html body.hiring-page .rich-detail-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+}
+
+html body.hiring-page .rich-detail-body {
+    min-height: 330px !important;
+    padding: 34px 34px 30px !important;
+    display: grid !important;
+    grid-template-rows: auto auto auto 1fr auto !important;
+}
+
+html body.hiring-page .rich-detail-body > i {
+    margin: 0 0 18px !important;
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    border-radius: 8px !important;
+}
+
+html body.hiring-page .rich-detail-body h3 {
+    min-height: 0 !important;
+    margin-bottom: 12px !important;
+    font-size: clamp(24px, 2.2vw, 32px) !important;
+    line-height: 1.12 !important;
+}
+
+html body.hiring-page .rich-detail-short {
+    min-height: 0 !important;
+    margin-bottom: 14px !important;
+}
+
+html body.hiring-page .rich-detail-more {
+    min-height: 0 !important;
+    margin-bottom: 18px !important;
+}
+
+html body.hiring-page .rich-detail-link {
+    align-self: end !important;
+}
+
+@media (max-width: 900px) {
+    html body.hiring-page .section > .rich-detail-grid,
+    html body.hiring-page .site-container.rich-detail-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 680px) {
+    html body.hiring-page .rich-detail-card {
+        grid-template-columns: 1fr !important;
+        min-height: 0 !important;
+    }
+
+    html body.hiring-page .rich-detail-image {
+        min-height: 220px !important;
+        height: 220px !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+
+    html body.hiring-page .rich-detail-body {
+        min-height: 0 !important;
+    }
+}
+
+/* Fast home hero image fix: five optimized right-side images, no missing PNG calls. */
+html body.home-page .home-hero {
+    min-height: 560px !important;
+    padding: 34px 0 !important;
+    background:
+        linear-gradient(104deg, #ffffff 0 49%, rgba(255, 255, 255, .96) 49.2% 50.4%, rgba(18, 44, 88, .92) 50.6% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-hero::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    background:
+        linear-gradient(104deg, transparent 0 49.8%, rgba(5, 18, 45, .16) 50.2% 100%),
+        radial-gradient(circle at 82% 32%, rgba(79, 140, 255, .22), transparent 30%) !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-hero .hero-grid {
+    position: relative !important;
+    z-index: 3 !important;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px) !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 49% !important;
+    z-index: 0 !important;
+    overflow: hidden !important;
+    display: block !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+    background:
+        linear-gradient(90deg, rgba(13, 35, 72, .46), rgba(10, 25, 55, .68)),
+        linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(10, 24, 54, .22)) !important;
+}
+
+html body.home-page .home-bg-slide {
+    position: absolute !important;
+    display: block !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    box-shadow: 0 20px 46px rgba(4, 16, 42, .28) !important;
+    opacity: .92 !important;
+    transform: translateZ(0) !important;
+    will-change: auto !important;
+}
+
+html body.home-page .home-bg-slide-1 {
+    width: 34% !important;
+    height: 31% !important;
+    right: 39% !important;
+    top: 8% !important;
+    background-image: url("../images/home.webp") !important;
+}
+
+html body.home-page .home-bg-slide-2 {
+    width: 30% !important;
+    height: 26% !important;
+    right: 8% !important;
+    top: 12% !important;
+    background-image: url("../images/home1.webp") !important;
+}
+
+html body.home-page .home-bg-slide-3 {
+    width: 36% !important;
+    height: 34% !important;
+    right: 28% !important;
+    top: 38% !important;
+    background-image: url("../images/home2.webp") !important;
+}
+
+html body.home-page .home-bg-slide-4 {
+    width: 25% !important;
+    height: 23% !important;
+    right: 5% !important;
+    top: 46% !important;
+    background-image: url("../images/home3.webp") !important;
+}
+
+html body.home-page .home-bg-slide-5 {
+    width: 32% !important;
+    height: 24% !important;
+    right: 17% !important;
+    bottom: 5% !important;
+    background-image: url("../images/home4.webp") !important;
+}
+
+html body.home-page .home-hero-media,
+html body.home-page .home-hero-photo {
+    display: none !important;
+}
+
+html body.home-page .home-counselling-card {
+    contain: layout paint !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html body.home-page .home-social-rail a:nth-child(3) {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 46%),
+        linear-gradient(135deg, #25d366 0%, #10b957 100%) !important;
+    box-shadow: 0 16px 34px rgba(33, 197, 93, .28) !important;
+}
+
+html body.home-page .home-social-rail a:nth-child(3):hover,
+html body.home-page .home-social-rail a:nth-child(3):focus-visible {
+    background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero {
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-bg-slider {
+        inset: auto 0 0 0 !important;
+        height: 220px !important;
+        opacity: .18 !important;
+    }
+
+    html body.home-page .home-bg-slide {
+        box-shadow: none !important;
+    }
+
+    html body.home-page .home-bg-slide-4,
+    html body.home-page .home-bg-slide-5 {
+        display: none !important;
+    }
+}
+
+@media (max-width: 640px) {
+    html body.home-page .home-bg-slider {
+        display: none !important;
+    }
+
+    html body.home-page .home-hero {
+        padding: 28px 0 34px !important;
+    }
+}
+
+/* Final home hero auto-scroll: one polished right-side panel rotating 5 images. */
+html body.home-page .home-hero,
+html body .hero-lite.home-hero {
+    isolation: isolate !important;
+    min-height: 590px !important;
+    padding: 38px 0 !important;
+    background:
+        linear-gradient(104deg, #ffffff 0 48.8%, rgba(255, 255, 255, .98) 49%, rgba(17, 43, 86, .98) 49.2% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .98) 0 49.2%, rgba(9, 26, 58, .10) 49.4% 100%),
+        radial-gradient(circle at 82% 20%, rgba(0, 168, 255, .28), transparent 28%),
+        radial-gradient(circle at 92% 78%, rgba(217, 28, 246, .18), transparent 26%) !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 49% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    clip-path: polygon(11% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #112b56 !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 4 !important;
+    background:
+        linear-gradient(90deg, rgba(14, 35, 75, .34), rgba(10, 27, 61, .10) 42%, rgba(10, 27, 61, .42)),
+        linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(6, 20, 49, .16)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 5 !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .82) 0 9.8%, transparent 10.2%),
+        linear-gradient(90deg, rgba(255, 255, 255, .04), transparent 18%),
+        radial-gradient(circle at 74% 28%, rgba(255, 255, 255, .12), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    display: block !important;
+    border-radius: 0 !important;
+    opacity: 0 !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    box-shadow: none !important;
+    transform: scale(1.04) translate3d(0, 0, 0) !important;
+    animation: homeFiveImageAutoScroll 25s linear infinite !important;
+    will-change: opacity, transform !important;
+}
+
+html body.home-page .home-bg-slide-1 {
+    background-image: url("../images/home.webp") !important;
+    animation-delay: 0s !important;
+}
+
+html body.home-page .home-bg-slide-2 {
+    background-image: url("../images/home1.webp") !important;
+    animation-delay: 5s !important;
+}
+
+html body.home-page .home-bg-slide-3 {
+    background-image: url("../images/home2.webp") !important;
+    animation-delay: 10s !important;
+}
+
+html body.home-page .home-bg-slide-4 {
+    background-image: url("../images/home3.webp") !important;
+    animation-delay: 15s !important;
+}
+
+html body.home-page .home-bg-slide-5 {
+    background-image: url("../images/home4.webp") !important;
+    animation-delay: 20s !important;
+}
+
+@keyframes homeFiveImageAutoScroll {
+    0% {
+        opacity: .96;
+        transform: scale(1.04) translateX(18px);
+    }
+    16% {
+        opacity: .96;
+    }
+    20% {
+        opacity: 0;
+        transform: scale(1.12) translateX(-18px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.12) translateX(-18px);
+    }
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    position: relative !important;
+    z-index: 6 !important;
+    min-height: 510px !important;
+}
+
+html body.home-page .eduleb-hero-side {
+    justify-self: center !important;
+}
+
+html body.home-page .home-counselling-card {
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 255, 255, .46) !important;
+    border-top: 5px solid #d91cf6 !important;
+    background: rgba(255, 255, 255, .94) !important;
+    box-shadow: 0 28px 70px rgba(3, 14, 40, .32) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero,
+    html body .hero-lite.home-hero {
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .96) 0 48%, rgba(15, 42, 86, .94) 48.2% 100%),
+            #ffffff !important;
+    }
+
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        height: auto !important;
+        min-height: 100% !important;
+        clip-path: none !important;
+        opacity: 1 !important;
+    }
+
+    html body.home-page .home-bg-slide-4,
+    html body.home-page .home-bg-slide-5 {
+        display: block !important;
+    }
+}
+
+@media (max-width: 640px) {
+    html body.home-page .home-bg-slider {
+        display: block !important;
+        inset: 0 !important;
+        height: auto !important;
+        opacity: .34 !important;
+    }
+
+    html body.home-page .home-hero,
+    html body .hero-lite.home-hero {
+        min-height: auto !important;
+        padding: 28px 0 36px !important;
+    }
+}
+
+/* Right side only home image slider: real image layers, continuous 5-image scroll. */
+html body.home-page .home-hero,
+html body .hero-lite.home-hero {
+    background:
+        linear-gradient(104deg, #ffffff 0 48.8%, #102a56 49% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 49% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 8 !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .86) 0 10.6%, transparent 10.9%),
+        linear-gradient(90deg, rgba(8, 25, 57, .18), rgba(8, 25, 57, .08) 48%, rgba(8, 25, 57, .30)),
+        radial-gradient(circle at 72% 28%, rgba(255, 255, 255, .10), transparent 2px) 0 0 / 42px 42px !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: none !important;
+    display: none !important;
+}
+
+html body.home-page img.home-bg-slide,
+html body.home-page .home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    transform: scale(1.05) translateX(20px) !important;
+    animation: homeRightImageScroll 25s ease-in-out infinite !important;
+    will-change: opacity, transform !important;
+}
+
+html body.home-page .home-bg-slide-1 {
+    animation-delay: 0s !important;
+}
+
+html body.home-page .home-bg-slide-2 {
+    animation-delay: -20s !important;
+}
+
+html body.home-page .home-bg-slide-3 {
+    animation-delay: -15s !important;
+}
+
+html body.home-page .home-bg-slide-4 {
+    animation-delay: -10s !important;
+}
+
+html body.home-page .home-bg-slide-5 {
+    animation-delay: -5s !important;
+}
+
+@keyframes homeRightImageScroll {
+    0%, 17% {
+        opacity: 1;
+        transform: scale(1.05) translateX(20px);
+    }
+    20%, 100% {
+        opacity: 0;
+        transform: scale(1.13) translateX(-24px);
+    }
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .98) 0 49.1%, rgba(8, 25, 57, .08) 49.3% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    position: relative !important;
+    z-index: 9 !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+
+    html body.home-page .home-bg-slider::before {
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .88) 0 45%, rgba(8, 25, 57, .38) 45.2% 100%),
+            radial-gradient(circle at 72% 28%, rgba(255, 255, 255, .08), transparent 2px) 0 0 / 42px 42px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    html body.home-page .home-bg-slider {
+        opacity: .42 !important;
+    }
+}
+
+/* Right hero image final crop fix: keep same model, show images clearly. */
+html body.home-page .home-bg-slider {
+    inset: 0 0 0 49.5% !important;
+    clip-path: polygon(11% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+}
+
+html body.home-page img.home-bg-slide,
+html body.home-page .home-bg-slide {
+    object-fit: cover !important;
+    object-position: center center !important;
+    filter: saturate(1.05) contrast(1.03) brightness(1.04) !important;
+    transform: scale(1.01) translateX(0) !important;
+    animation: homeRightImageCleanScroll 25s ease-in-out infinite !important;
+}
+
+html body.home-page .home-bg-slide-1,
+html body.home-page .home-bg-slide-2,
+html body.home-page .home-bg-slide-3,
+html body.home-page .home-bg-slide-4,
+html body.home-page .home-bg-slide-5 {
+    width: 100% !important;
+    height: 100% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+}
+
+html body.home-page .home-bg-slide-1 {
+    object-position: center center !important;
+    animation-delay: 0s !important;
+}
+
+html body.home-page .home-bg-slide-2 {
+    object-position: center center !important;
+    animation-delay: -20s !important;
+}
+
+html body.home-page .home-bg-slide-3 {
+    object-position: center center !important;
+    animation-delay: -15s !important;
+}
+
+html body.home-page .home-bg-slide-4 {
+    object-position: center center !important;
+    animation-delay: -10s !important;
+}
+
+html body.home-page .home-bg-slide-5 {
+    object-position: center center !important;
+    animation-delay: -5s !important;
+}
+
+@keyframes homeRightImageCleanScroll {
+    0%, 18% {
+        opacity: 1;
+        transform: scale(1.01) translateX(0);
+    }
+    20%, 100% {
+        opacity: 0;
+        transform: scale(1.035) translateX(-10px);
+    }
+}
+
+html body.home-page .home-bg-slider::before {
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .90) 0 10.4%, transparent 10.8%),
+        linear-gradient(90deg, rgba(8, 25, 57, .10), rgba(8, 25, 57, .04) 48%, rgba(8, 25, 57, .18)),
+        radial-gradient(circle at 72% 28%, rgba(255, 255, 255, .08), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-hero::before {
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .98) 0 49.35%, rgba(8, 25, 57, .04) 49.55% 100%) !important;
+}
+
+html body.home-page .home-counselling-card {
+    background: rgba(255, 255, 255, .96) !important;
+    box-shadow: 0 24px 64px rgba(3, 14, 40, .28) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+
+    html body.home-page img.home-bg-slide,
+    html body.home-page .home-bg-slide {
+        object-position: center center !important;
+    }
+}
+
+/* Guaranteed visible right-side slider: no blank blue gaps. */
+html body.home-page .home-bg-slider {
+    inset: 0 0 0 49.5% !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    clip-path: polygon(11% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background:
+        linear-gradient(90deg, rgba(8, 25, 57, .10), rgba(8, 25, 57, .14)),
+        url("../images/home.webp") center center / cover no-repeat,
+        #102a56 !important;
+}
+
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    opacity: 0 !important;
+    visibility: visible !important;
+    transform: scale(1.01) !important;
+    animation: homeRightGuaranteedSlider 25s ease-in-out infinite !important;
+    filter: saturate(1.05) contrast(1.02) brightness(1.05) !important;
+}
+
+html body.home-page img.home-bg-slide-1 {
+    animation-delay: 0s !important;
+}
+
+html body.home-page img.home-bg-slide-2 {
+    animation-delay: 5s !important;
+}
+
+html body.home-page img.home-bg-slide-3 {
+    animation-delay: 10s !important;
+}
+
+html body.home-page img.home-bg-slide-4 {
+    animation-delay: 15s !important;
+}
+
+html body.home-page img.home-bg-slide-5 {
+    animation-delay: 20s !important;
+}
+
+@keyframes homeRightGuaranteedSlider {
+    0%, 22% {
+        opacity: 1;
+        transform: scale(1.01) translateX(0);
+    }
+    26%, 100% {
+        opacity: 0;
+        transform: scale(1.04) translateX(-8px);
+    }
+}
+
+html body.home-page .home-bg-slider::before {
+    z-index: 5 !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .88) 0 10.4%, transparent 10.8%),
+        linear-gradient(90deg, rgba(8, 25, 57, .08), rgba(8, 25, 57, .02) 46%, rgba(8, 25, 57, .16)),
+        radial-gradient(circle at 72% 28%, rgba(255, 255, 255, .08), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-hero::before {
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .98) 0 49.35%, rgba(8, 25, 57, .02) 49.55% 100%) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+}
+
+/* Absolute final home right background model. */
+html body.home-page .home-hero,
+html body.home-page .hero-lite.home-hero {
+    min-height: 655px !important;
+    overflow: hidden !important;
+    background:
+        linear-gradient(104deg, #ffffff 0 49%, #102a56 49.15% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 48.4% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    clip-path: polygon(8.2% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.96) 0 7.6%, transparent 7.9%),
+        linear-gradient(90deg, rgba(7,20,48,.04), rgba(7,20,48,.02) 52%, rgba(7,20,48,.20)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.02) 0 58%, rgba(5,16,40,.18) 100%),
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.12), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide,
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+    animation: ttHomeRightSameModel 25s ease-in-out infinite !important;
+    filter: saturate(1.06) contrast(1.03) brightness(1.04) !important;
+    will-change: transform, opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1,
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2,
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3,
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4,
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5,
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeRightSameModel {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    4%, 18% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    22%, 100% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.99) 0 48.85%, rgba(8,25,57,.02) 49.05% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    min-height: 575px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    align-items: center !important;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 360px) !important;
+}
+
+html body.home-page .eduleb-hero-side {
+    justify-self: center !important;
+    align-self: center !important;
+}
+
+html body.home-page .home-counselling-card {
+    margin-top: 70px !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero,
+    html body.home-page .hero-lite.home-hero {
+        min-height: 0 !important;
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+        opacity: .24 !important;
+    }
+
+    html body.home-page .home-bg-slider img.home-bg-slide,
+    html body.home-page img.home-bg-slide {
+        object-position: center center !important;
+    }
+
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        min-height: 0 !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .home-counselling-card {
+        margin-top: 0 !important;
+    }
+}
+
+/* Absolute final same-align override: no image movement between slides. */
+html body.home-page .home-bg-slider img.home-bg-slide,
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: none !important;
+    animation: ttHomeRightSameAlignFinal 25s ease-in-out infinite !important;
+    filter: saturate(1.06) contrast(1.03) brightness(1.04) !important;
+    will-change: opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1,
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2,
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3,
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4,
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5,
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeRightSameAlignFinal {
+    0%, 2% {
+        opacity: 0;
+        transform: none;
+    }
+    5%, 18% {
+        opacity: 1;
+        transform: none;
+    }
+    21%, 100% {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+/* Absolute final home right same alignment: images fade in the same fixed frame. */
+html body.home-page .home-bg-slider img.home-bg-slide,
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: none !important;
+    animation: ttHomeRightSameAlign 25s ease-in-out infinite !important;
+    filter: saturate(1.06) contrast(1.03) brightness(1.04) !important;
+    will-change: opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1,
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2,
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3,
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4,
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5,
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeRightSameAlign {
+    0%, 2% {
+        opacity: 0;
+        transform: none;
+    }
+    5%, 18% {
+        opacity: 1;
+        transform: none;
+    }
+    21%, 100% {
+        opacity: 0;
+        transform: none;
+    }
+}
+
+/* Home hero right background: keep one consistent angled model for all 5 slides. */
+html body.home-page .home-hero,
+html body.home-page .hero-lite.home-hero {
+    min-height: 655px !important;
+    overflow: hidden !important;
+    background:
+        linear-gradient(104deg, #ffffff 0 49%, #102a56 49.15% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 48.4% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    clip-path: polygon(8.2% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.96) 0 7.6%, transparent 7.9%),
+        linear-gradient(90deg, rgba(7,20,48,.04), rgba(7,20,48,.02) 52%, rgba(7,20,48,.20)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.02) 0 58%, rgba(5,16,40,.18) 100%),
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.12), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide,
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+    animation: ttHomeRightSameModel 25s ease-in-out infinite !important;
+    filter: saturate(1.06) contrast(1.03) brightness(1.04) !important;
+    will-change: transform, opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1,
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2,
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3,
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4,
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5,
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeRightSameModel {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    4%, 18% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    22%, 100% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.99) 0 48.85%, rgba(8,25,57,.02) 49.05% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    min-height: 575px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    align-items: center !important;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 360px) !important;
+}
+
+html body.home-page .eduleb-hero-side {
+    justify-self: center !important;
+    align-self: center !important;
+}
+
+html body.home-page .home-counselling-card {
+    margin-top: 70px !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero,
+    html body.home-page .hero-lite.home-hero {
+        min-height: 0 !important;
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+        opacity: .24 !important;
+    }
+
+    html body.home-page .home-bg-slider img.home-bg-slide,
+    html body.home-page img.home-bg-slide {
+        object-position: center center !important;
+    }
+
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        min-height: 0 !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .home-counselling-card {
+        margin-top: 0 !important;
+    }
+}
+
+/* Home hero image slider: use the five real image layers with one stable crop. */
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 49.2% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    clip-path: polygon(11.5% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.90) 0 10.5%, transparent 10.9%),
+        linear-gradient(90deg, rgba(7,20,48,.08), rgba(7,20,48,.02) 45%, rgba(7,20,48,.18)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    background:
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.13), transparent 2px) 0 0 / 42px 42px,
+        linear-gradient(90deg, transparent 0 63%, rgba(7, 20, 48, .18) 100%) !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+    animation: ttHomeFiveImageScroll 25s ease-in-out infinite !important;
+    filter: saturate(1.08) contrast(1.04) brightness(1.05) !important;
+    will-change: transform, opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeFiveImageScroll {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    3%, 18% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    22%, 100% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+        opacity: .28 !important;
+    }
+
+    html body.home-page .home-bg-slider img.home-bg-slide {
+        object-position: center center !important;
+    }
+}
+
+/* Full-view right image alignment: avoid crop under diagonal, slide one by one. */
+html body.home-page .home-bg-slider {
+    inset: 0 0 0 49.2% !important;
+    clip-path: polygon(11.5% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background:
+        linear-gradient(180deg, rgba(16,42,86,.08) 0 58%, rgba(16,42,86,.98) 86%),
+        #102a56 !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    z-index: 6 !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.92) 0 10.4%, transparent 10.8%),
+        linear-gradient(180deg, transparent 0 58%, rgba(8,25,57,.58) 100%) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    z-index: 7 !important;
+    background:
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.10), transparent 2px) 0 0 / 42px 42px,
+        linear-gradient(90deg, transparent 0 62%, rgba(7,20,48,.14) 100%) !important;
+}
+
+html body.home-page img.home-bg-slide {
+    top: 0 !important;
+    left: 9.5% !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 90.5% !important;
+    height: 64% !important;
+    object-fit: contain !important;
+    object-position: left top !important;
+    opacity: 1 !important;
+    transform: translateX(112%) !important;
+    animation: homeRightFullViewScroll 25s ease-in-out infinite !important;
+    background: #102a56 !important;
+    filter: saturate(1.08) contrast(1.04) brightness(1.04) !important;
+}
+
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes homeRightFullViewScroll {
+    0% {
+        transform: translateX(112%);
+    }
+    4%, 18% {
+        transform: translateX(0);
+    }
+    22%, 100% {
+        transform: translateX(-112%);
+    }
+}
+
+html body.home-page .home-counselling-card {
+    margin-top: 138px !important;
+}
+
+@media (max-width: 1180px) {
+    html body.home-page img.home-bg-slide {
+        height: 58% !important;
+    }
+
+    html body.home-page .home-counselling-card {
+        margin-top: 110px !important;
+    }
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+
+    html body.home-page img.home-bg-slide {
+        left: 0 !important;
+        width: 100% !important;
+        height: 44% !important;
+    }
+
+    html body.home-page .home-counselling-card {
+        margin-top: 0 !important;
+    }
+}
+
+/* Final polished right-side slideshow. Keep images only on the right and slide cleanly. */
+html body.home-page .home-hero,
+html body .hero-lite.home-hero {
+    background:
+        linear-gradient(104deg, #ffffff 0 48.9%, #102a56 49.1% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 49.2% !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+    display: block !important;
+    opacity: 1 !important;
+    clip-path: polygon(11.5% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background:
+        linear-gradient(90deg, rgba(8, 25, 57, .08), rgba(8, 25, 57, .12)),
+        url("../images/home.webp") center center / cover no-repeat,
+        #102a56 !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(104deg, rgba(255, 255, 255, .90) 0 10.5%, transparent 10.9%),
+        linear-gradient(90deg, rgba(7, 20, 48, .10), rgba(7, 20, 48, .02) 44%, rgba(7, 20, 48, .26)),
+        linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(3, 12, 34, .18)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    background:
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.13), transparent 2px) 0 0 / 42px 42px,
+        linear-gradient(90deg, transparent 0 63%, rgba(7, 20, 48, .18) 100%) !important;
+}
+
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: scale(1.04) translateX(7%) !important;
+    animation: homeRightPolishedScroll 25s cubic-bezier(.4, 0, .2, 1) infinite !important;
+    filter: saturate(1.08) contrast(1.04) brightness(1.05) !important;
+    will-change: opacity, transform !important;
+}
+
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes homeRightPolishedScroll {
+    0% {
+        opacity: 0;
+        transform: scale(1.04) translateX(7%);
+    }
+    4%, 18% {
+        opacity: 1;
+        transform: scale(1.02) translateX(0);
+    }
+    22%, 100% {
+        opacity: 0;
+        transform: scale(1.045) translateX(-7%);
+    }
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.99) 0 49.15%, rgba(8,25,57,.03) 49.35% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid {
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 360px) !important;
+    gap: clamp(28px, 4vw, 52px) !important;
+}
+
+html body.home-page .eduleb-hero-side {
+    justify-self: center !important;
+    align-self: center !important;
+}
+
+html body.home-page .home-counselling-card {
+    background: rgba(255, 255, 255, .97) !important;
+    border: 1px solid rgba(255, 255, 255, .62) !important;
+    border-top: 5px solid #d91cf6 !important;
+    box-shadow: 0 28px 72px rgba(3, 14, 40, .30) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+
+    html body.home-page .home-bg-slider::before {
+        background:
+            linear-gradient(180deg, rgba(255,255,255,.92) 0 45%, rgba(7,20,48,.28) 45.2% 100%) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    html body.home-page .home-bg-slider {
+        opacity: .34 !important;
+    }
+}
+
+/* Final right hero sequence: same alignment, one-by-one slide scrolling. */
+html body.home-page .home-bg-slider {
+    inset: 0 0 0 49.2% !important;
+    clip-path: polygon(11.5% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background:
+        linear-gradient(90deg, rgba(8, 25, 57, .08), rgba(8, 25, 57, .12)),
+        url("../images/home.webp") center center / cover no-repeat,
+        #102a56 !important;
+}
+
+html body.home-page img.home-bg-slide {
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 1 !important;
+    transform: translateX(100%) scale(1) !important;
+    animation: homeRightOneByOneScroll 25s ease-in-out infinite !important;
+    filter: saturate(1.08) contrast(1.04) brightness(1.05) !important;
+}
+
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes homeRightOneByOneScroll {
+    0% {
+        transform: translateX(100%) scale(1);
+    }
+    4%, 18% {
+        transform: translateX(0) scale(1);
+    }
+    22%, 100% {
+        transform: translateX(-100%) scale(1);
+    }
+}
+
+html body.home-page .home-bg-slider::before {
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.90) 0 10.5%, transparent 10.9%),
+        linear-gradient(90deg, rgba(7,20,48,.08), rgba(7,20,48,.02) 45%, rgba(7,20,48,.18)) !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+    }
+}
+
+/* Absolute final home right background model. */
+html body.home-page .home-hero,
+html body.home-page .hero-lite.home-hero {
+    min-height: 655px !important;
+    overflow: hidden !important;
+    background:
+        linear-gradient(104deg, #ffffff 0 49%, #102a56 49.15% 100%),
+        #ffffff !important;
+}
+
+html body.home-page .home-bg-slider {
+    position: absolute !important;
+    inset: 0 0 0 48.4% !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    clip-path: polygon(8.2% 0, 100% 0, 100% 100%, 0 100%) !important;
+    background: #102a56 !important;
+    pointer-events: none !important;
+}
+
+html body.home-page .home-bg-slider::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.96) 0 7.6%, transparent 7.9%),
+        linear-gradient(90deg, rgba(7,20,48,.04), rgba(7,20,48,.02) 52%, rgba(7,20,48,.20)) !important;
+}
+
+html body.home-page .home-bg-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.02) 0 58%, rgba(5,16,40,.18) 100%),
+        radial-gradient(circle at 76% 25%, rgba(255,255,255,.12), transparent 2px) 0 0 / 42px 42px !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide,
+html body.home-page img.home-bg-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+    animation: ttHomeRightSameModel 25s ease-in-out infinite !important;
+    filter: saturate(1.06) contrast(1.03) brightness(1.04) !important;
+    will-change: transform, opacity !important;
+}
+
+html body.home-page .home-bg-slider img.home-bg-slide-1,
+html body.home-page img.home-bg-slide-1 { animation-delay: 0s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-2,
+html body.home-page img.home-bg-slide-2 { animation-delay: 5s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-3,
+html body.home-page img.home-bg-slide-3 { animation-delay: 10s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-4,
+html body.home-page img.home-bg-slide-4 { animation-delay: 15s !important; }
+html body.home-page .home-bg-slider img.home-bg-slide-5,
+html body.home-page img.home-bg-slide-5 { animation-delay: 20s !important; }
+
+@keyframes ttHomeRightSameModel {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    4%, 18% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    22%, 100% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+html body.home-page .home-hero::before {
+    z-index: 2 !important;
+    background:
+        linear-gradient(104deg, rgba(255,255,255,.99) 0 48.85%, rgba(8,25,57,.02) 49.05% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    min-height: 575px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    align-items: center !important;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 360px) !important;
+}
+
+html body.home-page .eduleb-hero-side {
+    justify-self: center !important;
+    align-self: center !important;
+}
+
+html body.home-page .home-counselling-card {
+    margin-top: 70px !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .home-hero,
+    html body.home-page .hero-lite.home-hero {
+        min-height: 0 !important;
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-bg-slider {
+        inset: 0 !important;
+        clip-path: none !important;
+        opacity: .24 !important;
+    }
+
+    html body.home-page .home-bg-slider img.home-bg-slide,
+    html body.home-page img.home-bg-slide {
+        object-position: center center !important;
+    }
+
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        min-height: 0 !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .home-counselling-card {
+        margin-top: 0 !important;
+    }
+}
+
+
+/* ==========================================================================
+   Hero Slider — right-side dynamic image slider (home page)
+   ========================================================================== */
+html body.home-page .home-hero,
+html body.home-page .hero-lite.home-hero {
+    min-height: 655px !important;
+    overflow: hidden !important;
+    background: linear-gradient(104deg, #ffffff 0 48.7%, #102d5f 48.9% 100%) !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    width: min(1250px, calc(100% - 48px)) !important;
+    min-height: 575px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(520px, 560px) minmax(0, 760px) !important;
+    gap: clamp(44px, 6vw, 90px) !important;
+    align-items: center !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+html body.home-page .home-hero-media,
+html body.home-page .home-hero-photo,
+html body.home-page .home-bg-slider,
+html body.home-page .eduleb-hero-side {
+    display: none !important;
+}
+
+html body.home-page .hero-right-content,
+html body.home-page .hero-slider-col {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 30px 35px 50px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 28px !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+html body.home-page .hero-slider {
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    background: #123665 !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+.hero-slider .slider-track {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.hero-slider .slider-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-slider .slider-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+html body.home-page .hero-slider .slider-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 20px !important;
+}
+
+/* Arrows */
+.hero-slider .slider-prev,
+.hero-slider .slider-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(10, 40, 80, 0.62);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.hero-slider .slider-prev { left: 14px; }
+.hero-slider .slider-next { right: 14px; }
+
+.hero-slider .slider-prev:hover,
+.hero-slider .slider-next:hover {
+    background: rgba(37, 99, 235, 0.82);
+    transform: translateY(-50%) scale(1.08);
+}
+
+/* Dots */
+.hero-slider .slider-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.slider-dot {
+    width: 8px;
+    height: 8px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.slider-dot.is-active {
+    background: #fff;
+    transform: scale(1.35);
+}
+
+/* Counselling card sits below slider */
+html body.home-page .hero-counselling-form,
+html body.home-page .hero-slider-col .home-counselling-card {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    max-width: 460px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+/* Tablet */
+@media (max-width: 1200px) {
+    html body.home-page .hero-right-content,
+    html body.home-page .hero-slider-col {
+        max-width: none !important;
+        padding: 28px 25px 45px !important;
+    }
+
+    html body.home-page .hero-slider {
+        max-width: none !important;
+        height: auto !important;
+    }
+}
+
+@media (max-width: 900px) {
+    html body.home-page .home-hero,
+    html body.home-page .hero-lite.home-hero {
+        min-height: 0 !important;
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        width: min(100% - 32px, 620px) !important;
+        grid-template-columns: 1fr !important;
+        min-height: 0 !important;
+        gap: 28px !important;
+        padding: 38px 0 !important;
+    }
+
+    html body.home-page .hero-right-content,
+    html body.home-page .hero-slider-col {
+        order: 2 !important;
+        flex-direction: column !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        padding: 25px 20px 40px !important;
+        gap: 24px !important;
+    }
+
+    body.home-page .home-hero-copy {
+        order: 1;
+    }
+
+    html body.home-page .hero-counselling-form,
+    body.home-page .hero-slider-col .home-counselling-card {
+        position: static !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        transform: none !important;
+    }
+
+    html body.home-page .hero-slider {
+        max-width: none !important;
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    html body.home-page .hero-right-content,
+    html body.home-page .hero-slider-col {
+        width: 100% !important;
+        padding: 18px 12px 30px !important;
+        gap: 20px !important;
+    }
+
+    html body.home-page .hero-slider {
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 14px !important;
+    }
+
+    html body.home-page .hero-slider .slider-slide img {
+        border-radius: 14px !important;
+    }
+
+    html body.home-page .hero-counselling-form,
+    body.home-page .hero-slider-col .home-counselling-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .hero-slider .slider-prev,
+    .hero-slider .slider-next {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+}
+
+
+/* ==========================================================================
+   Hero left-side image frame — clean blue-border framed container
+   Overrides all previous home-image-title rules.
+   ========================================================================== */
+
+/* Reset the h1 wrapper so it is invisible and takes no visual space */
+html body.home-page .home-hero-copy h1.home-image-title,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title,
+html body.home-page .home-hero-copy h1.home-image-title:hover,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title:hover {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 24px !important;
+    padding: 0 !important;
+    aspect-ratio: unset !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title::before,
+html body.home-page .home-hero-copy h1.home-image-title::after,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title::before,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* The direct img child inside h1 (legacy path — hidden now that the frame div wraps it) */
+html body.home-page .home-hero-copy h1.home-image-title > img {
+    display: none !important;
+}
+
+/* ── Blue framed container ── */
+.hero-left-image-frame {
+    width: 100%;
+    max-width: 650px;
+    aspect-ratio: 3 / 2;
+    height: auto;
+    margin: 0 auto;
+    padding: 12px;
+    border: 4px solid #146BFF;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 15px 40px rgba(20, 107, 255, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-left-image-frame img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 16px;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title .hero-left-image-frame img,
+html body.home-page .home-hero .home-hero-copy h1.home-image-title .hero-left-image-frame img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+@media (max-width: 992px) {
+    .hero-left-image-frame {
+        max-width: 560px;
+        height: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-left-image-frame {
+        width: 100%;
+        height: auto;
+        padding: 8px;
+        border-width: 3px;
+        border-radius: 18px;
+    }
+
+    .hero-left-image-frame img {
+        border-radius: 12px;
+    }
+}
+
+/* ==========================================================================
+   Final home hero layout: diagonal split with dynamic backend slider background.
+   ========================================================================== */
+html body.home-page .hero-lite.home-hero,
+html body.home-page .home-hero {
+    width: 100% !important;
+    min-height: calc(100vh - var(--header-height)) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    color: #263653 !important;
+    background: #102d5f !important;
+}
+
+html body.home-page .home-hero::before {
+    content: none !important;
+    display: none !important;
+}
+
+html body.home-page .home-hero .hero-grid,
+html body.home-page .home-hero > .site-container {
+    width: 100% !important;
+    min-height: calc(100vh - var(--header-height)) !important;
+    max-width: none !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(360px, 36%) minmax(0, 64%) !important;
+    gap: 0 !important;
+    align-items: stretch !important;
+    position: relative !important;
+    z-index: 4 !important;
+}
+
+html body.home-page .home-hero-copy {
+    position: relative !important;
+    z-index: 5 !important;
+    min-height: calc(100vh - var(--header-height)) !important;
+    padding: 56px 70px 42px clamp(42px, 7.5vw, 118px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    background: #ffffff !important;
+    clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%) !important;
+}
+
+html body.home-page .home-kicker,
+html body.home-page .home-stats {
+    display: none !important;
+}
+
+html body.home-page .home-hero-copy h1.home-image-title {
+    width: min(100%, 500px) !important;
+    margin: 0 0 24px !important;
+}
+
+html body.home-page .hero-left-image-frame {
+    width: 100% !important;
+    max-width: 500px !important;
+    height: clamp(260px, 36vh, 390px) !important;
+    aspect-ratio: auto !important;
+    padding: 10px !important;
+    border: 4px solid #246cff !important;
+    border-radius: 22px !important;
+    background: #ffffff !important;
+    box-shadow: 0 15px 35px rgba(36, 108, 255, 0.18) !important;
+}
+
+html body.home-page .hero-left-image-frame img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    border-radius: 15px !important;
+}
+
+html body.home-page .home-hero-copy > p {
+    width: min(100%, 475px) !important;
+    margin: 0 0 0 12px !important;
+    color: #263653 !important;
+    -webkit-text-fill-color: #263653 !important;
+    font-size: clamp(16px, 1.2vw, 18px) !important;
+    line-height: 1.62 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+html body.home-page .home-hero-copy .hero-actions {
+    margin: 26px 0 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+}
+
+html body.home-page .hero-right-content,
+html body.home-page .hero-slider-col {
+    position: relative !important;
+    z-index: 2 !important;
+    min-height: calc(100vh - var(--header-height)) !important;
+    width: calc(100% + 8vw) !important;
+    margin: 0 0 0 -8vw !important;
+    padding: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+    background: #102d5f !important;
+}
+
+html body.home-page .hero-slider {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: #102d5f !important;
+    overflow: hidden !important;
+}
+
+html body.home-page .hero-slider::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+    background: linear-gradient(90deg, rgba(7, 26, 58, .10), rgba(7, 26, 58, .02) 45%, rgba(7, 26, 58, .12)) !important;
+}
+
+html body.home-page .hero-slider .slider-track,
+html body.home-page .hero-slider .slider-slide {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+html body.home-page .hero-slider .slider-track {
+    position: relative !important;
+    display: flex !important;
+    transform: translate3d(0, 0, 0);
+    transition: transform 1.25s cubic-bezier(.18, .72, .22, 1) !important;
+    will-change: transform !important;
+}
+
+html body.home-page .hero-slider .slider-slide {
+    position: relative !important;
+    inset: auto !important;
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transition: none !important;
+}
+
+html body.home-page .hero-slider .slider-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body.home-page .hero-slider .slider-track {
+        transition: none !important;
+    }
+}
+
+html body.home-page .hero-slider .slider-prev,
+html body.home-page .hero-slider .slider-next,
+html body.home-page .hero-slider .slider-dots {
+    z-index: 9 !important;
+}
+
+html body.home-page .hero-slider .slider-prev {
+    left: 26px !important;
+}
+
+html body.home-page .hero-slider .slider-next {
+    right: 26px !important;
+}
+
+html body.home-page .hero-slider .slider-dots {
+    bottom: 18px !important;
+}
+
+html body.home-page .hero-counselling-form,
+html body.home-page .hero-slider-col .home-counselling-card {
+    position: absolute !important;
+    z-index: 8 !important;
+    left: calc(56% + 4vw) !important;
+    top: 57% !important;
+    width: min(430px, calc(100% - 80px)) !important;
+    max-width: 430px !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+html body.home-page .home-social-rail {
+    position: fixed !important;
+    top: 50% !important;
+    right: clamp(20px, 2.4vw, 34px) !important;
+    z-index: 60 !important;
+    transform: translateY(-50%) !important;
+}
+
+html body.home-page .home-ai-chat {
+    right: clamp(24px, 3vw, 38px) !important;
+    bottom: 94px !important;
+    z-index: 70 !important;
+}
+
+html body.home-page .floating-actions {
+    right: clamp(24px, 3vw, 38px) !important;
+    bottom: 28px !important;
+    z-index: 68 !important;
+}
+
+html body.home-page .floating-actions .whatsapp-float {
+    display: none !important;
+}
+
+@media (max-width: 1200px) {
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        grid-template-columns: minmax(340px, 40%) minmax(0, 60%) !important;
+    }
+
+    html body.home-page .home-hero-copy {
+        padding: 48px 28px 38px !important;
+    }
+
+    html body.home-page .hero-left-image-frame {
+        height: clamp(245px, 34vh, 360px) !important;
+    }
+
+    html body.home-page .hero-counselling-form,
+    html body.home-page .hero-slider-col .home-counselling-card {
+        left: 55% !important;
+        width: min(400px, calc(100% - 50px)) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    html body.home-page .hero-lite.home-hero,
+    html body.home-page .home-hero {
+        background: #ffffff !important;
+    }
+
+    html body.home-page .home-hero::before {
+        display: none !important;
+    }
+
+    html body.home-page .home-hero .hero-grid,
+    html body.home-page .home-hero > .site-container {
+        min-height: 0 !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .home-hero-copy {
+        min-height: 0 !important;
+        padding: 36px 22px 28px !important;
+        clip-path: none !important;
+        align-items: center !important;
+    }
+
+    html body.home-page .home-hero-copy > p,
+    html body.home-page .home-hero-copy .hero-actions {
+        margin-left: 0 !important;
+        text-align: center !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    html body.home-page .hero-right-content,
+    html body.home-page .hero-slider-col {
+        min-height: 720px !important;
+    }
+
+    html body.home-page .hero-counselling-form,
+    html body.home-page .hero-slider-col .home-counselling-card {
+        left: 50% !important;
+        top: 59% !important;
+        width: min(440px, calc(100% - 36px)) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    html body.home-page .home-hero-copy {
+        padding: 22px 14px 28px !important;
+    }
+
+    html body.home-page .hero-left-image-frame {
+        height: 230px !important;
+        padding: 8px !important;
+        border-radius: 18px !important;
+    }
+
+    html body.home-page .hero-right-content,
+    html body.home-page .hero-slider-col {
+        min-height: 790px !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    html body.home-page .hero-counselling-form,
+    html body.home-page .hero-slider-col .home-counselling-card {
+        top: 61% !important;
+        width: calc(100% - 32px) !important;
+        max-width: 390px !important;
+        padding: 18px 14px 10px !important;
+    }
+
+    html body.home-page .home-counselling-card h2 {
+        font-size: 20px !important;
+        line-height: 1.2 !important;
+        margin-bottom: 8px !important;
+    }
+
+    html body.home-page .home-counselling-card > p,
+    html body.home-page .form-note {
+        display: none !important;
+    }
+
+    html body.home-page .home-counselling-form {
+        gap: 10px !important;
+    }
+
+    html body.home-page .home-counselling-form input,
+    html body.home-page .home-counselling-form select {
+        min-height: 48px !important;
+    }
+
+    html body.home-page .home-social-rail {
+        top: calc(var(--header-height) + 86px) !important;
+        right: 14px !important;
+        bottom: auto !important;
+        flex-direction: row !important;
+        transform: none !important;
+        gap: 8px !important;
+        z-index: 90 !important;
+    }
+
+    html body.home-page .home-social-rail a,
+    html body.home-page .home-social-rail button {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        font-size: 15px !important;
+    }
+
+    html body.home-page .home-ai-chat {
+        left: 14px !important;
+        right: auto !important;
+        bottom: 18px !important;
+        z-index: 92 !important;
+    }
+
+    html body.home-page .home-ai-toggle {
+        min-width: 46px !important;
+        height: 46px !important;
+        padding: 0 12px !important;
+    }
+
+    html body.home-page .home-ai-toggle span {
+        display: none !important;
+    }
+
+    html body.home-page .floating-actions {
+        right: 14px !important;
+        bottom: 18px !important;
+        z-index: 91 !important;
+    }
+
+    html body.home-page .floating-actions .scroll-top {
+        width: 44px !important;
+        height: 44px !important;
+    }
 }

@@ -2,10 +2,34 @@
 require_once __DIR__ . '/includes/site-data.php';
 
 $settings = tt_settings();
+$homeWhatsappPhone = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
+$homeWhatsappUrl = 'https://web.whatsapp.com/send?phone=' . $homeWhatsappPhone . '&text=' . rawurlencode('Hello Talentteno, I would like course information.');
 $allCourses = tt_courses();
 $featuredCourses = tt_courses(6, true);
 $services = tt_services(6);
 $testimonials = tt_testimonials(3);
+$homeHeroSlides = tt_home_slider_images();
+if (empty($homeHeroSlides)) {
+    $homeHeroSlides = [['image' => 'assets/images/home.webp', 'title' => '']];
+}
+$homeSlideSeen = [];
+foreach ($homeHeroSlides as $slide) {
+    $homeSlideSeen[$slide['image'] ?? ''] = true;
+}
+foreach ([
+    ['image' => 'assets/images/home.webp', 'title' => 'Talentteno practical training'],
+    ['image' => 'assets/images/home1.webp', 'title' => 'Talentteno classroom learning'],
+    ['image' => 'assets/images/home2.webp', 'title' => 'Talentteno student projects'],
+] as $fallbackSlide) {
+    if (count($homeHeroSlides) >= 3) {
+        break;
+    }
+    if (!isset($homeSlideSeen[$fallbackSlide['image']])) {
+        $homeHeroSlides[] = $fallbackSlide;
+        $homeSlideSeen[$fallbackSlide['image']] = true;
+    }
+}
+$homeSliderCount = count($homeHeroSlides);
 $homeFormResult = null;
 $fallbackCourses = [
     ['title' => 'Full Stack Development', 'category' => 'Development', 'short_desc' => 'Frontend, backend, database and deployment training with project practice.', 'description' => 'Complete full stack development training with live project support.', 'fee' => 15000, 'original_fee' => 25000],
@@ -37,14 +61,14 @@ $homeHighlights = [
     ['icon' => 'fa-certificate', 'title' => 'Certification support', 'text' => 'Complete course certification with project evaluation and internship guidance.'],
 ];
 $modelTeam = [
-    ['name' => 'Senior Full Stack Mentor', 'role' => 'Web Development Trainer', 'image' => 'assets/images/home1.png'],
+    ['name' => 'Senior Full Stack Mentor', 'role' => 'Web Development Trainer', 'image' => 'assets/images/home1.webp'],
     ['name' => 'Data & AI Coach', 'role' => 'Python and Analytics Mentor', 'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png'],
-    ['name' => 'Career Guidance Lead', 'role' => 'Interview Preparation Mentor', 'image' => 'assets/images/home2.png'],
-    ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home.png'],
+    ['name' => 'Career Guidance Lead', 'role' => 'Interview Preparation Mentor', 'image' => 'assets/images/home2.webp'],
+    ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home3.webp'],
 ];
 $learningNotes = [
-    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/home1.png', 'tag' => 'Career Guide'],
-    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/home2.png', 'tag' => 'Project Practice'],
+    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/home1.webp', 'tag' => 'Career Guide'],
+    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/home2.webp', 'tag' => 'Project Practice'],
     ['title' => 'Interview preparation checklist for IT roles', 'image' => 'assets/images/contact-counsellor-hero.png', 'tag' => 'Placement'],
 ];
 $reviewItems = $testimonials ?: [
@@ -186,7 +210,7 @@ function tt_home_course_image(array $course): string
         }
     }
 
-    return 'assets/images/home2.png';
+    return 'assets/images/home2.webp';
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
@@ -210,7 +234,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-homebox3">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-smoothslide2">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -234,22 +258,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
 
     <main class="page-main">
         <section class="hero-lite home-hero">
-            <div class="home-bg-slider" aria-hidden="true">
-                <span class="home-bg-slide home-bg-slide-1"></span>
-                <span class="home-bg-slide home-bg-slide-2"></span>
-                <span class="home-bg-slide home-bg-slide-3"></span>
-            </div>
-            <div class="home-hero-media" aria-hidden="true">
-                <span class="home-hero-photo home-hero-photo-1"></span>
-                <span class="home-hero-photo home-hero-photo-2"></span>
-                <span class="home-hero-photo home-hero-photo-3"></span>
-            </div>
             <div class="site-container hero-grid">
                 <div class="hero-copy home-hero-copy reveal">
                     <span class="hero-kicker home-kicker"><i class="fa-solid fa-star"></i> #1 IT Training Institute in Madurai</span>
                     <h1 class="home-image-title">
                         <span class="sr-only"><?= tt_h($settings['tagline']) ?></span>
-                        <img src="assets/images/home left.jpeg" alt="<?= tt_h($settings['tagline']) ?>" decoding="async" fetchpriority="high">
+                        <div class="hero-left-image-frame">
+                            <img src="assets/images/home left.jpeg" alt="<?= tt_h($settings['tagline']) ?>" decoding="async" fetchpriority="high">
+                        </div>
                     </h1>
                     <p>From basics to advanced technologies, learn everything you need to succeed in the IT industry. <?= tt_h($settings['success_rate']) ?> Job Assistance + Free Internship.</p>
                     <div class="home-stats">
@@ -262,8 +278,32 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         <a class="btn btn-secondary home-secondary-btn" href="contact.php"><i class="fa-solid fa-circle-play"></i> Free Demo Class</a>
                     </div>
                 </div>
-                <div class="eduleb-hero-side reveal reveal-right" id="home-signup">
-                    <div class="home-counselling-card">
+                <div class="hero-slider-col hero-right-content reveal reveal-right">
+                    <div class="hero-slider" id="heroSlider" data-hero-slider aria-label="Course highlights slider">
+                        <div class="slider-track" data-slider-track>
+                            <?php foreach ($homeHeroSlides as $index => $slide): ?>
+                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>">
+                                <img
+                                    src="<?= tt_h($slide['image']) ?>"
+                                    alt="<?= tt_h($slide['title'] ?: 'Talentteno course highlight ' . ($index + 1)) ?>"
+                                    loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"
+                                    decoding="async"
+                                    <?= $index === 0 ? 'fetchpriority="high"' : '' ?>
+                                >
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if ($homeSliderCount > 1): ?>
+                        <button class="slider-prev" data-slider-prev aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="slider-next" data-slider-next aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="slider-dots" data-slider-dots aria-label="Slide navigation">
+                            <?php for ($i = 0; $i < $homeSliderCount; $i++): ?>
+                            <button class="slider-dot<?= $i === 0 ? ' is-active' : '' ?>" data-dot="<?= $i ?>" aria-label="Go to slide <?= $i + 1 ?>" aria-pressed="<?= $i === 0 ? 'true' : 'false' ?>"></button>
+                            <?php endfor; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="home-counselling-card hero-counselling-form" id="home-signup">
                         <h2>Sign Up for Free Counselling</h2>
                         <p>Share your details. Our admission counsellor will contact you.</p>
                         <?php if ($homeFormResult): ?>
@@ -310,7 +350,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 </div>
                 <div class="model-about-visual reveal reveal-right">
                     <img class="model-about-main" src="uploads/media/full-stack-development-20260703-133158-761383.png" alt="Full stack project training visual" loading="lazy" decoding="async">
-                    <img class="model-about-float" src="assets/images/home2.png" alt="Students learning with mentor" loading="lazy" decoding="async">
+                    <img class="model-about-float" src="assets/images/home2.webp" alt="Students learning with mentor" loading="lazy" decoding="async">
                     <button class="model-play" type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
                 </div>
             </div>
@@ -332,7 +372,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         </article>
                         <?php endforeach; ?>
                     </div>
-                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="assets/images/home1.png" alt="IT training discussion" loading="lazy" decoding="async"></div>
+                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="assets/images/home1.webp" alt="IT training discussion" loading="lazy" decoding="async"></div>
                     <div class="model-service-stack">
                         <?php foreach (array_slice($popularTracks, 2, 2) as $course): ?>
                         <article class="model-service-card reveal">
@@ -401,29 +441,29 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-center-head reveal"><span class="model-label">Course Path</span><h2>What learning tracks we serve</h2></div>
                 <div class="model-path-grid">
                     <div class="model-path-visual reveal">
-                        <img src="assets/images/home2.png" alt="Students collaborating during IT training" loading="lazy" decoding="async">
+                        <img src="assets/images/home2.webp" alt="Students collaborating during IT training" loading="lazy" decoding="async">
                         <div><span>Step 01</span><h3>Practical course selection</h3><p>Start with counselling, choose the right course and follow a clear project-based learning path.</p></div>
                     </div>
                     <div class="model-path-list reveal" data-path-tabs>
-                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="assets/images/home2.png"><strong>01</strong><span>Full Stack Development</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="assets/images/home1.png"><strong>02</strong><span>Data Science & AI</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="assets/images/home.png"><strong>03</strong><span>Cyber Security</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="assets/images/home1.png"><strong>04</strong><span>Digital Marketing</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="assets/images/home2.png"><strong>05</strong><span>UI / UX and Design</span></button>
+                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="assets/images/home.webp"><strong>01</strong><span>Full Stack Development</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="assets/images/home1.webp"><strong>02</strong><span>Data Science & AI</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="assets/images/home2.webp"><strong>03</strong><span>Cyber Security</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="assets/images/home3.webp"><strong>04</strong><span>Digital Marketing</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="assets/images/home4.webp"><strong>05</strong><span>UI / UX and Design</span></button>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="model-video-section" aria-label="Talentteno training preview">
-            <img src="assets/images/home.png" alt="Hands-on IT project planning" loading="lazy" decoding="async">
+            <img src="assets/images/home3.webp" alt="Hands-on IT project planning" loading="lazy" decoding="async">
             <button type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
         </section>
 
         <section class="model-section model-hire-section" id="hire">
             <div class="site-container">
                 <div class="model-hire-hero reveal">
-                    <img src="assets/images/home2.png" alt="Students discussing project work" loading="lazy" decoding="async">
+                    <img src="assets/images/home4.webp" alt="Students discussing project work" loading="lazy" decoding="async">
                     <div class="model-hire-title"><span>Why students choose</span><h2>Talentteno Institute</h2></div>
                     <aside><ul><li><i class="fa-solid fa-circle-check"></i> Mentor-led classes</li><li><i class="fa-solid fa-circle-check"></i> Project practice</li><li><i class="fa-solid fa-circle-check"></i> Interview guidance</li><li><i class="fa-solid fa-circle-check"></i> Placement support</li></ul><strong>90%</strong><span>Skill confidence improvement through practice-led learning</span></aside>
                 </div>
@@ -484,7 +524,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <div class="home-social-rail" aria-label="Talentteno social links">
         <a href="<?= tt_h(!empty($settings['instagram_url']) && $settings['instagram_url'] !== '#' ? $settings['instagram_url'] : 'https://www.instagram.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
         <a href="<?= tt_h(!empty($settings['linkedin_url']) && $settings['linkedin_url'] !== '#' ? $settings['linkedin_url'] : 'https://www.linkedin.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <button type="button" data-toggle-whatsapp aria-controls="whatsappEnquiryPanel" aria-expanded="false" aria-label="Open WhatsApp quick enquiry"><i class="fa-brands fa-whatsapp"></i></button>
+        <a href="<?= tt_h($homeWhatsappUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat"><i class="fa-brands fa-whatsapp"></i></a>
     </div>
     <div class="course-detail-modal" id="courseDetailModal" aria-hidden="true">
         <div class="course-detail-backdrop" data-close-course-detail></div>
@@ -503,7 +543,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         <div class="training-video-backdrop" data-video-close></div>
         <div class="training-video-panel" role="dialog" aria-modal="true" aria-label="Talentteno training preview video">
             <button class="training-video-close" type="button" data-video-close aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
-            <video controls preload="metadata" playsinline poster="assets/images/home.png">
+            <video controls preload="metadata" playsinline poster="assets/images/home.webp">
                 <source src="assets/videos/talentteno-training-preview.mp4" type="video/mp4">
             </video>
         </div>
@@ -537,6 +577,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-menutap1" defer></script>
+<script src="assets/js/site-pages.js?v=20260717-chatfix1" defer></script>
 </body>
 </html>
