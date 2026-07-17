@@ -32,17 +32,121 @@ $icon_choices = [
     'fa-database','fa-cloud','fa-shield-halved','fa-pen-nib','fa-handshake'
 ];
 
+function tt_admin_content_image_url(?string $image): string
+{
+    $image = ltrim(trim((string)$image), '/');
+    if ($image === '') {
+        return '';
+    }
+    if (preg_match('/^https?:\/\//i', $image)) {
+        return $image;
+    }
+    return '../../frontend/' . $image;
+}
+
+function tt_admin_content_upload_image(string &$error): string
+{
+    $file = $_FILES['image_file'] ?? null;
+    if (!$file || (int)($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return '';
+    }
+
+    if ((int)$file['error'] !== UPLOAD_ERR_OK) {
+        $error = 'Image upload failed. Please choose another image.';
+        return '';
+    }
+
+    $tmpPath = (string)$file['tmp_name'];
+    $mime = mime_content_type($tmpPath) ?: '';
+    $extensions = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+
+    if (!isset($extensions[$mime])) {
+        $error = 'Please upload a JPG, PNG, WebP, or GIF image.';
+        return '';
+    }
+
+    $uploadDir = __DIR__ . '/../../frontend/uploads/media/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0775, true);
+    }
+
+    $baseName = pathinfo((string)$file['name'], PATHINFO_FILENAME);
+    $slug = preg_replace('/[^a-z0-9]+/i', '-', strtolower($baseName));
+    $slug = trim((string)$slug, '-') ?: 'content-image';
+    $fileName = $slug . '-' . date('Ymd-His') . '-' . random_int(100000, 999999) . '.' . $extensions[$mime];
+    $target = $uploadDir . $fileName;
+
+    if (!move_uploaded_file($tmpPath, $target)) {
+        $error = 'Could not save uploaded image. Please try again.';
+        return '';
+    }
+
+    return 'uploads/media/' . $fileName;
+}
+
+function tt_admin_content_default_items(string $table): array
+{
+    $defaults = [
+        'careers' => [
+            ['fa-user-tie', 'Placement Preparation', 'assets/images/contact-counsellor-hero.png', 'Resume, mock interview and job-readiness guidance.', 'Practice interview questions, resume structure, LinkedIn profile improvement and job-readiness steps.', 1],
+            ['fa-briefcase', 'Internship to Career Path', 'assets/images/home1.webp', 'Build confidence through real project practice.', 'Move from training to internship work with guided tasks, project reviews and portfolio preparation.', 2],
+            ['fa-handshake', 'Hiring Support', 'assets/images/home2.webp', 'Get guided towards suitable IT career opportunities.', 'Get counselling for suitable roles, interview readiness and placement follow-up support.', 3],
+        ],
+        'blog_posts' => [
+            ['fa-newspaper', 'How to Choose an IT Course', 'assets/images/home1.webp', 'Pick a practical track based on your career goal.', 'Compare your interest, current skill level, project goals and placement timeline before choosing a course.', 1],
+            ['fa-code', 'Why Projects Matter', 'uploads/media/full-stack-development-20260703-133158-761383.png', 'Portfolio projects help prove your skills in interviews.', 'Live projects show practical problem solving, coding confidence and the ability to explain your work.', 2],
+            ['fa-lightbulb', 'Learning from Basics', 'uploads/media/programming-languages-20260703-133210-630417.png', 'A strong foundation makes advanced tools easier.', 'Start with fundamentals, practice consistently, then move into tools, frameworks and real-time tasks.', 3],
+        ],
+        'projects' => [
+            ['fa-diagram-project', 'Live Website Project', 'uploads/media/full-stack-development-20260703-133158-761383.png', 'Build a complete responsive business website.', 'Plan pages, create responsive sections, connect enquiry forms and publish portfolio-ready work.', 1],
+            ['fa-database', 'Data Dashboard Project', 'uploads/media/data-analyst-20260703-133130-702998.png', 'Practice data cleaning, reporting and visualization.', 'Use real datasets to clean data, prepare charts and explain business insights clearly.', 2],
+            ['fa-shield-halved', 'Cyber Lab Project', 'uploads/media/cyber-security-20260703-133329-242125.png', 'Learn practical security workflows in guided labs.', 'Practice security basics, scanning workflow, reporting and safe lab documentation.', 3],
+        ],
+    ];
+
+    return $defaults[$table] ?? [];
+}
+
+function tt_admin_content_seed_defaults(mysqli $conn, string $table): void
+{
+    $countResult = $conn->query("SELECT COUNT(*) AS total FROM `$table`");
+    $count = (int)(($countResult ? $countResult->fetch_assoc() : ['total' => 0])['total'] ?? 0);
+    if ($count > 0) {
+        return;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO `$table` (icon, title, image, short_desc, description, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, 1)");
+    foreach (tt_admin_content_default_items($table) as $item) {
+        [$icon, $title, $image, $shortDesc, $description, $sortOrder] = $item;
+        $stmt->bind_param('sssssi', $icon, $title, $image, $shortDesc, $description, $sortOrder);
+        $stmt->execute();
+    }
+}
+
+tt_admin_content_seed_defaults($conn, $contentTable);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
     $title = trim($_POST['title'] ?? '');
     $icon = trim($_POST['icon'] ?? 'fa-file-lines');
-    $image = trim($_POST['image'] ?? '');
+    $image = trim($_POST['image_existing'] ?? '');
+    $uploadedImage = tt_admin_content_upload_image($error);
+    if ($uploadedImage !== '') {
+        $image = $uploadedImage;
+    }
     $short_desc = trim($_POST['short_desc'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $sort_order = (int)($_POST['sort_order'] ?? 0);
     $is_active = (int)($_POST['is_active'] ?? 1);
 
-    if ($title === '') {
+    if ($error !== '') {
+        // Keep the upload error visible and skip database write.
+    } elseif ($title === '') {
         $error = "$contentSingular title is required.";
     } elseif ($id > 0) {
         $stmt = $conn->prepare("UPDATE `$contentTable` SET title=?, icon=?, image=?, short_desc=?, description=?, sort_order=?, is_active=? WHERE id=?");
@@ -87,7 +191,7 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
     <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=20260717-contentimage1">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
@@ -112,8 +216,9 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
                     <i class="fas fa-<?= $edit_item ? 'edit' : 'plus' ?>" style="color:var(--blue)"></i>
                     <?= $edit_item ? 'Edit ' . htmlspecialchars($contentSingular) : 'Add ' . htmlspecialchars($contentSingular) ?>
                 </h3>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <?php if ($edit_item): ?><input type="hidden" name="id" value="<?= (int)$edit_item['id'] ?>"><?php endif; ?>
+                    <input type="hidden" name="image_existing" value="<?= htmlspecialchars($edit_item['image'] ?? '') ?>">
                     <div class="form-group">
                         <label>Title *</label>
                         <input type="text" name="title" required value="<?= htmlspecialchars($edit_item['title'] ?? '') ?>">
@@ -127,9 +232,15 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Image Path</label>
-                        <input type="text" name="image" value="<?= htmlspecialchars($edit_item['image'] ?? '') ?>" placeholder="uploads/media/example.png or assets/images/home1.webp">
-                        <small style="color:#64748B;">Optional. Use an image from Media/Gallery uploads or assets. If empty, frontend chooses a matching default image.</small>
+                        <label>Image</label>
+                        <input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image. If empty, frontend chooses a matching default image.</small>
+                        <?php if (!empty($edit_item['image'])): ?>
+                        <div class="content-current-image">
+                            <img src="<?= htmlspecialchars(tt_admin_content_image_url($edit_item['image'])) ?>" alt="">
+                            <span>Current image</span>
+                        </div>
+                        <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label>Short Description</label>
@@ -167,8 +278,19 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
                             <tr>
                                 <td><i class="fas <?= htmlspecialchars($item['icon']) ?>" style="color:var(--blue);font-size:18px;"></i></td>
                                 <td><strong><?= htmlspecialchars($item['title']) ?></strong></td>
-                                <td style="max-width:180px;color:#64748B;font-size:12px;"><?= htmlspecialchars($item['image'] ?? '') ?></td>
-                                <td style="max-width:280px;"><?= htmlspecialchars($item['short_desc']) ?></td>
+                                <td>
+                                    <?php if (!empty($item['image'])): ?>
+                                    <img class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_content_image_url($item['image'])) ?>" alt="">
+                                    <?php else: ?>
+                                    <span class="content-admin-placeholder"><i class="fas fa-image"></i></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="content-detail-cell">
+                                    <strong><?= htmlspecialchars($item['short_desc'] ?: 'No short description') ?></strong>
+                                    <?php if (!empty($item['description'])): ?>
+                                    <span><?= htmlspecialchars($item['description']) ?></span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= (int)$item['sort_order'] ?></td>
                                 <td><span class="badge badge-<?= $item['is_active'] ? 'green' : 'gray' ?>"><?= $item['is_active'] ? 'Active' : 'Inactive' ?></span></td>
                                 <td style="white-space:nowrap;">

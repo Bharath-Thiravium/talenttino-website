@@ -50,9 +50,9 @@ $modelTeam = [
     ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home3.webp'],
 ];
 $learningNotes = [
-    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/home1.webp', 'tag' => 'Career Guide'],
-    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/home2.webp', 'tag' => 'Project Practice'],
-    ['title' => 'Interview preparation checklist for IT roles', 'image' => 'assets/images/contact-counsellor-hero.png', 'tag' => 'Placement'],
+    ['title' => 'How to choose the right IT course after college', 'image' => 'assets/images/%20IT%20course%20after%20college.png', 'tag' => 'Career Guide'],
+    ['title' => 'Why live projects matter for freshers', 'image' => 'assets/images/live%20projects%20matter.png', 'tag' => 'Project Practice'],
+    ['title' => 'Interview preparation checklist for IT roles', 'image' => 'assets/images/Interview%20preparation.png', 'tag' => 'Placement'],
 ];
 $reviewItems = $testimonials ?: [
     ['student_name' => 'Talentteno Student', 'course' => 'Full Stack Development', 'review' => 'The classes were practical and the project tasks helped me understand real development flow.', 'rating' => 5],
@@ -217,7 +217,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-bgslide2">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-learningimg1">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -561,6 +561,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260717-bgslide2" defer></script>
+<script src="assets/js/site-pages.js?v=20260717-learningimg1" defer></script>
 </body>
 </html>
