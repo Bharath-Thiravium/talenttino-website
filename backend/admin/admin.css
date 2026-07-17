@@ -180,6 +180,7 @@ body.modal-open { overflow: hidden; }
 .course-form-banner.designing { background: #DB2777; }
 .course-form-banner.cyber { background: linear-gradient(135deg, #0EA5E9, #2563EB 52%, #7C3AED); }
 .field-help { display: block; margin-top: 6px; color: var(--text-muted); font-size: 11px; }
+.field-help.text-danger { color: #DC2626; font-weight: 700; }
 .current-file { display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; color: #15803D; font-size: 12px; text-decoration: none; }
 .form-group label small { color: var(--text-muted); font-weight: 400; }
 .course-current-image { position: relative; display: inline-block; margin-top: 10px; }

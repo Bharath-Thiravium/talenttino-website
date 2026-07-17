@@ -13,7 +13,6 @@ if (empty($homeHeroSlides)) {
     $homeHeroSlides = [['image' => 'assets/images/home.webp', 'title' => '']];
 }
 $homeSliderCount = count($homeHeroSlides);
-$homeFirstHeroImage = (string)($homeHeroSlides[0]['image'] ?? 'assets/images/home.webp');
 $homeFormResult = null;
 $fallbackCourses = [
     ['title' => 'Full Stack Development', 'category' => 'Development', 'short_desc' => 'Frontend, backend, database and deployment training with project practice.', 'description' => 'Complete full stack development training with live project support.', 'fee' => 15000, 'original_fee' => 25000],
@@ -216,17 +215,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     ]); ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <?php if ($homeFirstHeroImage !== ''): ?>
-    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroImage) ?>" fetchpriority="high">
-    <?php endif; ?>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260717-navsize1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-learningimg1">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -252,10 +243,23 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         <section class="hero-lite home-hero">
             <div class="site-container hero-grid">
                 <div class="hero-copy home-hero-copy reveal">
-                    <a class="home-view-courses-btn" href="course.php">
-                        <span>View All Courses</span>
-                        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-                    </a>
+                    <span class="hero-kicker home-kicker"><i class="fa-solid fa-star"></i> #1 IT Training Institute in Madurai</span>
+                    <h1 class="home-image-title">
+                        <span class="sr-only"><?= tt_h($settings['tagline']) ?></span>
+                        <div class="hero-left-image-frame">
+                            <img src="assets/images/home left.jpeg" alt="<?= tt_h($settings['tagline']) ?>" decoding="async" fetchpriority="high">
+                        </div>
+                    </h1>
+                    <p>From basics to advanced technologies, learn everything you need to succeed in the IT industry. <?= tt_h($settings['success_rate']) ?> Job Assistance + Free Internship.</p>
+                    <div class="home-stats">
+                        <div><strong><?= tt_h($settings['total_students']) ?></strong><span>Students Trained</span></div>
+                        <div><strong><?= tt_h($settings['success_rate']) ?></strong><span>Job Assistance</span></div>
+                        <div><strong><?= tt_h($settings['total_trainers']) ?></strong><span>Expert Trainers</span></div>
+                    </div>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary home-primary-btn" href="course.php">Explore Courses</a>
+                        <a class="btn btn-secondary home-secondary-btn" href="contact.php"><i class="fa-solid fa-circle-play"></i> Free Demo Class</a>
+                    </div>
                 </div>
                 <div class="hero-slider-col hero-right-content reveal reveal-right">
                     <div class="hero-slider" id="heroSlider" data-hero-slider aria-label="Course highlights slider">
@@ -529,7 +533,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         </div>
     </div>
     <div class="home-ai-chat" data-ai-chat aria-label="Talentteno AI chat">
-        <button class="home-ai-toggle" type="button" data-ai-toggle aria-label="Open Talentteno AI chat" aria-controls="homeAiPanel" aria-expanded="false">
+        <button class="home-ai-toggle" type="button" data-ai-toggle aria-controls="homeAiPanel" aria-expanded="false">
             <i class="fa-solid fa-comments"></i>
             <span>AI Chat</span>
         </button>

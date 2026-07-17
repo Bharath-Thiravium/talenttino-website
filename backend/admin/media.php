@@ -17,6 +17,7 @@ $allowedMimes = [
     'application/pdf' => 'pdf',
 ];
 $appMaxBytes = 100 * 1024 * 1024;
+$maxBatchFiles = 10;
 
 function tt_media_ensure_dir(string $dir): bool
 {
@@ -86,6 +87,36 @@ function tt_media_upload_error_message(int $errorCode, int $maxBytes): string
     }
 }
 
+function tt_media_uploaded_files(array $files): array
+{
+    if (!isset($files['name'])) {
+        return [];
+    }
+
+    if (!is_array($files['name'])) {
+        return [[
+            'name' => (string)($files['name'] ?? ''),
+            'type' => (string)($files['type'] ?? ''),
+            'tmp_name' => (string)($files['tmp_name'] ?? ''),
+            'error' => (int)($files['error'] ?? UPLOAD_ERR_NO_FILE),
+            'size' => (int)($files['size'] ?? 0),
+        ]];
+    }
+
+    $normalized = [];
+    foreach ($files['name'] as $index => $name) {
+        $normalized[] = [
+            'name' => (string)$name,
+            'type' => (string)($files['type'][$index] ?? ''),
+            'tmp_name' => (string)($files['tmp_name'][$index] ?? ''),
+            'error' => (int)($files['error'][$index] ?? UPLOAD_ERR_NO_FILE),
+            'size' => (int)($files['size'][$index] ?? 0),
+        ];
+    }
+
+    return $normalized;
+}
+
 $serverUploadMax = tt_media_ini_bytes((string) ini_get('upload_max_filesize'));
 $serverPostMax = tt_media_ini_bytes((string) ini_get('post_max_size'));
 $maxUploadBytes = min($appMaxBytes, $serverUploadMax ?: $appMaxBytes, $serverPostMax ?: $appMaxBytes);
@@ -97,25 +128,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
     $targetLabel = $galleryImageUpload ? 'gallery upload folder' : 'media upload folder';
     if (!tt_media_ensure_dir($targetDir)) {
         $error = 'Unable to create ' . $targetLabel . '.';
-    } elseif (!isset($_FILES['media_file']) || $_FILES['media_file']['error'] === UPLOAD_ERR_NO_FILE) {
-        $error = 'Please choose a file.';
-    } elseif ($_FILES['media_file']['error'] !== UPLOAD_ERR_OK) {
-        $error = tt_media_upload_error_message((int) $_FILES['media_file']['error'], $maxUploadBytes);
-    } elseif ($_FILES['media_file']['size'] > $maxUploadBytes) {
-        $error = 'Image file must be ' . $maxUploadLabel . ' or smaller.';
+    } elseif (!isset($_FILES['media_file'])) {
+        $error = 'Please choose 1 to ' . $maxBatchFiles . ' file(s).';
     } else {
-        $mime = mime_content_type($_FILES['media_file']['tmp_name']);
-        if (!isset($allowedMimes[$mime])) {
-            $error = 'Only JPG, PNG, WebP, GIF, or PDF files are allowed.';
-        } elseif ($galleryImageUpload && !str_starts_with($mime, 'image/')) {
-            $error = 'Gallery upload accepts only JPG, PNG, WebP, or GIF images.';
+        $uploads = array_values(array_filter(
+            tt_media_uploaded_files($_FILES['media_file']),
+            static fn(array $file): bool => (int)$file['error'] !== UPLOAD_ERR_NO_FILE || trim((string)$file['name']) !== ''
+        ));
+
+        if (!$uploads) {
+            $error = 'Please choose 1 to ' . $maxBatchFiles . ' file(s).';
+        } elseif (count($uploads) > $maxBatchFiles) {
+            $error = 'Upload maximum ' . $maxBatchFiles . ' files at one time.';
         } else {
-            $name = tt_media_safe_name($_FILES['media_file']['name']);
-            $filename = $name . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6) . '.' . $allowedMimes[$mime];
-            if (move_uploaded_file($_FILES['media_file']['tmp_name'], $targetDir . $filename)) {
-                $success = $galleryImageUpload ? 'Gallery image uploaded successfully.' : 'Media uploaded successfully.';
-            } else {
-                $error = 'Unable to save the uploaded file.';
+            $saved = 0;
+            $failed = [];
+
+            foreach ($uploads as $index => $file) {
+                $displayName = trim((string)$file['name']) !== '' ? (string)$file['name'] : 'File ' . ($index + 1);
+
+                if ((int)$file['error'] !== UPLOAD_ERR_OK) {
+                    $failed[] = $displayName . ': ' . tt_media_upload_error_message((int)$file['error'], $maxUploadBytes);
+                    continue;
+                }
+
+                if ((int)$file['size'] > $maxUploadBytes) {
+                    $failed[] = $displayName . ': File must be ' . $maxUploadLabel . ' or smaller.';
+                    continue;
+                }
+
+                $tmpName = (string)$file['tmp_name'];
+                $mime = is_file($tmpName) ? (mime_content_type($tmpName) ?: '') : '';
+                if (!isset($allowedMimes[$mime])) {
+                    $failed[] = $displayName . ': Only JPG, PNG, WebP, GIF, or PDF files are allowed.';
+                    continue;
+                }
+
+                if ($galleryImageUpload && !str_starts_with($mime, 'image/')) {
+                    $failed[] = $displayName . ': Gallery upload accepts only JPG, PNG, WebP, or GIF images.';
+                    continue;
+                }
+
+                $name = tt_media_safe_name($displayName);
+                $filename = $name . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6) . '.' . $allowedMimes[$mime];
+                if (move_uploaded_file($tmpName, $targetDir . $filename)) {
+                    $saved++;
+                } else {
+                    $failed[] = $displayName . ': Unable to save the uploaded file.';
+                }
+            }
+
+            if ($saved > 0) {
+                $label = $galleryImageUpload ? 'gallery image' : 'media file';
+                $success = $saved . ' ' . $label . ($saved === 1 ? '' : 's') . ' uploaded successfully.';
+            }
+
+            if ($failed) {
+                $error = implode(' ', array_slice($failed, 0, 4));
+                if (count($failed) > 4) {
+                    $error .= ' +' . (count($failed) - 4) . ' more failed.';
+                }
             }
         }
     }
@@ -195,7 +267,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                     <p>Upload public gallery images. These images are shown automatically on the frontend Gallery page.</p>
                 </div>
                 <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="gallery_image">
-                    <i class="fas fa-plus"></i> Add Gallery Image
+                    <i class="fas fa-plus"></i> Add Gallery Images
                 </button>
             </div>
             <div class="admin-card media-upload-intro">
@@ -204,7 +276,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                     <p>Upload reusable files for course images, page content, brochures, or admin copy-paste paths.</p>
                 </div>
                 <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="media_file">
-                    <i class="fas fa-plus"></i> Add Media File
+                    <i class="fas fa-plus"></i> Add Media Files
                 </button>
             </div>
         </div>
@@ -295,8 +367,8 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
     <div class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mediaUploadTitle">
         <div class="admin-modal-header">
             <div>
-                <h2 id="mediaUploadTitle"><i class="fas fa-cloud-upload-alt"></i> Add Gallery Image</h2>
-                <p id="mediaUploadDescription">Choose a JPG, PNG, WebP, or GIF image. After upload, it will appear in the public gallery.</p>
+                <h2 id="mediaUploadTitle"><i class="fas fa-cloud-upload-alt"></i> Add Gallery Images</h2>
+                <p id="mediaUploadDescription">Choose 1 to 10 JPG, PNG, WebP, or GIF images. After upload, they will appear in the public gallery.</p>
             </div>
             <button type="button" class="modal-close" data-close-media-upload aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
@@ -305,15 +377,16 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
             <input type="hidden" name="media_kind" value="gallery_image" data-media-kind-input>
             <div class="admin-modal-body">
                 <div class="form-group">
-                    <label data-media-file-label>Image File</label>
+                    <label data-media-file-label>Image Files</label>
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= $maxUploadBytes ?>">
-                    <input type="file" name="media_file" accept="image/jpeg,image/png,image/webp,image/gif" required data-media-file-input>
-                    <small class="field-help" data-media-file-help>Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.</small>
+                    <input type="file" name="media_file[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required data-media-file-input>
+                    <small class="field-help" data-media-file-help>Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.</small>
+                    <small class="field-help" data-media-file-count></small>
                 </div>
             </div>
             <div class="admin-modal-footer">
                 <button type="button" class="btn-cancel" data-close-media-upload>Cancel</button>
-                <button class="btn-save" type="submit" data-media-submit><i class="fas fa-cloud-upload-alt"></i> Upload Image</button>
+                <button class="btn-save" type="submit" data-media-submit><i class="fas fa-cloud-upload-alt"></i> Upload Images</button>
             </div>
         </form>
     </div>
@@ -326,22 +399,24 @@ const mediaKindInput = document.querySelector('[data-media-kind-input]');
 const mediaFileLabel = document.querySelector('[data-media-file-label]');
 const mediaFileInput = document.querySelector('[data-media-file-input]');
 const mediaFileHelp = document.querySelector('[data-media-file-help]');
+const mediaFileCount = document.querySelector('[data-media-file-count]');
 const mediaSubmit = document.querySelector('[data-media-submit]');
+const maxBatchFiles = <?= (int)$maxBatchFiles ?>;
 const uploadModalModes = {
     gallery_image: {
-        title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Image',
-        description: 'Choose a JPG, PNG, WebP, or GIF image. After upload, it will appear in the public gallery.',
-        label: 'Image File',
+        title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Images',
+        description: 'Choose 1 to 10 JPG, PNG, WebP, or GIF images. After upload, they will appear in the public gallery.',
+        label: 'Image Files',
         accept: 'image/jpeg,image/png,image/webp,image/gif',
-        help: 'Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.',
-        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Image'
+        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
+        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Images'
     },
     media_file: {
-        title: '<i class="fas fa-cloud-upload-alt"></i> Add Media File',
-        description: 'Choose an image or PDF for reusable admin media paths. These files do not automatically appear in Gallery.',
-        label: 'Media File',
+        title: '<i class="fas fa-cloud-upload-alt"></i> Add Media Files',
+        description: 'Choose 1 to 10 images or PDFs for reusable admin media paths. These files do not automatically appear in Gallery.',
+        label: 'Media Files',
         accept: 'image/jpeg,image/png,image/webp,image/gif,application/pdf',
-        help: 'Allowed: JPG, PNG, WebP, GIF, PDF. Maximum <?= htmlspecialchars($maxUploadLabel) ?>.',
+        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF, PDF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
         submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Media'
     }
 };
@@ -353,6 +428,8 @@ function openMediaUploadModal(kind = 'gallery_image') {
     mediaFileLabel.textContent = mode.label;
     mediaFileInput.value = '';
     mediaFileInput.setAttribute('accept', mode.accept);
+    mediaFileInput.setAttribute('multiple', 'multiple');
+    mediaFileCount.textContent = '';
     mediaFileHelp.textContent = mode.help;
     mediaSubmit.innerHTML = mode.submit;
     mediaUploadModal.classList.add('is-open');
@@ -368,6 +445,18 @@ document.querySelectorAll('[data-open-media-upload]').forEach(button => {
     button.addEventListener('click', () => openMediaUploadModal(button.dataset.mediaKind || 'gallery_image'));
 });
 document.querySelectorAll('[data-close-media-upload]').forEach(button => button.addEventListener('click', closeMediaUploadModal));
+mediaFileInput.addEventListener('change', () => {
+    const count = mediaFileInput.files ? mediaFileInput.files.length : 0;
+    if (count > maxBatchFiles) {
+        mediaFileInput.value = '';
+        mediaFileCount.textContent = `Please select only ${maxBatchFiles} files at one time.`;
+        mediaFileCount.classList.add('text-danger');
+        return;
+    }
+
+    mediaFileCount.classList.remove('text-danger');
+    mediaFileCount.textContent = count ? `${count} file${count === 1 ? '' : 's'} selected.` : '';
+});
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && mediaUploadModal.classList.contains('is-open')) {
         closeMediaUploadModal();

@@ -41,7 +41,7 @@ foreach ($contactCourses as $course) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260716-rightslider7">
+    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-navsize1">
 </head>
 <body class="static-site contact-page">
 <div class="site-shell">

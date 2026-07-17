@@ -20,7 +20,35 @@ $serveFile = static function (string $file): bool {
         return true;
     }
 
-    return false;
+    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'avif' => 'image/avif',
+        'css' => 'text/css; charset=UTF-8',
+        'gif' => 'image/gif',
+        'ico' => 'image/x-icon',
+        'jpeg' => 'image/jpeg',
+        'jpg' => 'image/jpeg',
+        'js' => 'application/javascript; charset=UTF-8',
+        'mp4' => 'video/mp4',
+        'png' => 'image/png',
+        'svg' => 'image/svg+xml',
+        'webm' => 'video/webm',
+        'webp' => 'image/webp',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
+    ];
+
+    if (!headers_sent()) {
+        header('Content-Type: ' . ($mimeTypes[$extension] ?? 'application/octet-stream'));
+        header('Cache-Control: public, max-age=31536000, immutable');
+        header('Content-Length: ' . filesize($file));
+    }
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'HEAD') {
+        readfile($file);
+    }
+
+    return true;
 };
 
 $resolve = static function (string $base, string $requestPath): string {
