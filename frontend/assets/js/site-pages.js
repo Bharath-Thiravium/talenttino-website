@@ -288,6 +288,70 @@ document.querySelectorAll('form:not(.whatsapp-enquiry-form):not([data-download-f
     });
 });
 
+const scrollRevealSelectors = [
+    '.feature-card',
+    '.about-value',
+    '.purpose-card',
+    '.timeline-card',
+    '.detail-tile',
+    '.rich-detail-card',
+    '.course-card',
+    '.catalog-card',
+    '.price-card',
+    '.contact-card',
+    '.home-course-card',
+    '.home-process-card',
+    '.home-highlight-item',
+    '.testimonial-card',
+    '.model-copy',
+    '.model-split-head',
+    '.model-center-head',
+    '.model-dark-head',
+    '.model-service-card',
+    '.model-service-center',
+    '.model-project-card',
+    '.model-course-showcase-card',
+    '.model-team-card',
+    '.model-about-visual',
+    '.model-path-visual',
+    '.model-path-list',
+    '.model-hire-hero',
+    '.model-hire-points > div',
+    '.review-scroll-stage',
+    '.review-scroll-card',
+    '.model-blog-card',
+    '.admin-gallery-card',
+    '.gallery-card',
+    '.about-visual-main',
+    '.about-visual-mini',
+    '.identity-image',
+    '.rich-detail-image',
+    '.course-image',
+    '.catalog-image',
+    '.about-image-strip img',
+    '.gallery-card img',
+    '.admin-gallery-card img'
+];
+
+document.querySelectorAll(scrollRevealSelectors.join(',')).forEach(item => {
+    if (item.closest('.page-hero, .site-header, .site-footer, .course-detail-modal, .service-modal-overlay, .training-video-modal')) return;
+    item.classList.add('reveal', 'scroll-reveal-auto');
+    if (document.body.classList.contains('home-page')) {
+        if (item.matches('.model-split-head, .model-center-head, .model-dark-head, .model-copy')) {
+            item.classList.add('home-reveal-head');
+        }
+        if (item.matches('.model-service-card, .model-project-card, .model-course-showcase-card, .model-team-card, .model-blog-card, .review-scroll-card, .model-hire-points > div')) {
+            item.classList.add('home-reveal-card');
+        }
+        if (item.matches('.model-about-visual, .model-service-center, .model-path-visual, .model-hire-hero, .review-scroll-stage')) {
+            item.classList.add('home-reveal-media');
+        }
+    }
+    if (item.matches('img, .rich-detail-image, .course-image, .catalog-image, .about-visual-main, .about-visual-mini, .identity-image, .model-about-visual, .model-service-center, .model-project-card, .model-team-card, .model-path-visual, .model-hire-hero, .review-scroll-stage, .model-blog-card')) {
+        item.classList.add('scroll-image-reveal');
+    }
+});
+
 const revealItems = document.querySelectorAll('.reveal');
 if (reduceMotion) {
     revealItems.forEach(item => item.classList.add('is-visible'));
@@ -299,14 +363,17 @@ if (reduceMotion) {
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.14, rootMargin: '0px 0px -45px 0px' });
+    }, { threshold: 0.06, rootMargin: '0px 0px 14% 0px' });
 
     revealItems.forEach(item => {
         const siblings = item.parentElement
             ? [...item.parentElement.children].filter(child => child.classList.contains('reveal'))
             : [];
         const siblingIndex = Math.max(0, siblings.indexOf(item));
-        item.style.transitionDelay = `${Math.min(siblingIndex * 75, 300)}ms`;
+        const isMobile = window.innerWidth <= 760;
+        const delayStep = isMobile ? 42 : 70;
+        const delayCap = isMobile ? 150 : 280;
+        item.style.transitionDelay = `${Math.min(siblingIndex * delayStep, delayCap)}ms`;
         observer.observe(item);
     });
 } else {
