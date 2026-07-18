@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-navsize1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-speed2">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -532,7 +532,7 @@ function tt_catalog_fallback_image(array $course): string
 <div class="site-shell">
     <header class="site-header compact-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -547,8 +547,12 @@ function tt_catalog_fallback_image(array $course): string
     <main class="page-main catalog-page">
         <?php
             $heroImage = trim((string)($coursePage['hero_image'] ?? ''));
+            $heroCssImage = $heroImage;
+            if (str_starts_with($heroCssImage, 'assets/images/')) {
+                $heroCssImage = '../images/' . substr($heroCssImage, strlen('assets/images/'));
+            }
             $heroStyle = $heroImage !== ''
-                ? "--catalog-hero-image:url('" . htmlspecialchars($heroImage, ENT_QUOTES) . "')"
+                ? "--catalog-hero-image:url('" . htmlspecialchars($heroCssImage, ENT_QUOTES) . "')"
                 : '';
         ?>
         <section class="catalog-hero"<?= $heroStyle !== '' ? ' style="' . $heroStyle . '"' : '' ?>>
@@ -628,6 +632,6 @@ function tt_catalog_fallback_image(array $course): string
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260718-speed1" defer></script>
 </body>
 </html>

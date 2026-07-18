@@ -24,6 +24,13 @@ function tt_home_slide_media_images(): array
 {
     $sources = [
         [
+            'dir' => __DIR__ . '/../../frontend/assets/images/',
+            'url' => '../../frontend/assets/images/',
+            'path' => 'assets/images/',
+            'label' => 'Default Home',
+            'files' => ['home.webp', 'home1.webp', 'home2.webp', 'home3.webp', 'home4.webp'],
+        ],
+        [
             'dir' => __DIR__ . '/../../frontend/uploads/media/',
             'url' => '../../frontend/uploads/media/',
             'path' => 'uploads/media/',
@@ -39,7 +46,16 @@ function tt_home_slide_media_images(): array
 
     $images = [];
     foreach ($sources as $source) {
-        foreach (glob($source['dir'] . '*') ?: [] as $filePath) {
+        $filePaths = [];
+        if (!empty($source['files'])) {
+            foreach ($source['files'] as $file) {
+                $filePaths[] = $source['dir'] . $file;
+            }
+        } else {
+            $filePaths = glob($source['dir'] . '*') ?: [];
+        }
+
+        foreach ($filePaths as $filePath) {
             if (!is_file($filePath)) continue;
             $mime = mime_content_type($filePath) ?: '';
             if (!str_starts_with($mime, 'image/')) continue;
@@ -56,6 +72,17 @@ function tt_home_slide_media_images(): array
 
     usort($images, static fn($a, $b) => $b['modified'] <=> $a['modified']);
     return $images;
+}
+
+function tt_home_slide_default_images(): array
+{
+    return [
+        ['Home classroom', 'assets/images/home.webp', 1],
+        ['Practical training', 'assets/images/home1.webp', 2],
+        ['Student learning', 'assets/images/home2.webp', 3],
+        ['IT lab session', 'assets/images/home3.webp', 4],
+        ['Career training', 'assets/images/home4.webp', 5],
+    ];
 }
 
 function tt_home_slide_image_exists(string $image): bool
@@ -159,6 +186,21 @@ if (isset($_GET['cleanup'])) {
             AND older.id < newer.id");
     header('Location: home_slider.php?saved=cleanup');
     exit;
+}
+
+$slideCountResult = $conn->query('SELECT COUNT(*) AS total FROM home_slides');
+$slideCount = (int)(($slideCountResult ? $slideCountResult->fetch_assoc() : null)['total'] ?? 0);
+if ($slideCount === 0) {
+    $seed = $conn->prepare('INSERT INTO home_slides (title, image, sort_order, display_order, is_active) VALUES (?, ?, ?, ?, 1)');
+    if ($seed) {
+        foreach (tt_home_slide_default_images() as [$defaultTitle, $defaultImage, $defaultOrder]) {
+            if (!tt_home_slide_image_exists($defaultImage)) {
+                continue;
+            }
+            $seed->bind_param('ssii', $defaultTitle, $defaultImage, $defaultOrder, $defaultOrder);
+            $seed->execute();
+        }
+    }
 }
 
 $editSlide = null;

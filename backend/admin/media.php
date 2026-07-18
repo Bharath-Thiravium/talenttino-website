@@ -14,6 +14,9 @@ $allowedMimes = [
     'image/png' => 'png',
     'image/webp' => 'webp',
     'image/gif' => 'gif',
+    'video/mp4' => 'mp4',
+    'video/webm' => 'webm',
+    'video/ogg' => 'ogv',
     'application/pdf' => 'pdf',
 ];
 $appMaxBytes = 100 * 1024 * 1024;
@@ -123,9 +126,9 @@ $maxUploadBytes = min($appMaxBytes, $serverUploadMax ?: $appMaxBytes, $serverPos
 $maxUploadLabel = tt_media_format_bytes($maxUploadBytes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
-    $galleryImageUpload = ($_POST['media_kind'] ?? '') === 'gallery_image';
-    $targetDir = $galleryImageUpload ? $galleryDir : $mediaDir;
-    $targetLabel = $galleryImageUpload ? 'gallery upload folder' : 'media upload folder';
+    $galleryUpload = ($_POST['media_kind'] ?? '') === 'gallery_item';
+    $targetDir = $galleryUpload ? $galleryDir : $mediaDir;
+    $targetLabel = $galleryUpload ? 'gallery upload folder' : 'media upload folder';
     if (!tt_media_ensure_dir($targetDir)) {
         $error = 'Unable to create ' . $targetLabel . '.';
     } elseif (!isset($_FILES['media_file'])) {
@@ -164,8 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
                     continue;
                 }
 
-                if ($galleryImageUpload && !str_starts_with($mime, 'image/')) {
-                    $failed[] = $displayName . ': Gallery upload accepts only JPG, PNG, WebP, or GIF images.';
+                if ($galleryUpload && !str_starts_with($mime, 'image/') && !str_starts_with($mime, 'video/')) {
+                    $failed[] = $displayName . ': Gallery upload accepts only images or videos.';
                     continue;
                 }
 
@@ -179,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
             }
 
             if ($saved > 0) {
-                $label = $galleryImageUpload ? 'gallery image' : 'media file';
+                $label = $galleryUpload ? 'gallery item' : 'media file';
                 $success = $saved . ' ' . $label . ($saved === 1 ? '' : 's') . ' uploaded successfully.';
             }
 
@@ -199,16 +202,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_media'])) {
     $path = ($library === 'gallery' ? $galleryDir : $mediaDir) . $file;
     if ($file !== '' && is_file($path)) {
         unlink($path);
-        $success = $library === 'gallery' ? 'Gallery image deleted successfully.' : 'Media deleted successfully.';
+        $success = $library === 'gallery' ? 'Gallery item deleted successfully.' : 'Media deleted successfully.';
     } else {
-        $error = $library === 'gallery' ? 'Gallery image not found.' : 'Media file not found.';
+        $error = $library === 'gallery' ? 'Gallery item not found.' : 'Media file not found.';
     }
 }
 
 tt_media_ensure_dir($galleryDir);
 tt_media_ensure_dir($mediaDir);
 
-function tt_media_collect_files(string $dir, string $adminUrl, string $frontendPrefix, bool $imagesOnly = false): array
+function tt_media_collect_files(string $dir, string $adminUrl, string $frontendPrefix, bool $galleryOnly = false): array
 {
     $files = [];
     foreach (glob($dir . '*') ?: [] as $path) {
@@ -216,7 +219,7 @@ function tt_media_collect_files(string $dir, string $adminUrl, string $frontendP
         $file = basename($path);
         if (str_starts_with($file, '.')) continue;
         $mime = mime_content_type($path) ?: '';
-        if ($imagesOnly && !str_starts_with($mime, 'image/')) continue;
+        if ($galleryOnly && !str_starts_with($mime, 'image/') && !str_starts_with($mime, 'video/')) continue;
         $files[] = [
             'name' => $file,
             'mime' => $mime,
@@ -225,6 +228,7 @@ function tt_media_collect_files(string $dir, string $adminUrl, string $frontendP
             'frontend_path' => $frontendPrefix . rawurlencode($file),
             'admin_url' => $adminUrl . rawurlencode($file),
             'is_image' => str_starts_with($mime, 'image/'),
+            'is_video' => str_starts_with($mime, 'video/'),
         ];
     }
     usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
@@ -263,11 +267,11 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
         <div class="media-upload-options">
             <div class="admin-card media-upload-intro">
                 <div>
-                    <h3><i class="fas fa-images"></i> Gallery Images</h3>
-                    <p>Upload public gallery images. These images are shown automatically on the frontend Gallery page.</p>
+                    <h3><i class="fas fa-photo-film"></i> Gallery Images & Videos</h3>
+                    <p>Upload public gallery images and videos. These items are shown automatically on the frontend Gallery page.</p>
                 </div>
-                <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="gallery_image">
-                    <i class="fas fa-plus"></i> Add Gallery Images
+                <button type="button" class="course-add-btn course" data-open-media-upload data-media-kind="gallery_item">
+                    <i class="fas fa-plus"></i> Add Gallery Items
                 </button>
             </div>
             <div class="admin-card media-upload-intro">
@@ -283,7 +287,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
 
         <div class="admin-card">
             <div class="card-header">
-                <h3><i class="fas fa-images"></i> Gallery Images</h3>
+                <h3><i class="fas fa-photo-film"></i> Gallery Images & Videos</h3>
                 <span style="font-size:13px;color:#64748B;"><strong><?= count($galleryFiles) ?></strong> files</span>
             </div>
             <?php if ($galleryFiles): ?>
@@ -291,7 +295,12 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                 <?php foreach ($galleryFiles as $file): ?>
                 <article class="media-card">
                     <a class="media-preview" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank">
+                        <?php if ($file['is_video']): ?>
+                        <video src="<?= htmlspecialchars($file['admin_url']) ?>" muted preload="metadata"></video>
+                        <span class="media-video-badge"><i class="fas fa-play"></i></span>
+                        <?php else: ?>
                         <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>">
+                        <?php endif; ?>
                     </a>
                     <div class="media-body">
                         <h3 title="<?= htmlspecialchars($file['name']) ?>"><?= htmlspecialchars($file['name']) ?></h3>
@@ -300,7 +309,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                         <input type="text" value="<?= htmlspecialchars($file['frontend_path']) ?>" readonly onclick="this.select();">
                         <div class="media-actions">
                             <a class="btn-xs btn-blue" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank"><i class="fas fa-eye"></i> View</a>
-                            <form method="POST" onsubmit="return confirm('Delete this gallery image?');">
+                            <form method="POST" onsubmit="return confirm('Delete this gallery item?');">
                                 <input type="hidden" name="delete_media" value="1">
                                 <input type="hidden" name="library" value="gallery">
                                 <input type="hidden" name="file" value="<?= htmlspecialchars($file['name']) ?>">
@@ -314,7 +323,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
             <?php else: ?>
             <div class="empty-state">
                 <i class="fas fa-images"></i>
-                <p>No gallery images uploaded yet.</p>
+                <p>No gallery images or videos uploaded yet.</p>
             </div>
             <?php endif; ?>
         </div>
@@ -367,26 +376,26 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
     <div class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mediaUploadTitle">
         <div class="admin-modal-header">
             <div>
-                <h2 id="mediaUploadTitle"><i class="fas fa-cloud-upload-alt"></i> Add Gallery Images</h2>
-                <p id="mediaUploadDescription">Choose 1 to 10 JPG, PNG, WebP, or GIF images. After upload, they will appear in the public gallery.</p>
+                <h2 id="mediaUploadTitle"><i class="fas fa-cloud-upload-alt"></i> Add Gallery Items</h2>
+                <p id="mediaUploadDescription">Choose 1 to 10 images or videos. After upload, they will appear in the public gallery.</p>
             </div>
             <button type="button" class="modal-close" data-close-media-upload aria-label="Close"><i class="fas fa-times"></i></button>
         </div>
         <form method="POST" enctype="multipart/form-data" class="media-upload-form">
             <input type="hidden" name="upload_media" value="1">
-            <input type="hidden" name="media_kind" value="gallery_image" data-media-kind-input>
+            <input type="hidden" name="media_kind" value="gallery_item" data-media-kind-input>
             <div class="admin-modal-body">
                 <div class="form-group">
-                    <label data-media-file-label>Image Files</label>
+                    <label data-media-file-label>Gallery Files</label>
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= $maxUploadBytes ?>">
-                    <input type="file" name="media_file[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required data-media-file-input>
-                    <small class="field-help" data-media-file-help>Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.</small>
+                    <input type="file" name="media_file[]" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg" multiple required data-media-file-input>
+                    <small class="field-help" data-media-file-help>Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF, MP4, WebM, OGV. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.</small>
                     <small class="field-help" data-media-file-count></small>
                 </div>
             </div>
             <div class="admin-modal-footer">
                 <button type="button" class="btn-cancel" data-close-media-upload>Cancel</button>
-                <button class="btn-save" type="submit" data-media-submit><i class="fas fa-cloud-upload-alt"></i> Upload Images</button>
+                <button class="btn-save" type="submit" data-media-submit><i class="fas fa-cloud-upload-alt"></i> Upload Gallery Items</button>
             </div>
         </form>
     </div>
@@ -403,25 +412,25 @@ const mediaFileCount = document.querySelector('[data-media-file-count]');
 const mediaSubmit = document.querySelector('[data-media-submit]');
 const maxBatchFiles = <?= (int)$maxBatchFiles ?>;
 const uploadModalModes = {
-    gallery_image: {
-        title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Images',
-        description: 'Choose 1 to 10 JPG, PNG, WebP, or GIF images. After upload, they will appear in the public gallery.',
-        label: 'Image Files',
-        accept: 'image/jpeg,image/png,image/webp,image/gif',
-        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
-        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Images'
+    gallery_item: {
+        title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Items',
+        description: 'Choose 1 to 10 images or videos. After upload, they will appear in the public gallery.',
+        label: 'Gallery Files',
+        accept: 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg',
+        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF, MP4, WebM, OGV. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
+        submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Gallery Items'
     },
     media_file: {
         title: '<i class="fas fa-cloud-upload-alt"></i> Add Media Files',
-        description: 'Choose 1 to 10 images or PDFs for reusable admin media paths. These files do not automatically appear in Gallery.',
+        description: 'Choose 1 to 10 images, videos, or PDFs for reusable admin media paths. These files do not automatically appear in Gallery.',
         label: 'Media Files',
-        accept: 'image/jpeg,image/png,image/webp,image/gif,application/pdf',
-        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF, PDF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
+        accept: 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg,application/pdf',
+        help: 'Choose 1 to <?= (int)$maxBatchFiles ?> files. Allowed: JPG, PNG, WebP, GIF, MP4, WebM, OGV, PDF. Maximum <?= htmlspecialchars($maxUploadLabel) ?> per file.',
         submit: '<i class="fas fa-cloud-upload-alt"></i> Upload Media'
     }
 };
-function openMediaUploadModal(kind = 'gallery_image') {
-    const mode = uploadModalModes[kind] || uploadModalModes.gallery_image;
+function openMediaUploadModal(kind = 'gallery_item') {
+    const mode = uploadModalModes[kind] || uploadModalModes.gallery_item;
     mediaUploadTitle.innerHTML = mode.title;
     mediaUploadDescription.textContent = mode.description;
     mediaKindInput.value = kind;

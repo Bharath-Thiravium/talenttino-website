@@ -14,6 +14,8 @@ if (empty($homeHeroSlides)) {
 }
 $homeSliderCount = count($homeHeroSlides);
 $homeFirstHeroImage = (string)($homeHeroSlides[0]['image'] ?? 'assets/images/home.webp');
+$homeFirstHeroPreload = tt_home_optimized_image($homeFirstHeroImage, 1400) ?: $homeFirstHeroImage;
+$homeFirstHeroSrcset = tt_home_optimized_srcset($homeFirstHeroImage, [430, 900, 1400]);
 $homeFormResult = null;
 $fallbackCourses = [
     ['title' => 'Full Stack Development', 'category' => 'Development', 'short_desc' => 'Frontend, backend, database and deployment training with project practice.', 'description' => 'Complete full stack development training with live project support.', 'fee' => 15000, 'original_fee' => 25000],
@@ -197,6 +199,39 @@ function tt_home_course_image(array $course): string
     return 'assets/images/home2.webp';
 }
 
+function tt_home_optimized_base(string $image): string
+{
+    $path = (string)(parse_url($image, PHP_URL_PATH) ?: $image);
+    $file = pathinfo(rawurldecode(basename($path)), PATHINFO_FILENAME);
+    $file = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $file), '-'));
+    return $file !== '' ? $file : 'image';
+}
+
+function tt_home_optimized_image(string $image, int $width): string
+{
+    $name = tt_home_optimized_base($image) . '-w' . $width . '.webp';
+    $relative = 'uploads/optimized/' . $name;
+    return is_file(__DIR__ . '/' . $relative) ? $relative : '';
+}
+
+function tt_home_optimized_srcset(string $image, array $widths): string
+{
+    $items = [];
+    foreach ($widths as $width) {
+        $candidate = tt_home_optimized_image($image, (int)$width);
+        if ($candidate !== '') {
+            $items[] = $candidate . ' ' . (int)$width . 'w';
+        }
+    }
+
+    return implode(', ', $items);
+}
+
+function tt_home_image_src(string $image, int $preferredWidth): string
+{
+    return tt_home_optimized_image($image, $preferredWidth) ?: $image;
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
     $homeFormResult = tt_submit_enquiry($_POST, 'enquiry');
 }
@@ -217,8 +252,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <?php if ($homeFirstHeroImage !== ''): ?>
-    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroImage) ?>" fetchpriority="high">
+    <?php if ($homeFirstHeroPreload !== ''): ?>
+    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroPreload) ?>"<?= $homeFirstHeroSrcset !== '' ? ' imagesrcset="' . tt_h($homeFirstHeroSrcset) . '" imagesizes="100vw"' : '' ?> fetchpriority="high">
     <?php endif; ?>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
@@ -226,14 +261,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260717-navsize1">
+    <style>
+        :root{--header-height:86px;--text:#07142d;--brand:#0845b2}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:#f4f9ff;font-family:"Plus Jakarta Sans",Arial,sans-serif}.site-container{width:min(1200px,calc(100% - 40px));margin-inline:auto}.site-header{min-height:var(--header-height);background:linear-gradient(90deg,rgba(235,248,255,.94) 0%,rgba(214,235,252,.98) 46%,rgba(228,239,255,.96) 100%);border-bottom:1px solid rgba(27,99,179,.16);box-shadow:0 16px 38px rgba(12,63,126,.12);position:sticky;top:0;z-index:1000}.nav-wrap{min-height:var(--header-height);display:grid;grid-template-columns:minmax(320px,.95fr) minmax(560px,auto) minmax(132px,.34fr);align-items:center;column-gap:20px;padding:0 20px}.brand{min-height:68px;display:inline-flex;align-items:center;gap:12px;text-decoration:none}.brand-mark.logo-mark{width:62px;height:62px;min-width:62px;padding:6px;border-radius:18px;background:linear-gradient(180deg,#fff 0%,#eef7ff 100%);border:1px solid rgba(38,113,205,.2);box-shadow:0 14px 30px rgba(15,92,174,.14);display:grid;place-items:center}.brand-mark img{width:100%;height:100%;object-fit:contain}.brand-name{display:block;color:var(--brand);font-size:30px;font-weight:900;line-height:.98}.brand-sub{display:block;margin-top:8px;color:#0b66ff;font-size:11px;font-weight:900;line-height:1;letter-spacing:4.8px}.site-nav{min-height:54px;height:54px;display:inline-flex;align-items:center;justify-content:center;justify-self:center;gap:5px;padding:6px;border:1px solid rgba(61,126,194,.2);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.56) 0%,rgba(177,215,245,.4) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.82),inset 0 -1px 0 rgba(59,118,182,.1),0 12px 30px rgba(22,82,145,.1)}.site-nav>a,.site-nav .nav-item>a{height:42px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 18px;border-radius:999px;color:#102945;background:transparent;font-size:15px;font-weight:900;line-height:1;text-decoration:none;white-space:nowrap}.site-nav>a.active,.site-nav>a:hover,.site-nav .nav-item:hover>a,.site-nav .nav-item.active>a{color:#004ebd;background:linear-gradient(180deg,#fff 0%,#e7f5ff 100%);box-shadow:0 10px 22px rgba(32,101,172,.15),inset 0 1px 0 rgba(255,255,255,.92)}.nav-menu{display:none}.nav-item:hover .nav-menu,.nav-item:focus-within .nav-menu{display:block}.menu-button{display:none}.page-main{display:block}.home-hero{position:relative;min-height:calc(100vh - var(--header-height));overflow:hidden;background:#07142d}.hero-grid{width:100%;min-height:calc(100vh - var(--header-height));display:grid;grid-template-columns:minmax(0,1fr);padding:0}.hero-slider-col{position:absolute;inset:0;min-height:calc(100vh - var(--header-height));overflow:hidden}.hero-slider,.slider-track,.slider-slide{width:100%;height:100%}.slider-track{display:flex;transition:transform .6s ease}.slider-slide{flex:0 0 100%;min-width:100%;background-size:cover;background-position:center top;background-repeat:no-repeat}.slider-slide img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}.hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,18,44,.72) 0%,rgba(8,18,44,.4) 34%,rgba(8,18,44,.08) 68%,rgba(8,18,44,.18) 100%);pointer-events:none}.home-hero-copy{position:relative;z-index:5;display:flex;align-items:flex-end;width:min(560px,calc(100% - 48px));min-height:calc(100vh - var(--header-height));margin-left:clamp(24px,7.5vw,112px);padding-bottom:clamp(38px,7vh,72px)}.home-view-courses-btn{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:0 24px;border-radius:16px;color:#fff;background:linear-gradient(135deg,#5b83ff 0%,#c51cff 100%);font-weight:900;text-decoration:none;box-shadow:0 18px 36px rgba(91,131,255,.25)}.home-counselling-card{position:absolute;z-index:8;right:clamp(52px,9vw,145px);top:50%;width:min(390px,calc(100vw - 48px));transform:translateY(-50%);padding:22px;border-radius:12px;background:rgba(255,255,255,.92);box-shadow:0 24px 60px rgba(0,0,0,.22);border-top:7px solid #c51cff}.home-counselling-card h2{margin:0 0 14px;font-size:22px;line-height:1.2}.home-counselling-card p,.form-note{display:none}.home-counselling-form{display:grid;gap:11px}.home-counselling-form input,.home-counselling-form select{height:48px;border:1px solid #bdd6f4;border-radius:8px;padding:0 14px;font:inherit;font-weight:800;background:#f8fbff}.home-counselling-form button{height:48px;border:0;border-radius:8px;color:#fff;background:linear-gradient(135deg,#5b83ff 0%,#d414ef 100%);font:inherit;font-weight:900}.home-social-rail{position:fixed;right:28px;top:50%;z-index:50;display:grid;gap:12px}.home-social-rail a,.scroll-top{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;color:#fff;text-decoration:none;background:linear-gradient(135deg,#527dff,#c21cf2)}.home-ai-chat{position:fixed;right:28px;bottom:28px;z-index:70}.home-ai-toggle{height:50px;border:0;border-radius:16px;padding:0 22px;color:#fff;background:linear-gradient(135deg,#527dff,#c21cf2);font:inherit;font-weight:900}@media(max-width:980px){:root{--header-height:90px}.site-header{background:#fff}.nav-wrap{display:flex;justify-content:space-between}.brand-name{font-size:20px}.brand-sub{font-size:8px;letter-spacing:2px}.site-nav{display:none}.menu-button{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #cfe2ff;border-radius:12px;background:#eef6ff}.home-hero,.hero-grid,.hero-slider-col,.home-hero-copy{min-height:calc(100vh - var(--header-height))}.home-counselling-card{display:none}.home-social-rail{right:16px}.home-view-courses-btn{min-height:50px}}
+        @media(max-width:980px){html body.nav-open,html.nav-open{overflow:hidden!important}html body .site-header{--header-height:78px!important;background:#fff!important;border-bottom:1px solid #d8e8ff!important;box-shadow:none!important}html body .site-header .nav-wrap{width:100%!important;min-height:77px!important;margin:0!important;padding:8px 7px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 48px!important;gap:8px!important;background:#fff!important}html body .site-header .brand{min-width:0!important;gap:10px!important}html body .site-header .brand-mark.logo-mark{width:56px!important;height:56px!important;min-width:56px!important;border-radius:12px!important}html body .site-header .brand-name{max-width:calc(100vw - 134px)!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:25px!important}html body .site-header .brand-sub{max-width:calc(100vw - 134px)!important;overflow:hidden!important;white-space:nowrap!important;font-size:11px!important;letter-spacing:4px!important}html body .site-header .menu-button{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;justify-self:end!important;border:1px solid #b9d8ff!important;border-radius:12px!important;color:#0750d8!important;background:#eff7ff!important}html body.nav-open .site-header .site-nav.open{position:fixed!important;inset:var(--header-height) 0 0 0!important;width:100vw!important;height:calc(100vh - var(--header-height))!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:10px!important;padding:12px 7px 26px!important;overflow-y:auto!important;border-top:1px solid #d8e8ff!important;border-radius:0!important;background:#edf6ff!important;z-index:10040!important}html body.nav-open .site-header .site-nav.open>a,html body.nav-open .site-header .site-nav.open>.nav-item>a,html body.nav-open .site-header .site-nav.open .nav-enroll-cta{width:100%!important;min-height:54px!important;height:54px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;margin:0!important;padding:0 16px!important;color:#061632!important;border:1px solid #cfe3ff!important;border-radius:14px!important;background:rgba(255,255,255,.9)!important;text-align:left!important}html body.nav-open .site-header .site-nav.open>.nav-item>a{justify-content:space-between!important}html body.nav-open .site-header .site-nav.open .nav-item{width:100%!important;height:auto!important;display:flex!important;flex-direction:column!important;align-items:stretch!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu.open .nav-menu{position:static!important;width:100%!important;display:grid!important;gap:6px!important;margin:8px 0 0!important;padding:8px!important;border:1px solid #d6e7ff!important;border-radius:14px!important;background:#fff!important;opacity:1!important;visibility:visible!important;transform:none!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu:not(.open) .nav-menu{display:none!important}html body.nav-open .site-header .site-nav.open .nav-enroll-cta{justify-content:center!important;color:#fff!important;border:0!important;background:linear-gradient(135deg,#5d82ff 0%,#c51cff 100%)!important}}
+    </style>
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-aboutstatspolish1">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
             <a class="brand" href="index.php">
-                <span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span>
+                <span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span>
                 <span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span>
             </a>
             <nav class="site-nav">
@@ -261,10 +300,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                     <div class="hero-slider" id="heroSlider" data-hero-slider aria-label="Course highlights slider">
                         <div class="slider-track" data-slider-track>
                             <?php foreach ($homeHeroSlides as $index => $slide): ?>
-                            <?php $slideBgImage = str_replace("'", '%27', tt_abs_url((string)($slide['image'] ?? ''))); ?>
-                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>" style="--hero-slide-image: url('<?= tt_h($slideBgImage) ?>');">
+                            <?php
+                                $slideImage = (string)($slide['image'] ?? '');
+                                $slideSrc = tt_home_image_src($slideImage, 1400);
+                                $slideSrcset = tt_home_optimized_srcset($slideImage, [430, 900, 1400]);
+                                $slideBgImage = str_replace("'", '%27', (str_starts_with($slideSrc, 'uploads/') ? '../../' . $slideSrc : $slideSrc));
+                            ?>
+                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>"<?= $index === 0 ? ' style="--hero-slide-image: url(\'' . tt_h($slideBgImage) . '\');"' : ' data-bg="' . tt_h($slideBgImage) . '"' ?>>
                                 <img
-                                    src="<?= tt_h($slide['image']) ?>"
+                                    <?= $index === 0 ? 'src="' . tt_h($slideSrc) . '"' : 'data-src="' . tt_h($slideSrc) . '"' ?>
+                                    <?= $slideSrcset !== '' ? ($index === 0 ? 'srcset="' . tt_h($slideSrcset) . '"' : 'data-srcset="' . tt_h($slideSrcset) . '"') : '' ?>
+                                    sizes="100vw"
                                     alt="<?= tt_h($slide['title'] ?: 'Talentteno course highlight ' . ($index + 1)) ?>"
                                     loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"
                                     decoding="async"
@@ -329,9 +375,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                     <a class="model-gradient-btn" href="about.php">Read More <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
                 <div class="model-about-visual reveal reveal-right">
-                    <img class="model-about-main" src="uploads/media/full-stack-development-20260703-133158-761383.png" alt="Full stack project training visual" loading="lazy" decoding="async">
-                    <img class="model-about-float" src="assets/images/home2.webp" alt="Students learning with mentor" loading="lazy" decoding="async">
-                    <button class="model-play" type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
+                    <?php $aboutMainImage = 'uploads/media/full-stack-development-20260703-133158-761383.png'; $aboutMainSrcset = tt_home_optimized_srcset($aboutMainImage, [400, 800]); ?>
+                    <img class="model-about-main" src="<?= tt_h(tt_home_image_src($aboutMainImage, 800)) ?>"<?= $aboutMainSrcset !== '' ? ' srcset="' . tt_h($aboutMainSrcset) . '" sizes="(max-width: 767px) 100vw, 645px"' : '' ?> alt="Full stack project training visual" loading="lazy" decoding="async" width="645" height="430">
+                    <?php $aboutFloatImage = 'assets/images/home2.webp'; $aboutFloatSrcset = tt_home_optimized_srcset($aboutFloatImage, [430, 900]); ?>
+                    <img class="model-about-float" src="<?= tt_h(tt_home_image_src($aboutFloatImage, 430)) ?>"<?= $aboutFloatSrcset !== '' ? ' srcset="' . tt_h($aboutFloatSrcset) . '" sizes="220px"' : '' ?> alt="Students learning with mentor" loading="lazy" decoding="async" width="220" height="147">
                 </div>
             </div>
         </section>
@@ -352,7 +399,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         </article>
                         <?php endforeach; ?>
                     </div>
-                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="assets/images/home1.webp" alt="IT training discussion" loading="lazy" decoding="async"></div>
+                    <?php $serviceCenterImage = 'assets/images/home1.webp'; $serviceCenterSrcset = tt_home_optimized_srcset($serviceCenterImage, [430, 900]); ?>
+                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="<?= tt_h(tt_home_image_src($serviceCenterImage, 900)) ?>"<?= $serviceCenterSrcset !== '' ? ' srcset="' . tt_h($serviceCenterSrcset) . '" sizes="(max-width: 767px) 100vw, 430px"' : '' ?> alt="IT training discussion" loading="lazy" decoding="async" width="430" height="287"></div>
                     <div class="model-service-stack">
                         <?php foreach (array_slice($popularTracks, 2, 2) as $course): ?>
                         <article class="model-service-card reveal">
@@ -379,7 +427,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         $courseDuration = (string)($course['duration'] ?? '');
                     ?>
                     <article class="model-project-card model-course-showcase-card reveal">
-                        <img src="<?= tt_h($courseImage) ?>" alt="<?= tt_h($courseTitle) ?> course" loading="lazy" decoding="async">
+                        <?php $courseImageSrcset = tt_home_optimized_srcset($courseImage, [400, 800]); ?>
+                        <img src="<?= tt_h(tt_home_image_src($courseImage, 400)) ?>"<?= $courseImageSrcset !== '' ? ' srcset="' . tt_h($courseImageSrcset) . '" sizes="(max-width: 767px) 100vw, 394px"' : '' ?> alt="<?= tt_h($courseTitle) ?> course" loading="lazy" decoding="async" width="394" height="263">
                         <div class="model-course-card-content">
                             <span><?= tt_h(($course['category'] ?? '') ?: 'Course') ?></span>
                             <h3><?= tt_h($courseTitle) ?></h3>
@@ -394,7 +443,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                                 data-highlights="<?= tt_h(tt_home_course_examples($course)) ?>"
                                 data-duration="<?= tt_h($courseDuration) ?>"
                                 data-fee="<?= tt_h($courseFee) ?>"
-                                data-image="<?= tt_h($courseImage) ?>"
+                                data-image="<?= tt_h(tt_home_image_src($courseImage, 800)) ?>"
                                 data-enquire="contact.php?course=<?= rawurlencode($courseTitle) ?>">
                                 Enquire Now <i class="fa-solid fa-arrow-right"></i>
                             </button>
@@ -421,29 +470,26 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-center-head reveal"><span class="model-label">Course Path</span><h2>What learning tracks we serve</h2></div>
                 <div class="model-path-grid">
                     <div class="model-path-visual reveal">
-                        <img src="assets/images/home2.webp" alt="Students collaborating during IT training" loading="lazy" decoding="async">
+                        <?php $pathImage = 'assets/images/home2.webp'; $pathImageSrcset = tt_home_optimized_srcset($pathImage, [430, 900]); ?>
+                        <img src="<?= tt_h(tt_home_image_src($pathImage, 900)) ?>"<?= $pathImageSrcset !== '' ? ' srcset="' . tt_h($pathImageSrcset) . '" sizes="(max-width: 767px) 100vw, 520px"' : '' ?> alt="Students collaborating during IT training" loading="lazy" decoding="async" width="520" height="347">
                         <div><span>Step 01</span><h3>Practical course selection</h3><p>Start with counselling, choose the right course and follow a clear project-based learning path.</p></div>
                     </div>
                     <div class="model-path-list reveal" data-path-tabs>
-                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="assets/images/home.webp"><strong>01</strong><span>Full Stack Development</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="assets/images/home1.webp"><strong>02</strong><span>Data Science & AI</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="assets/images/home2.webp"><strong>03</strong><span>Cyber Security</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="assets/images/home3.webp"><strong>04</strong><span>Digital Marketing</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="assets/images/home4.webp"><strong>05</strong><span>UI / UX and Design</span></button>
+                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="<?= tt_h(tt_home_image_src('assets/images/home.webp', 900)) ?>"><strong>01</strong><span>Full Stack Development</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="<?= tt_h(tt_home_image_src('assets/images/home1.webp', 900)) ?>"><strong>02</strong><span>Data Science & AI</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="<?= tt_h(tt_home_image_src('assets/images/home2.webp', 900)) ?>"><strong>03</strong><span>Cyber Security</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="<?= tt_h(tt_home_image_src('assets/images/home3.webp', 900)) ?>"><strong>04</strong><span>Digital Marketing</span></button>
+                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="<?= tt_h(tt_home_image_src('assets/images/home4.webp', 900)) ?>"><strong>05</strong><span>UI / UX and Design</span></button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="model-video-section" aria-label="Talentteno training preview">
-            <img src="assets/images/home3.webp" alt="Hands-on IT project planning" loading="lazy" decoding="async">
-            <button type="button" aria-label="Watch training preview" data-video-open><i class="fa-solid fa-play"></i></button>
-        </section>
-
         <section class="model-section model-hire-section" id="hire">
             <div class="site-container">
                 <div class="model-hire-hero reveal">
-                    <img src="assets/images/home4.webp" alt="Students discussing project work" loading="lazy" decoding="async">
+                    <?php $hireImage = 'assets/images/home4.webp'; $hireImageSrcset = tt_home_optimized_srcset($hireImage, [430, 900]); ?>
+                    <img src="<?= tt_h(tt_home_image_src($hireImage, 900)) ?>"<?= $hireImageSrcset !== '' ? ' srcset="' . tt_h($hireImageSrcset) . '" sizes="(max-width: 767px) 100vw, 700px"' : '' ?> alt="Students discussing project work" loading="lazy" decoding="async" width="700" height="467">
                     <div class="model-hire-title"><span>Why students choose</span><h2>Talentteno Institute</h2></div>
                     <aside><ul><li><i class="fa-solid fa-circle-check"></i> Mentor-led classes</li><li><i class="fa-solid fa-circle-check"></i> Project practice</li><li><i class="fa-solid fa-circle-check"></i> Interview guidance</li><li><i class="fa-solid fa-circle-check"></i> Placement support</li></ul><strong>90%</strong><span>Skill confidence improvement through practice-led learning</span></aside>
                 </div>
@@ -464,7 +510,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         <?php for ($loop = 0; $loop < 2; $loop++): ?>
                         <?php foreach ($reviewShowcaseImages as $index => $slide): $item = $reviewItems[$index % count($reviewItems)]; ?>
                         <article class="review-scroll-card">
-                            <img src="<?= tt_h($slide['image']) ?>" alt="<?= tt_h($slide['title']) ?> training image" loading="<?= $loop === 0 && $index < 3 ? 'eager' : 'lazy' ?>" decoding="async">
+                            <?php $reviewImageSrcset = tt_home_optimized_srcset((string)$slide['image'], [400, 800]); ?>
+                            <img src="<?= tt_h(tt_home_image_src((string)$slide['image'], 400)) ?>"<?= $reviewImageSrcset !== '' ? ' srcset="' . tt_h($reviewImageSrcset) . '" sizes="(max-width: 767px) 80vw, 320px"' : '' ?> alt="<?= tt_h($slide['title']) ?> training image" loading="lazy" decoding="async" width="320" height="213">
                             <div class="review-scroll-content">
                                 <span><i class="fa-solid <?= tt_h($slide['icon']) ?>"></i> <?= tt_h($slide['title']) ?></span>
                                 <p><?= tt_h($item['review']) ?></p>
@@ -478,7 +525,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         <?php for ($loop = 0; $loop < 2; $loop++): ?>
                         <?php foreach (array_reverse($reviewShowcaseImages) as $index => $slide): $item = $reviewItems[$index % count($reviewItems)]; ?>
                         <article class="review-scroll-card review-scroll-card-small">
-                            <img src="<?= tt_h($slide['image']) ?>" alt="" loading="lazy" decoding="async">
+                            <?php $reviewSmallSrcset = tt_home_optimized_srcset((string)$slide['image'], [400, 800]); ?>
+                            <img src="<?= tt_h(tt_home_image_src((string)$slide['image'], 400)) ?>"<?= $reviewSmallSrcset !== '' ? ' srcset="' . tt_h($reviewSmallSrcset) . '" sizes="220px"' : '' ?> alt="" loading="lazy" decoding="async" width="220" height="147">
                             <div class="review-scroll-content">
                                 <span><i class="fa-solid <?= tt_h($slide['icon']) ?>"></i> <?= tt_h($slide['title']) ?></span>
                             </div>
@@ -495,7 +543,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-center-head reveal"><span class="model-label">Learning Notes</span><h2>Career tips and course guidance</h2></div>
                 <div class="model-blog-grid">
                     <?php foreach ($learningNotes as $note): ?>
-                    <article class="model-blog-card reveal"><img src="<?= tt_h($note['image']) ?>" alt="<?= tt_h($note['title']) ?>" loading="lazy" decoding="async"><div class="meta"><span><i class="fa-solid fa-user"></i> Talentteno</span><span><i class="fa-solid fa-comment"></i> <?= tt_h($note['tag']) ?></span></div><h3><?= tt_h($note['title']) ?></h3><a href="blog.php">Read More</a><time>2026</time></article>
+                    <?php $noteImageSrcset = tt_home_optimized_srcset((string)$note['image'], [400, 800]); ?>
+                    <article class="model-blog-card reveal"><img src="<?= tt_h(tt_home_image_src((string)$note['image'], 400)) ?>"<?= $noteImageSrcset !== '' ? ' srcset="' . tt_h($noteImageSrcset) . '" sizes="(max-width: 767px) 100vw, 360px"' : '' ?> alt="<?= tt_h($note['title']) ?>" loading="lazy" decoding="async" width="360" height="240"><div class="meta"><span><i class="fa-solid fa-user"></i> Talentteno</span><span><i class="fa-solid fa-comment"></i> <?= tt_h($note['tag']) ?></span></div><h3><?= tt_h($note['title']) ?></h3><a href="blog.php">Read More</a><time>2026</time></article>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -517,15 +566,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
             <ul class="course-detail-highlights"></ul>
             <div class="course-detail-meta"><span class="course-detail-duration"></span><strong class="course-detail-fee"></strong></div>
             <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php">Enquire Now</a></div>
-        </div>
-    </div>
-    <div class="training-video-modal" id="trainingVideoModal" aria-hidden="true">
-        <div class="training-video-backdrop" data-video-close></div>
-        <div class="training-video-panel" role="dialog" aria-modal="true" aria-label="Talentteno training preview video">
-            <button class="training-video-close" type="button" data-video-close aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
-            <video controls preload="metadata" playsinline poster="assets/images/home.webp">
-                <source src="assets/videos/talentteno-training-preview.mp4" type="video/mp4">
-            </video>
         </div>
     </div>
     <div class="home-ai-chat" data-ai-chat aria-label="Talentteno AI chat">
@@ -557,6 +597,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260717-learningimg1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260718-speed1" defer></script>
 </body>
 </html>

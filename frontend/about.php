@@ -38,15 +38,21 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
     ]); ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-navsize1">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preload" as="image" href="assets/images/optimized/about-w1536.webp" imagesrcset="assets/images/optimized/about-w768.webp 768w, assets/images/optimized/about-w1200.webp 1200w, assets/images/optimized/about-w1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </noscript>
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-speed2">
 </head>
 <body class="static-site about-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -60,7 +66,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
     </header>
     <main class="page-main">
         <section class="page-hero has-page-hero-image">
-            <img class="page-hero-bg" src="assets/images/about.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <img class="page-hero-bg" src="assets/images/optimized/about-w1536.webp" srcset="assets/images/optimized/about-w768.webp 768w, assets/images/optimized/about-w1200.webp 1200w, assets/images/optimized/about-w1536.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" fetchpriority="high" width="1536" height="1024">
             <span class="page-hero-overlay" aria-hidden="true"></span>
             <div class="site-container reveal">
                 <span class="hero-kicker"><i class="fa-solid fa-graduation-cap"></i> Practical IT Institute</span>
@@ -82,14 +88,14 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
                 </div>
                 <div class="identity-image about-visual-stack reveal reveal-right">
                     <div class="about-visual-main">
-                        <img src="assets/images/home.webp" alt="Students receiving practical coding training at Talentteno Institute" loading="eager" decoding="async" fetchpriority="high">
+                        <img src="uploads/optimized/home-w900.webp" srcset="uploads/optimized/home-w430.webp 430w, uploads/optimized/home-w900.webp 900w, uploads/optimized/home-w1400.webp 1400w" sizes="(max-width: 1100px) 100vw, 520px" alt="Students receiving practical coding training at Talentteno Institute" loading="lazy" decoding="async" width="900" height="506">
                         <span class="about-visual-badge"><i class="fa-solid fa-code"></i> Live project practice</span>
                     </div>
                     <div class="about-visual-mini about-visual-mini-one">
-                        <img src="uploads/media/cyber-security-20260703-133329-242125.png" alt="Cyber security course visual" loading="eager" decoding="async">
+                        <img src="uploads/media/cyber-security-20260703-133329-242125.png" alt="Cyber security course visual" loading="lazy" decoding="async" width="420" height="280">
                     </div>
                     <div class="about-visual-mini about-visual-mini-two">
-                        <img src="uploads/media/data-science-ai-20260703-133112-527863.png" alt="Data science and artificial intelligence course visual" loading="eager" decoding="async">
+                        <img src="uploads/media/data-science-ai-20260703-133112-527863.png" alt="Data science and artificial intelligence course visual" loading="lazy" decoding="async" width="420" height="280">
                     </div>
                 </div>
             </div>
@@ -104,11 +110,11 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
                 <div class="mission-vision-grid">
                     <article class="purpose-card mission-card reveal reveal-left">
                         <span class="purpose-icon"><i class="fa-solid fa-bullseye"></i></span>
-                        <div><span class="purpose-number">01</span><h3>Our Mission</h3><p><?= tt_h($settings['mission']) ?></p></div>
+                        <div><h3>Our Mission</h3><p><?= tt_h($settings['mission']) ?></p></div>
                     </article>
                     <article class="purpose-card vision-card reveal reveal-right">
                         <span class="purpose-icon"><i class="fa-solid fa-binoculars"></i></span>
-                        <div><span class="purpose-number">02</span><h3>Our Vision</h3><p><?= tt_h($settings['vision']) ?></p></div>
+                        <div><h3>Our Vision</h3><p><?= tt_h($settings['vision']) ?></p></div>
                     </article>
                 </div>
             </div>
@@ -170,6 +176,6 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260718-speed1" defer></script>
 </body>
 </html>

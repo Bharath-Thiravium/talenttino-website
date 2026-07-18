@@ -36,7 +36,7 @@ if (nav) {
         const enrollCta = document.createElement('a');
         enrollCta.className = 'nav-enroll-cta';
         enrollCta.href = 'contact.php';
-        enrollCta.textContent = 'Enroll Now';
+        enrollCta.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span>Enroll Now</span>';
         nav.appendChild(enrollCta);
     }
     const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
@@ -134,7 +134,7 @@ function closeMobileNav() {
     menuButton?.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('nav-open');
     document.documentElement.classList.remove('nav-open');
-    if (menuButton) menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    if (menuButton) menuButton.innerHTML = '<span class="menu-button-symbol" aria-hidden="true">&#9776;</span>';
 }
 
 window.addEventListener('pageshow', closeMobileNav);
@@ -145,7 +145,9 @@ function toggleMobileNav(event) {
     event?.stopPropagation();
     const isOpen = nav?.classList.toggle('open') || false;
     menuButton?.setAttribute('aria-expanded', String(isOpen));
-    if (menuButton) menuButton.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    if (menuButton) menuButton.innerHTML = isOpen
+        ? '<span class="menu-button-symbol" aria-hidden="true">&times;</span>'
+        : '<span class="menu-button-symbol" aria-hidden="true">&#9776;</span>';
     document.body.classList.toggle('nav-open', isOpen);
     document.documentElement.classList.toggle('nav-open', isOpen);
 }
@@ -179,11 +181,14 @@ dropdownItems.forEach(item => {
     const trigger = item.querySelector(':scope > a');
     trigger?.setAttribute('aria-haspopup', 'true');
     trigger?.setAttribute('aria-expanded', 'false');
-    trigger?.addEventListener('click', event => {
+    const handleDropdownTrigger = event => {
         const triggerHref = trigger.getAttribute('href') || '';
         const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
         const wasOpen = item.classList.contains('open');
-        if (isMobileNav && wasOpen && triggerHref !== '#') return;
+        if (isMobileNav && wasOpen && triggerHref !== '#') {
+            window.location.href = trigger.href;
+            return;
+        }
         if (triggerHref === '#' || isMobileNav) {
             event.preventDefault();
             event.stopPropagation();
@@ -197,7 +202,8 @@ dropdownItems.forEach(item => {
         });
         item.classList.toggle('open', !wasOpen);
         trigger.setAttribute('aria-expanded', String(!wasOpen));
-    });
+    };
+    trigger?.addEventListener('click', handleDropdownTrigger);
 });
 
 nav?.querySelectorAll('a[href]').forEach(link => {
@@ -383,15 +389,24 @@ document.querySelectorAll('.course-card, .catalog-card, .feature-card, .detail-t
 });
 
 const courseDetailModal = document.getElementById('courseDetailModal');
+let courseDetailTrigger = null;
 const closeCourseDetail = () => {
     if (!courseDetailModal) return;
+    if (courseDetailModal.contains(document.activeElement)) {
+        document.activeElement.blur();
+    }
     courseDetailModal.classList.remove('is-open');
     courseDetailModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
+    document.documentElement.classList.remove('modal-open');
+    if (courseDetailTrigger && document.contains(courseDetailTrigger)) {
+        courseDetailTrigger.focus({ preventScroll: true });
+    }
 };
 
 function openCourseDetails(button) {
         if (!courseDetailModal) return;
+        courseDetailTrigger = button;
         courseDetailModal.querySelector('#courseDetailTitle').textContent = button.dataset.title || '';
         courseDetailModal.querySelector('.course-detail-category').textContent = button.dataset.category || 'Course';
         courseDetailModal.querySelector('.course-detail-description').textContent = button.dataset.description || 'Contact us for complete course details.';
@@ -438,11 +453,13 @@ function openCourseDetails(button) {
         courseDetailModal.classList.add('is-open');
         courseDetailModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
+        document.documentElement.classList.add('modal-open');
         courseDetailModal.querySelector('.course-detail-close').focus();
 }
 
 document.querySelectorAll('[data-course-modal]').forEach(button => {
     button.addEventListener('click', event => {
+        event.preventDefault();
         if (button.matches('.course-card, .catalog-card, .home-course-card') && event.target.closest('a, button, input, select, textarea')) return;
         openCourseDetails(button);
     });
@@ -478,13 +495,27 @@ document.querySelectorAll('.home-course-card').forEach(card => {
     });
 });
 
-document.querySelectorAll('[data-close-course-detail]').forEach(button => button.addEventListener('click', closeCourseDetail));
+document.querySelectorAll('[data-close-course-detail]').forEach(button => {
+    const closeFromControl = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        closeCourseDetail();
+    };
+    button.addEventListener('click', closeFromControl);
+    button.addEventListener('pointerdown', event => {
+        if (!button.classList.contains('course-detail-close') && !button.classList.contains('course-detail-backdrop')) return;
+        closeFromControl(event);
+    });
+});
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeCourseDetail();
 });
 
 const trainingVideoModal = document.getElementById('trainingVideoModal');
 const trainingVideo = trainingVideoModal?.querySelector('video');
+const trainingVideoSource = trainingVideo?.querySelector('source');
+const trainingVideoDefaultSrc = trainingVideoSource?.getAttribute('src') || trainingVideo?.currentSrc || '';
+const trainingVideoDefaultType = trainingVideoSource?.getAttribute('type') || 'video/mp4';
 const closeTrainingVideo = () => {
     if (!trainingVideoModal) return;
     trainingVideoModal.classList.remove('is-open');
@@ -499,6 +530,13 @@ const closeTrainingVideo = () => {
 document.querySelectorAll('[data-video-open]').forEach(button => {
     button.addEventListener('click', () => {
         if (!trainingVideoModal) return;
+        const videoSrc = button.dataset.videoSrc || trainingVideoDefaultSrc;
+        const videoType = button.dataset.videoType || trainingVideoDefaultType;
+        if (trainingVideoSource && videoSrc && trainingVideoSource.getAttribute('src') !== videoSrc) {
+            trainingVideoSource.setAttribute('src', videoSrc);
+            trainingVideoSource.setAttribute('type', videoType);
+            trainingVideo?.load();
+        }
         trainingVideoModal.classList.add('is-open');
         trainingVideoModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
@@ -778,9 +816,27 @@ if (aiChat) {
     let current = 0;
     let timer = null;
     const INTERVAL = 4000;
+    const track = slider.querySelector('[data-slider-track]');
+
+    function hydrateSlide(index) {
+        const slide = slides[index];
+        if (!slide || slide.dataset.loaded === 'true') return;
+        const img = slide.querySelector('img');
+        if (img) {
+            if (img.dataset.srcset && !img.getAttribute('srcset')) {
+                img.setAttribute('srcset', img.dataset.srcset);
+            }
+            if (img.dataset.src && !img.getAttribute('src')) {
+                img.setAttribute('src', img.dataset.src);
+            }
+        }
+        if (slide.dataset.bg) {
+            slide.style.setProperty('--hero-slide-image', `url('${slide.dataset.bg}')`);
+        }
+        slide.dataset.loaded = 'true';
+    }
 
     function updateTrack() {
-        var track = slider.querySelector('[data-slider-track]');
         if (!track) return;
         track.style.transform = 'translate3d(-' + (current * 100) + '%, 0, 0)';
     }
@@ -803,6 +859,7 @@ if (aiChat) {
     }
 
     if (slides.length <= 1) {
+        hydrateSlide(current);
         syncAspectRatio(current);
         return;
     }
@@ -816,6 +873,8 @@ if (aiChat) {
         }
 
         current = (index + slides.length) % slides.length;
+        hydrateSlide(current);
+        hydrateSlide((current + 1) % slides.length);
         updateTrack();
 
         slides[current].classList.add('is-active');
@@ -829,6 +888,7 @@ if (aiChat) {
 
     function startAuto() {
         stopAuto();
+        window.setTimeout(() => hydrateSlide((current + 1) % slides.length), Math.max(1000, INTERVAL - 1200));
         timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
     }
 
@@ -861,7 +921,198 @@ if (aiChat) {
         }
     }, { passive: true });
 
+    hydrateSlide(current);
     syncAspectRatio(current);
     updateTrack();
     startAuto();
+}());
+
+
+// ==========================================================================
+// Service Detail Modal — shared across all service/career/hiring pages
+// ==========================================================================
+(function () {
+    'use strict';
+
+    var overlay = null;
+    var modal = null;
+    var closeBtn = null;
+    var lastFocused = null;
+    var scrollY = 0;
+
+    function buildModal() {
+        if (document.getElementById('serviceDetailModal')) return;
+
+        overlay = document.createElement('div');
+        overlay.className = 'service-modal-overlay';
+        overlay.id = 'serviceDetailModal';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-labelledby', 'smdTitle');
+
+        overlay.innerHTML = [
+            '<div class="service-modal">',
+            '  <button class="service-modal-close service-modal-floating-close" type="button" aria-label="Close" id="smdCloseBtn">',
+            '    <i class="fa-solid fa-xmark" aria-hidden="true"></i>',
+            '  </button>',
+            '  <div class="service-modal-header">',
+            '    <a class="service-modal-brand" href="index.php">',
+            '      <span class="smo-logo">',
+            '        <img src="uploads/optimized/logot-transparent-w64.webp"',
+            '             srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w"',
+            '             sizes="44px" alt="Talentteno Institute logo" width="44" height="44" decoding="async">',
+            '      </span>',
+            '      <span>',
+            '        <span class="smo-name">Talentteno Institute</span>',
+            '        <span class="smo-sub">IT Training Institute</span>',
+            '      </span>',
+            '    </a>',
+            '  </div>',
+            '  <div class="service-modal-body">',
+            '    <div class="service-modal-image-wrap">',
+            '      <img class="service-modal-image" src="" alt="" loading="lazy" decoding="async">',
+            '    </div>',
+            '    <div class="service-modal-content">',
+            '      <span class="service-modal-badge" id="smdBadge"></span>',
+            '      <h2 class="service-modal-title" id="smdTitle"></h2>',
+            '      <p class="service-modal-description" id="smdDesc"></p>',
+            '      <ul class="service-modal-features" id="smdFeatures"></ul>',
+            '      <div class="service-modal-cta">',
+            '        <a href="contact.php" id="smdCta"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Enquire Now</a>',
+            '      </div>',
+            '    </div>',
+            '  </div>',
+            '</div>'
+        ].join('');
+
+        document.body.appendChild(overlay);
+        modal = overlay.querySelector('.service-modal');
+        closeBtn = overlay.querySelector('.service-modal-close');
+
+        closeBtn.addEventListener('click', closeServiceModal);
+        closeBtn.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+
+        overlay.addEventListener('pointerdown', function (e) {
+            if (e.target === overlay) closeServiceModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!overlay || !overlay.classList.contains('is-open')) return;
+            if (e.key === 'Escape') { e.preventDefault(); closeServiceModal(); return; }
+            if (e.key === 'Tab') trapFocus(e);
+        });
+    }
+
+    function trapFocus(e) {
+        var focusable = modal.querySelectorAll(
+            'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    }
+
+    function openServiceModal(trigger) {
+        buildModal();
+
+        var title = trigger.dataset.smdTitle || '';
+        var category = trigger.dataset.smdCategory || 'Service';
+        var description = trigger.dataset.smdDescription || '';
+        var image = trigger.dataset.smdImage || '';
+        var features = (trigger.dataset.smdFeatures || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var enquireUrl = trigger.dataset.smdEnquire || 'contact.php';
+        var categoryKey = category.toLowerCase();
+        var extraFeatures = categoryKey.includes('career')
+            ? ['Guided resume and portfolio preparation.', 'Mock interview and placement support.', 'Internship guidance for eligible students.']
+            : categoryKey.includes('service')
+                ? ['Free counselling before joining.', 'Practical guidance from experienced trainers.', 'Contact us for timing and fee details.']
+                : categoryKey.includes('hiring')
+                    ? ['Admin team reviews every submitted profile.', 'Shortlisted candidates will be contacted for next steps.', 'Attach an updated resume for faster processing.']
+                    : ['Mentor-led practical guidance.', 'Clear next-step support from our team.', 'Enquire for current availability and details.'];
+        extraFeatures.forEach(function (text) {
+            if (features.length >= 5) return;
+            if (!features.some(function (item) { return item.toLowerCase() === text.toLowerCase(); })) {
+                features.push(text);
+            }
+        });
+
+        overlay.querySelector('#smdBadge').textContent = category;
+        overlay.querySelector('#smdTitle').textContent = title;
+        overlay.querySelector('#smdDesc').textContent = description;
+        overlay.querySelector('#smdCta').href = enquireUrl;
+
+        var imgEl = overlay.querySelector('.service-modal-image');
+        if (image) {
+            imgEl.src = image;
+            imgEl.alt = title + ' image';
+            overlay.querySelector('.service-modal-image-wrap').style.display = '';
+        } else {
+            overlay.querySelector('.service-modal-image-wrap').style.display = 'none';
+        }
+
+        var featuresList = overlay.querySelector('#smdFeatures');
+        featuresList.innerHTML = '';
+        features.forEach(function (text) {
+            var li = document.createElement('li');
+            li.className = 'service-modal-feature-item';
+            li.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>' + escapeHtml(text);
+            featuresList.appendChild(li);
+        });
+        featuresList.hidden = features.length === 0;
+
+        lastFocused = document.activeElement;
+        scrollY = window.scrollY;
+
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.add('is-open');
+        document.body.classList.add('service-modal-open');
+        document.body.style.top = '-' + scrollY + 'px';
+
+        // Scroll modal body to top
+        var body = overlay.querySelector('.service-modal-body');
+        if (body) body.scrollTop = 0;
+
+        window.setTimeout(function () { closeBtn.focus(); }, 60);
+    }
+
+    function closeServiceModal() {
+        if (!overlay) return;
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('service-modal-open');
+        document.body.style.top = '';
+        window.scrollTo({ top: scrollY, behavior: 'instant' });
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+            lastFocused.focus();
+        }
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Wire up all trigger buttons/links
+    function wireServiceModalTriggers() {
+        document.querySelectorAll('[data-smd-trigger]').forEach(function (trigger) {
+            trigger.addEventListener('click', function (e) {
+                e.preventDefault();
+                openServiceModal(trigger);
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wireServiceModalTriggers);
+    } else {
+        wireServiceModalTriggers();
+    }
 }());

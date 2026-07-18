@@ -283,13 +283,13 @@ function tt_looks_fake_phone(string $phone): bool
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-navsize1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-speed2">
 </head>
 <body class="static-site download-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -336,7 +336,7 @@ function tt_looks_fake_phone(string $phone): bool
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260718-speed1" defer></script>
 <script>
 document.querySelectorAll('[data-download-form]').forEach((form) => {
     const button = form.querySelector('[data-download-submit]');

@@ -28,13 +28,13 @@ $services = $services ?: $fallbackServices;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.css?v=20260717-navsize1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-speed2">
 </head>
 <body class="static-site services-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="132" height="62" decoding="async" fetchpriority="high"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -69,7 +69,18 @@ $services = $services ?: $fallbackServices;
                         <?php if (!empty($service['description']) && ($service['description'] !== ($service['short_desc'] ?? ''))): ?>
                         <p class="rich-detail-more"><?= tt_h($service['description']) ?></p>
                         <?php endif; ?>
-                        <a class="rich-detail-link" href="contact.php?topic=<?= rawurlencode($service['title'] ?? 'service') ?>">More Details <i class="fa-solid fa-arrow-right"></i></a>
+                        <button
+                            type="button"
+                            class="rich-detail-link"
+                            data-smd-trigger
+                            data-smd-title="<?= tt_h($service['title'] ?? '') ?>"
+                            data-smd-category="<?= tt_h(($service['icon'] ?? '') ? 'Service' : 'Service') ?>"
+                            data-smd-description="<?= tt_h(($service['description'] ?? '') ?: ($service['short_desc'] ?? '')) ?>"
+                            data-smd-image="<?= tt_h($image) ?>"
+                            data-smd-features="<?= tt_h(($service['short_desc'] ?? '') !== ($service['description'] ?? '') ? ($service['short_desc'] ?? '') . "\n" . ($service['description'] ?? '') : ($service['short_desc'] ?? '')) ?>"
+                            data-smd-enquire="contact.php?topic=<?= rawurlencode($service['title'] ?? 'service') ?>">
+                            More Details <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </div>
                 </article>
                 <?php endforeach; ?>
@@ -78,6 +89,6 @@ $services = $services ?: $fallbackServices;
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.js?v=20260716-whatsapp1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260718-speed1" defer></script>
 </body>
 </html>
