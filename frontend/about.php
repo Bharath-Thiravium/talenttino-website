@@ -46,7 +46,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-footerhover1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-brandfix1">
 </head>
 <body class="static-site about-page">
 <div class="site-shell">

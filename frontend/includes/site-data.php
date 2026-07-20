@@ -497,29 +497,42 @@ function tt_item_image(array $item, string $type = 'general'): string
 function tt_home_slider_images(): array
 {
     $fallback = [
-        'assets/images/home.webp',
-        'assets/images/home1.webp',
-        'assets/images/home2.webp',
-        'assets/images/home3.webp',
-        'assets/images/home4.webp',
+        ['image' => 'assets/images/home.webp', 'mobile_image' => 'assets/images/optimized/home-mobile.webp'],
+        ['image' => 'assets/images/home1.webp', 'mobile_image' => 'assets/images/optimized/home1-mobile.webp'],
+        ['image' => 'assets/images/home2.webp', 'mobile_image' => 'assets/images/optimized/home2-mobile.webp'],
+        ['image' => 'assets/images/home3.webp', 'mobile_image' => 'assets/images/optimized/home3-mobile.webp'],
+        ['image' => 'assets/images/home4.webp', 'mobile_image' => 'assets/images/optimized/home4-mobile.webp'],
     ];
+
+    $defaultMobileImages = [];
+    foreach ($fallback as $slide) {
+        $defaultMobileImages[$slide['image']] = $slide['mobile_image'];
+    }
 
     $hasTable = tt_fetch_one("SHOW TABLES LIKE 'home_slides'");
     $hasDisplayOrder = $hasTable ? tt_fetch_one("SHOW COLUMNS FROM home_slides LIKE 'display_order'") : null;
+    $hasMobileImage = $hasTable ? tt_fetch_one("SHOW COLUMNS FROM home_slides LIKE 'mobile_image'") : null;
     $orderSql = $hasDisplayOrder
         ? 'display_order ASC, sort_order ASC, updated_at DESC, id DESC'
         : 'sort_order ASC, updated_at DESC, id DESC';
-    $rows = $hasTable ? tt_fetch_all("SELECT image, title FROM home_slides WHERE is_active = 1 ORDER BY $orderSql") : [];
+    $imageSql = $hasMobileImage ? 'image, mobile_image, title' : 'image, title';
+    $rows = $hasTable ? tt_fetch_all("SELECT $imageSql FROM home_slides WHERE is_active = 1 ORDER BY $orderSql") : [];
     $images = [];
     $seenImages = [];
     foreach ($rows as $row) {
         $image = tt_content_image_url($row['image'] ?? '');
+        $mobileImage = $hasMobileImage ? tt_content_image_url($row['mobile_image'] ?? '') : '';
+        if ($mobileImage === '' && isset($defaultMobileImages[$row['image'] ?? ''])) {
+            $defaultMobileImage = tt_content_image_url($defaultMobileImages[$row['image']]);
+            $mobileImage = $defaultMobileImage !== '' ? $defaultMobileImage : '';
+        }
         if ($image === '' || isset($seenImages[$image])) {
             continue;
         }
         $seenImages[$image] = true;
         $images[] = [
             'image' => $image,
+            'mobile_image' => $mobileImage !== '' ? $mobileImage : $image,
             'title' => trim((string)($row['title'] ?? '')),
         ];
     }
@@ -528,8 +541,9 @@ function tt_home_slider_images(): array
         return $images;
     }
 
-    return array_map(static fn(string $image): array => [
-        'image' => $image,
+    return array_map(static fn(array $slide): array => [
+        'image' => $slide['image'],
+        'mobile_image' => tt_content_image_url($slide['mobile_image']) !== '' ? $slide['mobile_image'] : $slide['image'],
         'title' => '',
     ], $fallback);
 }

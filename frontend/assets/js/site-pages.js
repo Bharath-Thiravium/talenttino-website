@@ -263,6 +263,11 @@ document.querySelectorAll('[data-path-tabs]').forEach(pathTabs => {
         if (image && button.dataset.image && image.getAttribute('src') !== button.dataset.image) {
             image.classList.add('is-changing');
             window.setTimeout(() => {
+                if (button.dataset.srcset) {
+                    image.setAttribute('srcset', button.dataset.srcset);
+                } else {
+                    image.removeAttribute('srcset');
+                }
                 image.src = button.dataset.image;
                 image.alt = `${button.textContent.trim()} training path`;
                 image.classList.remove('is-changing');
@@ -888,6 +893,11 @@ if (aiChat) {
     function hydrateSlide(index) {
         const slide = slides[index];
         if (!slide || slide.dataset.loaded === 'true') return;
+        slide.querySelectorAll('source').forEach(source => {
+            if (source.dataset.srcset && !source.getAttribute('srcset')) {
+                source.setAttribute('srcset', source.dataset.srcset);
+            }
+        });
         const img = slide.querySelector('img');
         if (img) {
             if (img.dataset.srcset && !img.getAttribute('srcset')) {
@@ -899,6 +909,9 @@ if (aiChat) {
         }
         if (slide.dataset.bg) {
             slide.style.setProperty('--hero-slide-image', `url('${slide.dataset.bg}')`);
+        }
+        if (slide.dataset.mobileBg) {
+            slide.style.setProperty('--hero-slide-mobile-image', `url('${slide.dataset.mobileBg}')`);
         }
         slide.dataset.loaded = 'true';
     }

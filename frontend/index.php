@@ -14,8 +14,23 @@ if (empty($homeHeroSlides)) {
 }
 $homeSliderCount = count($homeHeroSlides);
 $homeFirstHeroImage = (string)($homeHeroSlides[0]['image'] ?? 'assets/images/home.webp');
+$homeFirstHeroMobileImage = (string)($homeHeroSlides[0]['mobile_image'] ?? $homeFirstHeroImage);
 $homeFirstHeroPreload = tt_home_optimized_image($homeFirstHeroImage, 1400) ?: $homeFirstHeroImage;
 $homeFirstHeroSrcset = tt_home_optimized_srcset($homeFirstHeroImage, [430, 900, 1400]);
+$homeFirstHeroMobilePreload = tt_home_optimized_image($homeFirstHeroMobileImage, 430) ?: $homeFirstHeroMobileImage;
+$homeFirstHeroMobileSrcset = tt_home_optimized_srcset($homeFirstHeroMobileImage, [430, 900]);
+function tt_home_css_asset_url(string $url): string
+{
+    if (str_starts_with($url, 'uploads/')) {
+        return '../../' . $url;
+    }
+
+    if (str_starts_with($url, 'assets/images/')) {
+        return '../images/' . substr($url, strlen('assets/images/'));
+    }
+
+    return $url;
+}
 $homeFormResult = null;
 $fallbackCourses = [
     ['title' => 'Full Stack Development', 'category' => 'Development', 'short_desc' => 'Frontend, backend, database and deployment training with project practice.', 'description' => 'Complete full stack development training with live project support.', 'fee' => 15000, 'original_fee' => 25000],
@@ -68,6 +83,13 @@ $reviewShowcaseImages = [
     ['image' => 'uploads/media/data-analyst-20260703-133130-702998.png', 'title' => 'Data Analyst', 'icon' => 'fa-chart-line'],
     ['image' => 'uploads/media/digital-marketing-20260703-133146-981935.png', 'title' => 'Digital Marketing', 'icon' => 'fa-bullhorn'],
     ['image' => 'uploads/media/programming-languages-20260703-133210-630417.png', 'title' => 'Programming Languages', 'icon' => 'fa-terminal'],
+];
+$coursePathTracks = [
+    ['course' => 'Full Stack Development', 'step' => 'Step 01', 'title' => 'Full stack project training', 'desc' => 'Build frontend, backend, database and deployment skills through practical project work.', 'image' => 'uploads/media/full-stack-development-20260703-133158-761383.png'],
+    ['course' => 'Data Science & AI', 'step' => 'Step 02', 'title' => 'Data science and AI practice', 'desc' => 'Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks.', 'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png'],
+    ['course' => 'Cyber Security', 'step' => 'Step 03', 'title' => 'Cyber security lab training', 'desc' => 'Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks.', 'image' => 'uploads/media/cyber-security-20260703-133329-242125.png'],
+    ['course' => 'Digital Marketing', 'step' => 'Step 04', 'title' => 'Digital marketing projects', 'desc' => 'Build practical confidence with campaign planning, SEO basics, social media workflow and reporting.', 'image' => 'uploads/media/digital-marketing-20260703-133146-981935.png'],
+    ['course' => 'UI / UX and Design', 'step' => 'Step 05', 'title' => 'UI / UX portfolio guidance', 'desc' => 'Learn design foundations, interface planning, tool practice and portfolio-ready project presentation.', 'image' => 'assets/images/design%20.png'],
 ];
 
 function tt_home_course_icon(array $course): string
@@ -253,7 +275,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <?php if ($homeFirstHeroPreload !== ''): ?>
-    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroPreload) ?>"<?= $homeFirstHeroSrcset !== '' ? ' imagesrcset="' . tt_h($homeFirstHeroSrcset) . '" imagesizes="100vw"' : '' ?> fetchpriority="high">
+    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroPreload) ?>"<?= $homeFirstHeroSrcset !== '' ? ' imagesrcset="' . tt_h($homeFirstHeroSrcset) . '" imagesizes="100vw"' : '' ?> media="(min-width: 768px)" fetchpriority="high">
+    <?php endif; ?>
+    <?php if ($homeFirstHeroMobilePreload !== ''): ?>
+    <link rel="preload" as="image" href="<?= tt_h($homeFirstHeroMobilePreload) ?>"<?= $homeFirstHeroMobileSrcset !== '' ? ' imagesrcset="' . tt_h($homeFirstHeroMobileSrcset) . '" imagesizes="100vw"' : '' ?> media="(max-width: 767px)" fetchpriority="high">
     <?php endif; ?>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
@@ -265,7 +290,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         :root{--header-height:86px;--text:#07142d;--brand:#0845b2}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:#f4f9ff;font-family:"Plus Jakarta Sans",Arial,sans-serif}.site-container{width:min(1200px,calc(100% - 40px));margin-inline:auto}.site-header{min-height:var(--header-height);background:linear-gradient(90deg,rgba(235,248,255,.94) 0%,rgba(214,235,252,.98) 46%,rgba(228,239,255,.96) 100%);border-bottom:1px solid rgba(27,99,179,.16);box-shadow:0 16px 38px rgba(12,63,126,.12);position:sticky;top:0;z-index:1000}.nav-wrap{min-height:var(--header-height);display:grid;grid-template-columns:minmax(320px,.95fr) minmax(560px,auto) minmax(132px,.34fr);align-items:center;column-gap:20px;padding:0 20px}.brand{min-height:68px;display:inline-flex;align-items:center;gap:12px;text-decoration:none}.brand-mark.logo-mark{width:62px;height:62px;min-width:62px;padding:6px;border-radius:18px;background:linear-gradient(180deg,#fff 0%,#eef7ff 100%);border:1px solid rgba(38,113,205,.2);box-shadow:0 14px 30px rgba(15,92,174,.14);display:grid;place-items:center}.brand-mark img{width:100%;height:100%;object-fit:contain}.brand-name{display:block;color:var(--brand);font-size:30px;font-weight:900;line-height:.98}.brand-sub{display:block;margin-top:8px;color:#0b66ff;font-size:11px;font-weight:900;line-height:1;letter-spacing:4.8px}.site-nav{min-height:54px;height:54px;display:inline-flex;align-items:center;justify-content:center;justify-self:center;gap:5px;padding:6px;border:1px solid rgba(61,126,194,.2);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.56) 0%,rgba(177,215,245,.4) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.82),inset 0 -1px 0 rgba(59,118,182,.1),0 12px 30px rgba(22,82,145,.1)}.site-nav>a,.site-nav .nav-item>a{height:42px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 18px;border-radius:999px;color:#102945;background:transparent;font-size:15px;font-weight:900;line-height:1;text-decoration:none;white-space:nowrap}.site-nav>a.active,.site-nav>a:hover,.site-nav .nav-item:hover>a,.site-nav .nav-item.active>a{color:#004ebd;background:linear-gradient(180deg,#fff 0%,#e7f5ff 100%);box-shadow:0 10px 22px rgba(32,101,172,.15),inset 0 1px 0 rgba(255,255,255,.92)}.nav-menu{display:none}.nav-item:hover .nav-menu,.nav-item:focus-within .nav-menu{display:block}.menu-button{display:none}.page-main{display:block}.home-hero{position:relative;min-height:calc(100vh - var(--header-height));overflow:hidden;background:#07142d}.hero-grid{width:100%;min-height:calc(100vh - var(--header-height));display:grid;grid-template-columns:minmax(0,1fr);padding:0}.hero-slider-col{position:absolute;inset:0;min-height:calc(100vh - var(--header-height));overflow:hidden}.hero-slider,.slider-track,.slider-slide{width:100%;height:100%}.slider-track{display:flex;transition:transform .6s ease}.slider-slide{flex:0 0 100%;min-width:100%;background-size:cover;background-position:center top;background-repeat:no-repeat}.slider-slide img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}.hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,18,44,.72) 0%,rgba(8,18,44,.4) 34%,rgba(8,18,44,.08) 68%,rgba(8,18,44,.18) 100%);pointer-events:none}.home-hero-copy{position:relative;z-index:5;display:flex;align-items:flex-end;width:min(560px,calc(100% - 48px));min-height:calc(100vh - var(--header-height));margin-left:clamp(24px,7.5vw,112px);padding-bottom:clamp(38px,7vh,72px)}.home-view-courses-btn{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:0 24px;border-radius:16px;color:#fff;background:linear-gradient(135deg,#5b83ff 0%,#c51cff 100%);font-weight:900;text-decoration:none;box-shadow:0 18px 36px rgba(91,131,255,.25)}.home-counselling-card{position:absolute;z-index:8;right:clamp(52px,9vw,145px);top:50%;width:min(390px,calc(100vw - 48px));transform:translateY(-50%);padding:22px;border-radius:12px;background:rgba(255,255,255,.92);box-shadow:0 24px 60px rgba(0,0,0,.22);border-top:7px solid #c51cff}.home-counselling-card h2{margin:0 0 14px;font-size:22px;line-height:1.2}.home-counselling-card p,.form-note{display:none}.home-counselling-form{display:grid;gap:11px}.home-counselling-form input,.home-counselling-form select{height:48px;border:1px solid #bdd6f4;border-radius:8px;padding:0 14px;font:inherit;font-weight:800;background:#f8fbff}.home-counselling-form button{height:48px;border:0;border-radius:8px;color:#fff;background:linear-gradient(135deg,#5b83ff 0%,#d414ef 100%);font:inherit;font-weight:900}.home-social-rail{position:fixed;right:28px;top:50%;z-index:50;display:grid;gap:12px}.home-social-rail a,.scroll-top{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;color:#fff;text-decoration:none;background:linear-gradient(135deg,#527dff,#c21cf2)}.home-ai-chat{position:fixed;right:28px;bottom:28px;z-index:70}.home-ai-toggle{height:50px;border:0;border-radius:16px;padding:0 22px;color:#fff;background:linear-gradient(135deg,#527dff,#c21cf2);font:inherit;font-weight:900}@media(max-width:980px){:root{--header-height:90px}.site-header{background:#fff}.nav-wrap{display:flex;justify-content:space-between}.brand-name{font-size:20px}.brand-sub{font-size:8px;letter-spacing:2px}.site-nav{display:none}.menu-button{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #cfe2ff;border-radius:12px;background:#eef6ff}.home-hero,.hero-grid,.hero-slider-col,.home-hero-copy{min-height:calc(100vh - var(--header-height))}.home-counselling-card{display:none}.home-social-rail{right:16px}.home-view-courses-btn{min-height:50px}}
         @media(max-width:980px){html body.nav-open,html.nav-open{overflow:hidden!important}html body .site-header{--header-height:78px!important;background:#fff!important;border-bottom:1px solid #d8e8ff!important;box-shadow:none!important}html body .site-header .nav-wrap{width:100%!important;min-height:77px!important;margin:0!important;padding:8px 7px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 48px!important;gap:8px!important;background:#fff!important}html body .site-header .brand{min-width:0!important;gap:10px!important}html body .site-header .brand-mark.logo-mark{width:56px!important;height:56px!important;min-width:56px!important;border-radius:12px!important}html body .site-header .brand-name{max-width:calc(100vw - 134px)!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:25px!important}html body .site-header .brand-sub{max-width:calc(100vw - 134px)!important;overflow:hidden!important;white-space:nowrap!important;font-size:11px!important;letter-spacing:4px!important}html body .site-header .menu-button{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;justify-self:end!important;border:1px solid #b9d8ff!important;border-radius:12px!important;color:#0750d8!important;background:#eff7ff!important}html body.nav-open .site-header .site-nav.open{position:fixed!important;inset:var(--header-height) 0 0 0!important;width:100vw!important;height:calc(100vh - var(--header-height))!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:10px!important;padding:12px 7px 26px!important;overflow-y:auto!important;border-top:1px solid #d8e8ff!important;border-radius:0!important;background:#edf6ff!important;z-index:10040!important}html body.nav-open .site-header .site-nav.open>a,html body.nav-open .site-header .site-nav.open>.nav-item>a,html body.nav-open .site-header .site-nav.open .nav-enroll-cta{width:100%!important;min-height:54px!important;height:54px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;margin:0!important;padding:0 16px!important;color:#061632!important;border:1px solid #cfe3ff!important;border-radius:14px!important;background:rgba(255,255,255,.9)!important;text-align:left!important}html body.nav-open .site-header .site-nav.open>.nav-item>a{justify-content:space-between!important}html body.nav-open .site-header .site-nav.open .nav-item{width:100%!important;height:auto!important;display:flex!important;flex-direction:column!important;align-items:stretch!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu.open .nav-menu{position:static!important;width:100%!important;display:grid!important;gap:6px!important;margin:8px 0 0!important;padding:8px!important;border:1px solid #d6e7ff!important;border-radius:14px!important;background:#fff!important;opacity:1!important;visibility:visible!important;transform:none!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu:not(.open) .nav-menu{display:none!important}html body.nav-open .site-header .site-nav.open .nav-enroll-cta{justify-content:center!important;color:#fff!important;border:0!important;background:linear-gradient(135deg,#5d82ff 0%,#c51cff 100%)!important}}
     </style>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-footerhover1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260720-mobilehero1">
 </head>
 <body class="static-site home-page">
 <div class="site-shell">
@@ -302,20 +327,34 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                             <?php foreach ($homeHeroSlides as $index => $slide): ?>
                             <?php
                                 $slideImage = (string)($slide['image'] ?? '');
+                                $slideMobileImage = (string)($slide['mobile_image'] ?? $slideImage);
                                 $slideSrc = tt_home_image_src($slideImage, 1400);
                                 $slideSrcset = tt_home_optimized_srcset($slideImage, [430, 900, 1400]);
-                                $slideBgImage = str_replace("'", '%27', (str_starts_with($slideSrc, 'uploads/') ? '../../' . $slideSrc : $slideSrc));
+                                $slideMobileSrc = tt_home_image_src($slideMobileImage, 430);
+                                $slideMobileSrcset = tt_home_optimized_srcset($slideMobileImage, [430, 900]);
+                                $slideBgImage = str_replace("'", '%27', tt_home_css_asset_url($slideSrc));
+                                $slideMobileBgImage = str_replace("'", '%27', tt_home_css_asset_url($slideMobileSrc));
+                                $slideStyle = "--hero-slide-image: url('" . tt_h($slideBgImage) . "'); --hero-slide-mobile-image: url('" . tt_h($slideMobileBgImage) . "');";
+                                $slideDataBg = tt_h($slideBgImage);
+                                $slideDataMobileBg = tt_h($slideMobileBgImage);
                             ?>
-                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>"<?= $index === 0 ? ' style="--hero-slide-image: url(\'' . tt_h($slideBgImage) . '\');"' : ' data-bg="' . tt_h($slideBgImage) . '"' ?>>
-                                <img
-                                    <?= $index === 0 ? 'src="' . tt_h($slideSrc) . '"' : 'data-src="' . tt_h($slideSrc) . '"' ?>
-                                    <?= $slideSrcset !== '' ? ($index === 0 ? 'srcset="' . tt_h($slideSrcset) . '"' : 'data-srcset="' . tt_h($slideSrcset) . '"') : '' ?>
-                                    sizes="100vw"
-                                    alt="<?= tt_h($slide['title'] ?: 'Talentteno course highlight ' . ($index + 1)) ?>"
-                                    loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"
-                                    decoding="async"
-                                    <?= $index === 0 ? 'fetchpriority="high"' : '' ?>
-                                >
+                            <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>"<?= $index === 0 ? ' style="' . $slideStyle . '"' : ' data-bg="' . $slideDataBg . '" data-mobile-bg="' . $slideDataMobileBg . '"' ?>>
+                                <picture>
+                                    <source
+                                        media="(max-width: 767px)"
+                                        <?= $index === 0 ? 'srcset="' . tt_h($slideMobileSrcset !== '' ? $slideMobileSrcset : $slideMobileSrc) . '"' : 'data-srcset="' . tt_h($slideMobileSrcset !== '' ? $slideMobileSrcset : $slideMobileSrc) . '"' ?>
+                                        sizes="100vw"
+                                    >
+                                    <img
+                                        <?= $index === 0 ? 'src="' . tt_h($slideSrc) . '"' : 'data-src="' . tt_h($slideSrc) . '"' ?>
+                                        <?= $slideSrcset !== '' ? ($index === 0 ? 'srcset="' . tt_h($slideSrcset) . '"' : 'data-srcset="' . tt_h($slideSrcset) . '"') : '' ?>
+                                        sizes="100vw"
+                                        alt="<?= tt_h($slide['title'] ?: 'Talentteno course highlight ' . ($index + 1)) ?>"
+                                        loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"
+                                        decoding="async"
+                                        <?= $index === 0 ? 'fetchpriority="high"' : '' ?>
+                                    >
+                                </picture>
                             </div>
                             <?php endforeach; ?>
                         </div>
@@ -470,16 +509,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-center-head reveal"><span class="model-label">Course Path</span><h2>What learning tracks we serve</h2></div>
                 <div class="model-path-grid">
                     <div class="model-path-visual reveal">
-                        <?php $pathImage = 'assets/images/home2.webp'; $pathImageSrcset = tt_home_optimized_srcset($pathImage, [430, 900]); ?>
-                        <img src="<?= tt_h(tt_home_image_src($pathImage, 900)) ?>"<?= $pathImageSrcset !== '' ? ' srcset="' . tt_h($pathImageSrcset) . '" sizes="(max-width: 767px) 100vw, 520px"' : '' ?> alt="Students collaborating during IT training" loading="lazy" decoding="async" width="520" height="347">
-                        <div><span>Step 01</span><h3>Practical course selection</h3><p>Start with counselling, choose the right course and follow a clear project-based learning path.</p></div>
+                        <?php $activePathTrack = $coursePathTracks[0]; $pathImage = $activePathTrack['image']; $pathImageSrcset = tt_home_optimized_srcset($pathImage, [400, 800]); ?>
+                        <img src="<?= tt_h(tt_home_image_src($pathImage, 800)) ?>"<?= $pathImageSrcset !== '' ? ' srcset="' . tt_h($pathImageSrcset) . '" sizes="(max-width: 767px) 100vw, 520px"' : '' ?> alt="<?= tt_h($activePathTrack['course']) ?> training path" loading="lazy" decoding="async" width="520" height="347">
+                        <div><span><?= tt_h($activePathTrack['step']) ?></span><h3><?= tt_h($activePathTrack['title']) ?></h3><p><?= tt_h($activePathTrack['desc']) ?></p></div>
                     </div>
                     <div class="model-path-list reveal" data-path-tabs>
-                        <button type="button" class="active" aria-pressed="true" data-step="Step 01" data-title="Practical course selection" data-desc="Start with counselling, choose the right course and follow a clear project-based learning path." data-image="<?= tt_h(tt_home_image_src('assets/images/home.webp', 900)) ?>"><strong>01</strong><span>Full Stack Development</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 02" data-title="Data science and AI practice" data-desc="Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks." data-image="<?= tt_h(tt_home_image_src('assets/images/home1.webp', 900)) ?>"><strong>02</strong><span>Data Science & AI</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 03" data-title="Cyber security lab training" data-desc="Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks." data-image="<?= tt_h(tt_home_image_src('assets/images/home2.webp', 900)) ?>"><strong>03</strong><span>Cyber Security</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 04" data-title="Digital marketing projects" data-desc="Build practical confidence with campaign planning, SEO basics, social media workflow and reporting." data-image="<?= tt_h(tt_home_image_src('assets/images/home3.webp', 900)) ?>"><strong>04</strong><span>Digital Marketing</span></button>
-                        <button type="button" aria-pressed="false" data-step="Step 05" data-title="UI / UX portfolio guidance" data-desc="Learn design foundations, interface planning, tool practice and portfolio-ready project presentation." data-image="<?= tt_h(tt_home_image_src('assets/images/home4.webp', 900)) ?>"><strong>05</strong><span>UI / UX and Design</span></button>
+                        <?php foreach ($coursePathTracks as $index => $track): ?>
+                        <?php $trackSrcset = tt_home_optimized_srcset($track['image'], [400, 800]); ?>
+                        <button type="button" class="<?= $index === 0 ? 'active' : '' ?>" aria-pressed="<?= $index === 0 ? 'true' : 'false' ?>" data-step="<?= tt_h($track['step']) ?>" data-title="<?= tt_h($track['title']) ?>" data-desc="<?= tt_h($track['desc']) ?>" data-image="<?= tt_h(tt_home_image_src($track['image'], 800)) ?>"<?= $trackSrcset !== '' ? ' data-srcset="' . tt_h($trackSrcset) . '"' : '' ?>><strong><?= str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT) ?></strong><span><?= tt_h($track['course']) ?></span></button>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -597,6 +635,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260718-scrollsmooth1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260720-coursepath1" defer></script>
 </body>
 </html>

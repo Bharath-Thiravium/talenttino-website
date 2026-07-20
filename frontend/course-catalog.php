@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-footerhover1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-brandfix1">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}

@@ -5,6 +5,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS home_slides (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) DEFAULT '',
     image VARCHAR(255) NOT NULL,
+    mobile_image VARCHAR(255) DEFAULT '',
     sort_order INT DEFAULT 0,
     display_order INT DEFAULT 0,
     is_active TINYINT(1) DEFAULT 1,
@@ -15,6 +16,10 @@ $displayOrderColumn = $conn->query("SHOW COLUMNS FROM home_slides LIKE 'display_
 if ($displayOrderColumn && $displayOrderColumn->num_rows === 0) {
     $conn->query("ALTER TABLE home_slides ADD COLUMN display_order INT DEFAULT 0 AFTER sort_order");
     $conn->query("UPDATE home_slides SET display_order = sort_order WHERE display_order = 0");
+}
+$mobileImageColumn = $conn->query("SHOW COLUMNS FROM home_slides LIKE 'mobile_image'");
+if ($mobileImageColumn && $mobileImageColumn->num_rows === 0) {
+    $conn->query("ALTER TABLE home_slides ADD COLUMN mobile_image VARCHAR(255) DEFAULT '' AFTER image");
 }
 
 $success = '';
@@ -31,10 +36,22 @@ function tt_home_slide_media_images(): array
             'files' => ['home.webp', 'home1.webp', 'home2.webp', 'home3.webp', 'home4.webp'],
         ],
         [
+            'dir' => __DIR__ . '/../../frontend/assets/images/optimized/',
+            'url' => '../../frontend/assets/images/optimized/',
+            'path' => 'assets/images/optimized/',
+            'label' => 'Optimized Home',
+        ],
+        [
             'dir' => __DIR__ . '/../../frontend/uploads/media/',
             'url' => '../../frontend/uploads/media/',
             'path' => 'uploads/media/',
             'label' => 'Media',
+        ],
+        [
+            'dir' => __DIR__ . '/../../frontend/uploads/media/optimized/',
+            'url' => '../../frontend/uploads/media/optimized/',
+            'path' => 'uploads/media/optimized/',
+            'label' => 'Optimized Media',
         ],
         [
             'dir' => __DIR__ . '/../../frontend/uploads/gallery/',
@@ -77,11 +94,11 @@ function tt_home_slide_media_images(): array
 function tt_home_slide_default_images(): array
 {
     return [
-        ['Home classroom', 'assets/images/home.webp', 1],
-        ['Practical training', 'assets/images/home1.webp', 2],
-        ['Student learning', 'assets/images/home2.webp', 3],
-        ['IT lab session', 'assets/images/home3.webp', 4],
-        ['Career training', 'assets/images/home4.webp', 5],
+        ['Home classroom', 'assets/images/home.webp', 'assets/images/optimized/home-mobile.webp', 1],
+        ['Practical training', 'assets/images/home1.webp', 'assets/images/optimized/home1-mobile.webp', 2],
+        ['Student learning', 'assets/images/home2.webp', 'assets/images/optimized/home2-mobile.webp', 3],
+        ['IT lab session', 'assets/images/home3.webp', 'assets/images/optimized/home3-mobile.webp', 4],
+        ['Career training', 'assets/images/home4.webp', 'assets/images/optimized/home4-mobile.webp', 5],
     ];
 }
 
@@ -114,6 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pickedImage = trim((string)($_POST['media_image'] ?? ''));
     $manualImage = trim((string)($_POST['image'] ?? ''));
     $image = $pickedImage !== '' ? $pickedImage : $manualImage;
+    $pickedMobileImage = trim((string)($_POST['mobile_media_image'] ?? ''));
+    $manualMobileImage = trim((string)($_POST['mobile_image'] ?? ''));
+    $mobileImage = $pickedMobileImage !== '' ? $pickedMobileImage : $manualMobileImage;
     $displayOrder = (int)(($_POST['display_order'] ?? $_POST['sort_order'] ?? 0));
     $sortOrder = $displayOrder;
     $isActive = (int)($_POST['is_active'] ?? 1);
@@ -122,9 +142,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please choose a background image from Media or enter an image path.';
     } elseif (!tt_home_slide_image_exists($image)) {
         $error = 'Selected image was not found. Upload it in Gallery / Media first.';
+    } elseif ($mobileImage !== '' && !tt_home_slide_image_exists($mobileImage)) {
+        $error = 'Selected mobile image was not found. Upload it in Gallery / Media first.';
     } elseif ($id > 0) {
-        $stmt = $conn->prepare('UPDATE home_slides SET title=?, image=?, sort_order=?, display_order=?, is_active=? WHERE id=?');
-        $stmt->bind_param('ssiiii', $title, $image, $sortOrder, $displayOrder, $isActive, $id);
+        $stmt = $conn->prepare('UPDATE home_slides SET title=?, image=?, mobile_image=?, sort_order=?, display_order=?, is_active=? WHERE id=?');
+        $stmt->bind_param('sssiiii', $title, $image, $mobileImage, $sortOrder, $displayOrder, $isActive, $id);
         if ($stmt->execute()) {
             header('Location: home_slider.php?saved=updated');
             exit;
@@ -140,11 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($existingId > 0) {
-            $stmt = $conn->prepare('UPDATE home_slides SET title=?, sort_order=?, display_order=?, is_active=? WHERE id=?');
-            $stmt->bind_param('siiii', $title, $sortOrder, $displayOrder, $isActive, $existingId);
+            $stmt = $conn->prepare('UPDATE home_slides SET title=?, mobile_image=?, sort_order=?, display_order=?, is_active=? WHERE id=?');
+            $stmt->bind_param('ssiiii', $title, $mobileImage, $sortOrder, $displayOrder, $isActive, $existingId);
         } else {
-            $stmt = $conn->prepare('INSERT INTO home_slides (title, image, sort_order, display_order, is_active) VALUES (?, ?, ?, ?, ?)');
-            $stmt->bind_param('ssiii', $title, $image, $sortOrder, $displayOrder, $isActive);
+            $stmt = $conn->prepare('INSERT INTO home_slides (title, image, mobile_image, sort_order, display_order, is_active) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmt->bind_param('sssiii', $title, $image, $mobileImage, $sortOrder, $displayOrder, $isActive);
         }
 
         if ($stmt->execute()) {
@@ -191,14 +213,26 @@ if (isset($_GET['cleanup'])) {
 $slideCountResult = $conn->query('SELECT COUNT(*) AS total FROM home_slides');
 $slideCount = (int)(($slideCountResult ? $slideCountResult->fetch_assoc() : null)['total'] ?? 0);
 if ($slideCount === 0) {
-    $seed = $conn->prepare('INSERT INTO home_slides (title, image, sort_order, display_order, is_active) VALUES (?, ?, ?, ?, 1)');
+    $seed = $conn->prepare('INSERT INTO home_slides (title, image, mobile_image, sort_order, display_order, is_active) VALUES (?, ?, ?, ?, ?, 1)');
     if ($seed) {
-        foreach (tt_home_slide_default_images() as [$defaultTitle, $defaultImage, $defaultOrder]) {
+        foreach (tt_home_slide_default_images() as [$defaultTitle, $defaultImage, $defaultMobileImage, $defaultOrder]) {
             if (!tt_home_slide_image_exists($defaultImage)) {
                 continue;
             }
-            $seed->bind_param('ssii', $defaultTitle, $defaultImage, $defaultOrder, $defaultOrder);
+            $defaultMobileImage = tt_home_slide_image_exists($defaultMobileImage) ? $defaultMobileImage : '';
+            $seed->bind_param('sssii', $defaultTitle, $defaultImage, $defaultMobileImage, $defaultOrder, $defaultOrder);
             $seed->execute();
+        }
+    }
+} else {
+    foreach (tt_home_slide_default_images() as [, $defaultImage, $defaultMobileImage]) {
+        if (!tt_home_slide_image_exists($defaultMobileImage)) {
+            continue;
+        }
+        $fillMobile = $conn->prepare("UPDATE home_slides SET mobile_image = ? WHERE image = ? AND (mobile_image IS NULL OR mobile_image = '')");
+        if ($fillMobile) {
+            $fillMobile->bind_param('ss', $defaultMobileImage, $defaultImage);
+            $fillMobile->execute();
         }
     }
 }
@@ -264,7 +298,7 @@ $mediaImages = tt_home_slide_media_images();
                     </div>
                     <div class="form-group">
                         <label>Background Image</label>
-                        <input type="hidden" name="media_image" value="">
+                        <input type="hidden" name="media_image" value="" data-media-target>
                         <?php if ($mediaImages): ?>
                         <button type="button" class="btn-media-choose" data-open-media-picker>
                             <i class="fas fa-images"></i> Choose Image from Media
@@ -307,11 +341,62 @@ $mediaImages = tt_home_slide_media_images();
                         <?php else: ?>
                         <small class="field-help">No uploaded images found. Add images in Gallery / Media first.</small>
                         <?php endif; ?>
-                        <input type="text" name="image" value="<?= htmlspecialchars($editSlide['image'] ?? '') ?>" placeholder="uploads/media/example.webp or assets/images/home.webp" style="margin-top:10px;">
+                        <input type="text" name="image" value="<?= htmlspecialchars($editSlide['image'] ?? '') ?>" placeholder="uploads/media/example.webp or assets/images/home.webp" style="margin-top:10px;" data-image-path-input>
                         <small class="field-help">Choose from popup or paste a valid frontend image path.</small>
                         <?php if (!empty($editSlide['image'])): ?>
                         <div class="course-current-image" style="margin-top:10px;">
                             <img class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['image'])) ?>" alt="Current home slider image">
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Background Image <small>(optional)</small></label>
+                        <input type="hidden" name="mobile_media_image" value="" data-media-target>
+                        <?php if ($mediaImages): ?>
+                        <button type="button" class="btn-media-choose" data-open-media-picker>
+                            <i class="fas fa-mobile-screen-button"></i> Choose Mobile Image from Media
+                        </button>
+                        <div class="course-selected-media" data-selected-media-preview hidden>
+                            <img src="" alt="">
+                            <span></span>
+                            <button type="button" class="media-remove-btn" data-clear-selected-media aria-label="Remove selected mobile image">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="course-media-modal" data-media-picker-modal hidden>
+                            <div class="course-media-modal-backdrop" data-close-media-picker></div>
+                            <div class="course-media-modal-panel">
+                                <div class="course-media-modal-header">
+                                    <h3>Choose Mobile Background Image</h3>
+                                    <button type="button" class="modal-close" data-close-media-picker aria-label="Close">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="course-media-picker">
+                                    <?php foreach ($mediaImages as $media): ?>
+                                    <button type="button" class="course-media-option" data-pick-media="<?= htmlspecialchars($media['file']) ?>" data-media-url="<?= htmlspecialchars($media['url']) ?>" title="<?= htmlspecialchars($media['label']) ?>">
+                                        <span class="course-media-thumb">
+                                            <img src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="course-media-name"><?= htmlspecialchars($media['label']) ?></span>
+                                    </button>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="course-media-modal-footer">
+                                    <button type="button" class="btn-cancel" data-close-media-picker>Cancel</button>
+                                    <button type="button" class="btn-save" data-apply-media-picker disabled>
+                                        <i class="fas fa-check"></i> Use Selected Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        <input type="text" name="mobile_image" value="<?= htmlspecialchars($editSlide['mobile_image'] ?? '') ?>" placeholder="assets/images/optimized/home-mobile.webp" style="margin-top:10px;" data-image-path-input>
+                        <small class="field-help">Used only on mobile view. If empty, desktop image is used.</small>
+                        <?php if (!empty($editSlide['mobile_image'])): ?>
+                        <div class="course-current-image" style="margin-top:10px;">
+                            <img class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['mobile_image'])) ?>" alt="Current mobile home slider image">
                         </div>
                         <?php endif; ?>
                     </div>
@@ -340,7 +425,7 @@ $mediaImages = tt_home_slide_media_images();
                 </div>
                 <div class="table-wrap">
                     <table class="admin-table">
-                        <thead><tr><th>Preview</th><th>Title</th><th>Image</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Preview</th><th>Title</th><th>Image</th><th>Mobile Image</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
                         <tbody>
                             <?php foreach ($slides as $slide): ?>
                             <tr>
@@ -349,6 +434,7 @@ $mediaImages = tt_home_slide_media_images();
                                 </td>
                                 <td><strong><?= htmlspecialchars($slide['title'] ?: 'Home background') ?></strong></td>
                                 <td style="max-width:230px;color:#64748B;font-size:12px;"><?= htmlspecialchars($slide['image']) ?></td>
+                                <td style="max-width:230px;color:#64748B;font-size:12px;"><?= htmlspecialchars($slide['mobile_image'] ?: 'Same as desktop') ?></td>
                                 <td><?= (int)($slide['display_order'] ?? $slide['sort_order'] ?? 0) ?></td>
                                 <td><span class="badge badge-<?= $slide['is_active'] ? 'green' : 'gray' ?>"><?= $slide['is_active'] ? 'Active' : 'Inactive' ?></span></td>
                                 <td style="white-space:nowrap;">
@@ -358,7 +444,7 @@ $mediaImages = tt_home_slide_media_images();
                                 </td>
                             </tr>
                             <?php endforeach; ?>
-                            <?php if (!$slides): ?><tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:24px;">No home slider images added yet. The frontend will use default images.</td></tr><?php endif; ?>
+                            <?php if (!$slides): ?><tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:24px;">No home slider images added yet. The frontend will use default images.</td></tr><?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -402,8 +488,8 @@ document.querySelectorAll('[data-apply-media-picker]').forEach((button) => {
         const modal = button.closest('[data-media-picker-modal]');
         const group = button.closest('.form-group');
         if (!modal || !group || !modal.dataset.pendingFile) return;
-        const hiddenInput = group.querySelector('input[name="media_image"]');
-        const pathInput = group.querySelector('input[name="image"]');
+        const hiddenInput = group.querySelector('[data-media-target]');
+        const pathInput = group.querySelector('[data-image-path-input]');
         const preview = group.querySelector('[data-selected-media-preview]');
         if (hiddenInput) hiddenInput.value = modal.dataset.pendingFile;
         if (pathInput) pathInput.value = modal.dataset.pendingFile;
@@ -422,7 +508,7 @@ document.addEventListener('click', (event) => {
     if (!clearSelected) return;
     event.preventDefault();
     const group = clearSelected.closest('.form-group');
-    const hiddenInput = group?.querySelector('input[name="media_image"]');
+    const hiddenInput = group?.querySelector('[data-media-target]');
     const preview = group?.querySelector('[data-selected-media-preview]');
     if (hiddenInput) hiddenInput.value = '';
     if (preview) preview.hidden = true;
