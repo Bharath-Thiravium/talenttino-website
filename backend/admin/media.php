@@ -21,6 +21,9 @@ $allowedMimes = [
 ];
 $appMaxBytes = 100 * 1024 * 1024;
 $maxBatchFiles = 10;
+$isAjaxUpload = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
+    && isset($_POST['upload_media'])
+    && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) === 'fetch';
 
 function tt_media_ensure_dir(string $dir): bool
 {
@@ -122,10 +125,21 @@ function tt_media_uploaded_files(array $files): array
 
 $serverUploadMax = tt_media_ini_bytes((string) ini_get('upload_max_filesize'));
 $serverPostMax = tt_media_ini_bytes((string) ini_get('post_max_size'));
-$maxUploadBytes = min($appMaxBytes, $serverUploadMax ?: $appMaxBytes, $serverPostMax ?: $appMaxBytes);
+$serverPostFileMax = $serverPostMax > 1024 * 1024 ? $serverPostMax - (512 * 1024) : $serverPostMax;
+$maxUploadBytes = min($appMaxBytes, $serverUploadMax ?: $appMaxBytes, $serverPostFileMax ?: $appMaxBytes);
 $maxUploadLabel = tt_media_format_bytes($maxUploadBytes);
+$serverPostLabel = tt_media_format_bytes($serverPostMax ?: $maxUploadBytes);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
+if (
+    ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
+    && isset($_SERVER['CONTENT_LENGTH'])
+    && $serverPostMax > 0
+    && (int)$_SERVER['CONTENT_LENGTH'] > $serverPostMax
+) {
+    $error = 'Upload is too large for this server. Please upload smaller files. Maximum total request size is ' . $serverPostLabel . '.';
+}
+
+if ($error === '' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_media'])) {
     $galleryUpload = ($_POST['media_kind'] ?? '') === 'gallery_item';
     $targetDir = $galleryUpload ? $galleryDir : $mediaDir;
     $targetLabel = $galleryUpload ? 'gallery upload folder' : 'media upload folder';
@@ -206,6 +220,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_media'])) {
     } else {
         $error = $library === 'gallery' ? 'Gallery item not found.' : 'Media file not found.';
     }
+}
+
+if ($isAjaxUpload) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'ok' => $error === '',
+        'success' => $success,
+        'error' => $error,
+    ]);
+    exit;
 }
 
 tt_media_ensure_dir($galleryDir);
@@ -481,6 +505,8 @@ const mediaFileHelp = document.querySelector('[data-media-file-help]');
 const mediaFileCount = document.querySelector('[data-media-file-count]');
 const mediaSubmit = document.querySelector('[data-media-submit]');
 const maxBatchFiles = <?= (int)$maxBatchFiles ?>;
+const maxUploadBytes = <?= (int)$maxUploadBytes ?>;
+const maxUploadLabel = <?= json_encode($maxUploadLabel) ?>;
 const uploadModalModes = {
     gallery_item: {
         title: '<i class="fas fa-cloud-upload-alt"></i> Add Gallery Items',
@@ -509,8 +535,11 @@ function openMediaUploadModal(kind = 'gallery_item') {
     mediaFileInput.setAttribute('accept', mode.accept);
     mediaFileInput.setAttribute('multiple', 'multiple');
     mediaFileCount.textContent = '';
+    mediaFileCount.classList.remove('text-danger');
     mediaFileHelp.textContent = mode.help;
     mediaSubmit.innerHTML = mode.submit;
+    mediaSubmit.disabled = false;
+    mediaSubmit.removeAttribute('aria-busy');
     mediaUploadModal.classList.add('is-open');
     mediaUploadModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
@@ -525,16 +554,87 @@ document.querySelectorAll('[data-open-media-upload]').forEach(button => {
 });
 document.querySelectorAll('[data-close-media-upload]').forEach(button => button.addEventListener('click', closeMediaUploadModal));
 mediaFileInput.addEventListener('change', () => {
-    const count = mediaFileInput.files ? mediaFileInput.files.length : 0;
+    const files = mediaFileInput.files ? [...mediaFileInput.files] : [];
+    const count = files.length;
     if (count > maxBatchFiles) {
         mediaFileInput.value = '';
         mediaFileCount.textContent = `Please select only ${maxBatchFiles} files at one time.`;
         mediaFileCount.classList.add('text-danger');
+        mediaSubmit.disabled = true;
+        return;
+    }
+
+    const oversized = files.filter(file => file.size > maxUploadBytes);
+    if (oversized.length) {
+        mediaFileInput.value = '';
+        mediaFileCount.textContent = `${oversized[0].name} is too large. Maximum ${maxUploadLabel} per file.`;
+        mediaFileCount.classList.add('text-danger');
+        mediaSubmit.disabled = true;
         return;
     }
 
     mediaFileCount.classList.remove('text-danger');
     mediaFileCount.textContent = count ? `${count} file${count === 1 ? '' : 's'} selected.` : '';
+    mediaSubmit.disabled = false;
+});
+document.querySelector('.media-upload-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const files = mediaFileInput.files ? [...mediaFileInput.files] : [];
+    const oversized = files.find(file => file.size > maxUploadBytes);
+    if (!files.length || files.length > maxBatchFiles || oversized) {
+        mediaFileCount.classList.add('text-danger');
+        mediaFileCount.textContent = !files.length
+            ? 'Please choose at least one file.'
+            : oversized
+            ? `${oversized.name} is too large. Maximum ${maxUploadLabel} per file.`
+            : `Please select only ${maxBatchFiles} files at one time.`;
+        return;
+    }
+
+    mediaSubmit.disabled = true;
+    mediaSubmit.setAttribute('aria-busy', 'true');
+    mediaFileInput.disabled = true;
+    mediaFileCount.classList.remove('text-danger');
+
+    let uploaded = 0;
+    const failed = [];
+    for (const [index, file] of files.entries()) {
+        mediaFileCount.textContent = `Uploading ${index + 1} of ${files.length}: ${file.name}`;
+        const formData = new FormData();
+        formData.append('upload_media', '1');
+        formData.append('media_kind', mediaKindInput.value || 'gallery_item');
+        formData.append('MAX_FILE_SIZE', String(maxUploadBytes));
+        formData.append('media_file', file, file.name);
+
+        try {
+            const response = await fetch('media.php', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin',
+                headers: { 'X-Requested-With': 'fetch' }
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) {
+                failed.push(result.error || `${file.name}: Upload failed.`);
+            } else {
+                uploaded += 1;
+            }
+        } catch (error) {
+            failed.push(`${file.name}: Upload failed. Please try again.`);
+        }
+    }
+
+    if (failed.length) {
+        mediaFileInput.disabled = false;
+        mediaSubmit.disabled = false;
+        mediaSubmit.removeAttribute('aria-busy');
+        mediaFileCount.classList.add('text-danger');
+        mediaFileCount.textContent = `${uploaded} uploaded. ${failed.slice(0, 2).join(' ')}`;
+        return;
+    }
+
+    mediaFileCount.textContent = `${uploaded} file${uploaded === 1 ? '' : 's'} uploaded. Refreshing...`;
+    window.location.href = 'media.php';
 });
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && mediaUploadModal.classList.contains('is-open')) {
