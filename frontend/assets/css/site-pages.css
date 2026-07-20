@@ -48524,3 +48524,118 @@ html body .site-footer .footer-social a:focus-visible {
         letter-spacing: 2px !important;
     }
 }
+
+/* Final home services center image alignment. */
+html body.home-page .model-services-layout {
+    align-items: center !important;
+}
+
+html body.home-page .model-service-center {
+    width: 100% !important;
+    max-width: 530px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    justify-items: center !important;
+    align-content: center !important;
+    gap: 24px !important;
+    padding: 0 !important;
+}
+
+html body.home-page .model-service-center > a {
+    margin: 0 !important;
+}
+
+html body.home-page .model-service-center > img {
+    width: min(100%, 530px) !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3 !important;
+    min-height: 0 !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 0 !important;
+    transform: none !important;
+}
+
+@media (max-width: 1050px) {
+    html body.home-page .model-service-center {
+        max-width: 620px !important;
+    }
+
+    html body.home-page .model-service-center > img {
+        width: min(100%, 620px) !important;
+    }
+}
+
+/* Final home services full viewport fit. */
+html body.home-page .model-services {
+    scroll-margin-top: 118px !important;
+    padding-top: clamp(118px, 13vh, 142px) !important;
+    padding-bottom: clamp(56px, 7vh, 78px) !important;
+}
+
+html body.home-page .model-services .model-center-head {
+    margin-bottom: clamp(26px, 4vh, 38px) !important;
+}
+
+html body.home-page .model-services .model-center-head h2 {
+    max-width: 940px !important;
+    margin-inline: auto !important;
+    font-size: clamp(42px, 5.2vw, 76px) !important;
+    line-height: 0.96 !important;
+}
+
+html body.home-page .model-services-layout {
+    grid-template-columns: minmax(250px, 0.82fr) minmax(360px, 1.16fr) minmax(250px, 0.82fr) !important;
+    gap: clamp(24px, 3.2vw, 48px) !important;
+    align-items: center !important;
+}
+
+html body.home-page .model-service-stack {
+    gap: clamp(18px, 2.4vh, 26px) !important;
+}
+
+html body.home-page .model-service-card {
+    min-height: clamp(236px, 28vh, 276px) !important;
+    padding: clamp(26px, 3.2vh, 32px) 32px !important;
+}
+
+html body.home-page .model-service-card span {
+    width: clamp(68px, 8vh, 82px) !important;
+    height: clamp(68px, 8vh, 82px) !important;
+    margin-bottom: clamp(18px, 2.5vh, 24px) !important;
+}
+
+html body.home-page .model-service-card h3 {
+    font-size: clamp(22px, 1.7vw, 25px) !important;
+    line-height: 1.18 !important;
+}
+
+html body.home-page .model-service-card p {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+}
+
+html body.home-page .model-service-center {
+    max-width: min(530px, 35vw) !important;
+    gap: clamp(18px, 2.8vh, 24px) !important;
+}
+
+html body.home-page .model-service-center > img {
+    width: 100% !important;
+    max-height: clamp(330px, 43vh, 430px) !important;
+}
+
+@media (max-width: 1050px) {
+    html body.home-page .model-services {
+        padding-top: 96px !important;
+    }
+
+    html body.home-page .model-services-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-service-center {
+        max-width: min(620px, 100%) !important;
+    }
+}
