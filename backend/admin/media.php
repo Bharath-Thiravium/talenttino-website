@@ -211,14 +211,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_media'])) {
 tt_media_ensure_dir($galleryDir);
 tt_media_ensure_dir($mediaDir);
 
-function tt_media_collect_files(string $dir, string $adminUrl, string $frontendPrefix, bool $galleryOnly = false): array
+function tt_media_extension_mime(string $file): string
+{
+    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $mimes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'webp' => 'image/webp',
+        'gif' => 'image/gif',
+        'mp4' => 'video/mp4',
+        'webm' => 'video/webm',
+        'ogv' => 'video/ogg',
+        'ogg' => 'video/ogg',
+        'pdf' => 'application/pdf',
+    ];
+
+    return $mimes[$extension] ?? '';
+}
+
+function tt_media_page_number(string $key): int
+{
+    return max(1, (int)($_GET[$key] ?? 1));
+}
+
+function tt_media_page_url(string $key, int $page): string
+{
+    $query = $_GET;
+    $query[$key] = max(1, $page);
+    return 'media.php?' . http_build_query($query);
+}
+
+function tt_media_collect_files(string $dir, string $adminUrl, string $frontendPrefix, bool $galleryOnly = false, int $page = 1, int $perPage = 24): array
 {
     $files = [];
     foreach (glob($dir . '*') ?: [] as $path) {
         if (!is_file($path)) continue;
         $file = basename($path);
         if (str_starts_with($file, '.')) continue;
-        $mime = mime_content_type($path) ?: '';
+        $mime = tt_media_extension_mime($file);
+        if ($mime === '') {
+            $mime = mime_content_type($path) ?: '';
+        }
         if ($galleryOnly && !str_starts_with($mime, 'image/') && !str_starts_with($mime, 'video/')) continue;
         $files[] = [
             'name' => $file,
@@ -232,11 +266,42 @@ function tt_media_collect_files(string $dir, string $adminUrl, string $frontendP
         ];
     }
     usort($files, static fn($a, $b) => $b['modified'] <=> $a['modified']);
-    return $files;
+
+    $total = count($files);
+    $totalPages = max(1, (int)ceil($total / $perPage));
+    $page = min(max(1, $page), $totalPages);
+
+    return [
+        'items' => array_slice($files, ($page - 1) * $perPage, $perPage),
+        'total' => $total,
+        'page' => $page,
+        'per_page' => $perPage,
+        'total_pages' => $totalPages,
+    ];
 }
 
-$galleryFiles = tt_media_collect_files($galleryDir, $galleryUrl, $galleryFrontendPrefix, true);
-$files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
+function tt_media_render_pagination(array $pagination, string $pageKey): void
+{
+    if (($pagination['total_pages'] ?? 1) <= 1) {
+        return;
+    }
+
+    $page = (int)$pagination['page'];
+    $totalPages = (int)$pagination['total_pages'];
+    ?>
+    <div class="pagination">
+        <a class="<?= $page <= 1 ? 'disabled' : '' ?>" href="<?= htmlspecialchars(tt_media_page_url($pageKey, $page - 1)) ?>"><i class="fas fa-chevron-left"></i> Prev</a>
+        <span>Page <?= $page ?> of <?= $totalPages ?></span>
+        <a class="<?= $page >= $totalPages ? 'disabled' : '' ?>" href="<?= htmlspecialchars(tt_media_page_url($pageKey, $page + 1)) ?>">Next <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <?php
+}
+
+$mediaPerPage = 24;
+$galleryLibrary = tt_media_collect_files($galleryDir, $galleryUrl, $galleryFrontendPrefix, true, tt_media_page_number('gallery_page'), $mediaPerPage);
+$mediaLibrary = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix, false, tt_media_page_number('media_page'), $mediaPerPage);
+$galleryFiles = $galleryLibrary['items'];
+$files = $mediaLibrary['items'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -288,7 +353,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
         <div class="admin-card">
             <div class="card-header">
                 <h3><i class="fas fa-photo-film"></i> Gallery Images & Videos</h3>
-                <span style="font-size:13px;color:#64748B;"><strong><?= count($galleryFiles) ?></strong> files</span>
+                <span style="font-size:13px;color:#64748B;"><strong><?= (int)$galleryLibrary['total'] ?></strong> files</span>
             </div>
             <?php if ($galleryFiles): ?>
             <div class="media-grid">
@@ -296,10 +361,10 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                 <article class="media-card">
                     <a class="media-preview" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank">
                         <?php if ($file['is_video']): ?>
-                        <video src="<?= htmlspecialchars($file['admin_url']) ?>" muted preload="metadata"></video>
+                        <video src="<?= htmlspecialchars($file['admin_url']) ?>" muted preload="none"></video>
                         <span class="media-video-badge"><i class="fas fa-play"></i></span>
                         <?php else: ?>
-                        <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>">
+                        <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>" loading="lazy" decoding="async">
                         <?php endif; ?>
                     </a>
                     <div class="media-body">
@@ -320,6 +385,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                 </article>
                 <?php endforeach; ?>
             </div>
+            <?php tt_media_render_pagination($galleryLibrary, 'gallery_page'); ?>
             <?php else: ?>
             <div class="empty-state">
                 <i class="fas fa-images"></i>
@@ -331,7 +397,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
         <div class="admin-card">
             <div class="card-header">
                 <h3><i class="fas fa-folder-open"></i> Uploaded Media</h3>
-                <span style="font-size:13px;color:#64748B;"><strong><?= count($files) ?></strong> files</span>
+                <span style="font-size:13px;color:#64748B;"><strong><?= (int)$mediaLibrary['total'] ?></strong> files</span>
             </div>
             <?php if ($files): ?>
             <div class="media-grid">
@@ -339,7 +405,10 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                 <article class="media-card">
                     <a class="media-preview" href="<?= htmlspecialchars($file['admin_url']) ?>" target="_blank">
                         <?php if ($file['is_image']): ?>
-                        <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>">
+                        <img src="<?= htmlspecialchars($file['admin_url']) ?>" alt="<?= htmlspecialchars($file['name']) ?>" loading="lazy" decoding="async">
+                        <?php elseif ($file['is_video']): ?>
+                        <video src="<?= htmlspecialchars($file['admin_url']) ?>" muted preload="none"></video>
+                        <span class="media-video-badge"><i class="fas fa-play"></i></span>
                         <?php else: ?>
                         <i class="fas fa-file-pdf"></i>
                         <?php endif; ?>
@@ -362,6 +431,7 @@ $files = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix);
                 </article>
                 <?php endforeach; ?>
             </div>
+            <?php tt_media_render_pagination($mediaLibrary, 'media_page'); ?>
             <?php else: ?>
             <div class="empty-state">
                 <i class="fas fa-photo-film"></i>
