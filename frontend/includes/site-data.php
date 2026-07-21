@@ -78,7 +78,7 @@ function tt_settings(): array
         'about_content' => 'Talentteno Institute is a practical IT training institute focused on helping students move from basic knowledge to advanced job-ready skills.',
         'mission' => 'To bridge the gap between classroom learning and industry requirements through practical, mentor-led IT training.',
         'vision' => 'To become South Tamil Nadu\'s most trusted IT training institute.',
-        'total_students' => '2000+',
+        'total_students' => '250+',
         'total_trainers' => '15+',
         'success_rate' => '100%',
         'address' => 'Plot 81, Poriyalar Nagar, Tiruppalai, Madurai, Tamil Nadu - 625014',
@@ -100,6 +100,7 @@ function tt_settings(): array
 
     $row = tt_fetch_one('SELECT * FROM site_settings WHERE id = 1');
     $settings = array_merge($defaults, $row ?: []);
+    $settings['total_students'] = '250+';
 
     foreach ($settings as $key => $value) {
         if (is_string($value)) {
@@ -139,12 +140,19 @@ function tt_google_maps_embed_url(?array $settings = null): string
 {
     $settings = $settings ?? tt_settings();
     $savedMapUrl = trim((string)($settings['map_embed_url'] ?? ''));
-    if ($savedMapUrl !== '' && preg_match('#^https?://#i', $savedMapUrl)) {
+    if (
+        $savedMapUrl !== ''
+        && preg_match('#^https?://#i', $savedMapUrl)
+        && (
+            stripos($savedMapUrl, '/maps/embed') !== false
+            || stripos($savedMapUrl, 'output=embed') !== false
+        )
+    ) {
         return $savedMapUrl;
     }
 
     $query = rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
-    return 'https://www.google.com/maps?q=' . $query . '&output=embed';
+    return 'https://maps.google.com/maps?hl=en&z=16&iwloc=B&q=' . $query . '&output=embed';
 }
 
 function tt_company_profile(?array $settings = null): array

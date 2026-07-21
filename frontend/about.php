@@ -52,7 +52,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -80,10 +80,19 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
                     <span class="section-label">Institute overview</span>
                     <h2>Practical IT training built around student career growth</h2>
                     <p class="about-lead"><?= tt_h($settings['about_content']) ?></p>
-                    <div class="about-highlights">
-                        <span><strong><?= tt_h($settings['total_students']) ?></strong> Students trained</span>
-                        <span><strong><?= tt_h($settings['total_trainers']) ?></strong> Expert trainers</span>
-                        <span><strong><?= tt_h($settings['success_rate']) ?></strong> Career support</span>
+                    <div class="tt-stat-row">
+                        <div class="tt-stat-card">
+                            <span class="tt-stat-num"><?= tt_h($settings['total_students']) ?></span>
+                            <span class="tt-stat-title">Students trained</span>
+                        </div>
+                        <div class="tt-stat-card">
+                            <span class="tt-stat-num"><?= tt_h($settings['total_trainers']) ?></span>
+                            <span class="tt-stat-title">Expert trainers</span>
+                        </div>
+                        <div class="tt-stat-card">
+                            <span class="tt-stat-num"><?= tt_h($settings['success_rate']) ?></span>
+                            <span class="tt-stat-title">Career support</span>
+                        </div>
                     </div>
                 </div>
                 <div class="identity-image about-visual-stack reveal reveal-right">

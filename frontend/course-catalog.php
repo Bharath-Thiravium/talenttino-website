@@ -115,7 +115,7 @@ function tt_catalog_fallback_image(array $course): string
         body.catalog-body .catalog-grid>.catalog-card>p{display:-webkit-box!important;visibility:visible!important;opacity:1!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:42px!important;margin:0 0 14px!important;color:#52627a!important;-webkit-text-fill-color:#52627a!important;font-size:14px!important;line-height:1.5!important;text-align:left!important}
         body.catalog-body .catalog-grid>.catalog-card ul,
         body.catalog-body .catalog-grid>.catalog-card .catalog-price{display:none!important}
-        body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:absolute!important;left:22px!important;right:22px!important;bottom:22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important;padding-top:14px!important;border-top:1px solid rgba(37,99,235,.13)!important;background:#fff!important}
+        body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:absolute!important;left:22px!important;right:22px!important;bottom:22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important;padding-top:14px!important;border-top:0!important;background:#fff!important}
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;min-width:0!important;min-height:42px!important;height:42px!important;padding:0 12px!important;border-radius:8px!important;clip-path:none!important;text-decoration:none!important;font-size:13px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important;white-space:nowrap!important}
         body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn{background:#fff!important;color:#1554d1!important;-webkit-text-fill-color:#1554d1!important;border:1px solid rgba(79,140,255,.42)!important;box-shadow:none!important}
@@ -133,7 +133,7 @@ function tt_catalog_fallback_image(array $course): string
             body.catalog-body .catalog-grid>.catalog-card .catalog-category{top:236px!important;right:22px!important}
             body.catalog-body .catalog-grid>.catalog-card h2{min-height:0!important;margin:14px 22px 14px!important;font-size:clamp(23px,6vw,28px)!important;line-height:1.18!important}
             body.catalog-body .catalog-grid>.catalog-card>p{display:block!important;min-height:0!important;margin:0 22px 24px!important;overflow:visible!important;font-size:14.5px!important;line-height:1.65!important}
-            body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin:0!important;padding:16px 22px 22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border-top:1px solid rgba(79,140,255,.14)!important}
+            body.catalog-body .catalog-grid>.catalog-card .catalog-actions{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin:0!important;padding:16px 22px 22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border-top:0!important}
             body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
             body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{min-height:46px!important;height:46px!important;border-radius:10px!important;gap:0!important}
             body.catalog-body .catalog-grid>.catalog-card .catalog-actions i{display:none!important}
@@ -526,13 +526,64 @@ function tt_catalog_fallback_image(array $course): string
                 animation:none!important;
             }
         }
+        @media (max-width:700px){
+            html body.catalog-body .catalog-grid{
+                width:min(100% - 28px,420px)!important;
+                margin:0 auto!important;
+                grid-template-columns:1fr!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card,
+            html body.catalog-body.compact-catalog .catalog-grid>.catalog-card,
+            html body.catalog-body .catalog-grid>.catalog-card:nth-child(n){
+                display:flex!important;
+                flex-direction:column!important;
+                min-height:0!important;
+                height:auto!important;
+                padding:0!important;
+                overflow:hidden!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions{
+                position:relative!important;
+                left:auto!important;
+                right:auto!important;
+                bottom:auto!important;
+                z-index:3!important;
+                width:auto!important;
+                margin:auto 0 0!important;
+                padding:0 22px 22px!important;
+                display:grid!important;
+                grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+                gap:10px!important;
+                background:#fff!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+                display:inline-flex!important;
+                width:100%!important;
+                min-width:0!important;
+                height:46px!important;
+                min-height:46px!important;
+                padding:0 10px!important;
+                align-items:center!important;
+                justify-content:center!important;
+                border-radius:10px!important;
+                font-size:13px!important;
+                font-weight:900!important;
+                line-height:1!important;
+                white-space:nowrap!important;
+                overflow:hidden!important;
+                text-overflow:ellipsis!important;
+                opacity:1!important;
+                visibility:visible!important;
+            }
+        }
     </style>
 </head>
 <body class="static-site catalog-body <?= ($coursePage['layout'] ?? '') === 'compact' ? 'compact-catalog' : '' ?> <?= htmlspecialchars($coursePage['body_class'] ?? '') ?>">
 <div class="site-shell">
     <header class="site-header compact-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>

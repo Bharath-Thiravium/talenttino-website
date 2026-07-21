@@ -35,18 +35,11 @@ if (nav) {
     if (!nav.querySelector('.nav-enroll-cta')) {
         const enrollCta = document.createElement('a');
         enrollCta.className = 'nav-enroll-cta';
-        enrollCta.href = 'contact.php';
+        enrollCta.href = 'index.php#home-signup';
         enrollCta.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span>Enroll Now</span>';
         nav.appendChild(enrollCta);
     }
     const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
-    if (courseMenu && !courseMenu.querySelector('a[data-course-menu-all]')) {
-        const allCoursesLink = document.createElement('a');
-        allCoursesLink.href = 'course.php';
-        allCoursesLink.textContent = 'All Courses';
-        allCoursesLink.dataset.courseMenuAll = 'true';
-        courseMenu.prepend(allCoursesLink);
-    }
     if (courseMenu && !courseMenu.querySelector('a[href="designingcourse.php"]')) {
         const designCourseLink = document.createElement('a');
         designCourseLink.href = 'designingcourse.php';
@@ -67,6 +60,18 @@ if (nav) {
         moreTrigger.innerHTML = 'Others <i class="fa-solid fa-chevron-down"></i>';
     }
     if (morePanel) {
+        const baseMoreLinks = [
+            ['services.php', 'Services', 'fa-concierge-bell'],
+            ['career.php', 'Career', 'fa-briefcase'],
+            ['blog.php', 'Blog', 'fa-newspaper'],
+            ['project.php', 'Project', 'fa-diagram-project'],
+        ];
+        baseMoreLinks.forEach(([href, label, icon]) => {
+            const link = morePanel.querySelector(`a[href="${href}"]`);
+            if (!link || link.querySelector('i')) return;
+            link.classList.add('nav-menu-rich-link');
+            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
+        });
         const otherLinks = [
             ['review.php', 'Student Reviews', 'fa-star'],
             ['why-talentteno.php', 'Why Talentteno', 'fa-graduation-cap'],
@@ -137,6 +142,48 @@ function closeMobileNav() {
     if (menuButton) menuButton.innerHTML = '<span class="menu-button-symbol" aria-hidden="true">&#9776;</span>';
 }
 
+const enrollPopup = document.querySelector('#home-signup');
+let enrollPopupLastFocus = null;
+
+function openEnrollPopup(event) {
+    if (!enrollPopup) return false;
+    event?.preventDefault();
+    event?.stopPropagation();
+    closeMobileNav();
+    enrollPopupLastFocus = document.activeElement;
+    enrollPopup.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('enroll-popup-open');
+    document.documentElement.classList.add('enroll-popup-open');
+    window.setTimeout(() => {
+        enrollPopup.querySelector('input:not([type="hidden"]):not([tabindex="-1"]), select, button')?.focus();
+    }, 50);
+    return true;
+}
+
+function closeEnrollPopup() {
+    if (!enrollPopup) return;
+    document.body.classList.remove('enroll-popup-open');
+    document.documentElement.classList.remove('enroll-popup-open');
+    enrollPopup.setAttribute('aria-hidden', 'true');
+    if (enrollPopupLastFocus && typeof enrollPopupLastFocus.focus === 'function') {
+        enrollPopupLastFocus.focus();
+    }
+}
+
+nav?.querySelectorAll('.nav-enroll-cta').forEach(link => {
+    link.addEventListener('click', event => {
+        openEnrollPopup(event);
+    });
+});
+
+document.querySelectorAll('[data-enroll-close]').forEach(button => {
+    button.addEventListener('click', closeEnrollPopup);
+});
+
+if (window.location.hash === '#home-signup') {
+    window.addEventListener('load', () => openEnrollPopup(), { once: true });
+}
+
 window.addEventListener('pageshow', closeMobileNav);
 
 let menuPointerHandled = false;
@@ -169,6 +216,10 @@ menuButton?.addEventListener('click', event => {
 });
 
 document.addEventListener('click', event => {
+    if (document.body.classList.contains('enroll-popup-open') && enrollPopup && !event.target.closest('#home-signup')) {
+        closeEnrollPopup();
+        return;
+    }
     if (event.target.closest('.site-nav') || event.target.closest('.menu-button')) return;
     dropdownItems.forEach(item => item.classList.remove('open'));
     dropdownItems.forEach(item => item.querySelector(':scope > a')?.setAttribute('aria-expanded', 'false'));
@@ -227,6 +278,7 @@ window.addEventListener('resize', () => {
 
 document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
+    closeEnrollPopup();
     closeMobileNav();
 });
 
@@ -531,8 +583,8 @@ function openCourseDetails(button) {
 
 document.querySelectorAll('[data-course-modal]').forEach(button => {
     button.addEventListener('click', event => {
-        event.preventDefault();
         if (button.matches('.course-card, .catalog-card, .home-course-card') && event.target.closest('a, button, input, select, textarea')) return;
+        event.preventDefault();
         openCourseDetails(button);
     });
     button.addEventListener('keydown', event => {
@@ -652,7 +704,7 @@ if (aiChat) {
         },
         {
             keys: ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'offer', 'discount', 'emi', 'payment', 'pay', 'how much', 'fees evlo', 'fee evlo', 'evlo', 'rate', 'fees details'],
-            text: `Fees: Fees change based on course, duration, batch and current offer. For the correct fee, discount or EMI details, call ${companyDetails.phone1} / ${companyDetails.phone2} or submit the free counselling form.`
+            text: `Fees: Fees change based on course, duration, batch and current offer. For the correct fee, discount or EMI details, call ${companyDetails.phone1} / ${companyDetails.phone2} or send a WhatsApp enquiry.`
         },
         {
             keys: ['internship', 'intern', 'project', 'projects', 'live project', 'portfolio', 'practical', 'hands on', 'experience', 'internship iruka', 'project iruka', 'iruka', 'practical class', 'real time project'],
@@ -664,7 +716,7 @@ if (aiChat) {
         },
         {
             keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo', 'sample class', 'visit', 'demo class', 'free demo class'],
-            text: 'Demo class: You can book a free demo class or counselling session from the Sign Up form on the home page. Our counsellor will call and guide you.'
+            text: 'Demo class: You can book a free demo class or counselling session by calling the institute or sending a WhatsApp enquiry. Our counsellor will guide you.'
         },
         {
             keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map', 'near', 'place', 'route', 'enga', 'where is', 'office', 'branch'],
@@ -684,7 +736,7 @@ if (aiChat) {
         },
         {
             keys: ['admission', 'join', 'enroll', 'enrol', 'apply', 'register', 'joining', 'epdi join', 'how to join', 'join panna'],
-            text: 'Admission: To join Talentteno, submit the free counselling form, call the institute, or send a WhatsApp enquiry. The team will guide course selection, fee details and batch timing.'
+            text: 'Admission: To join Talentteno, call the institute, send a WhatsApp enquiry, or use the contact page. The team will guide course selection, fee details and batch timing.'
         },
         {
             keys: ['full stack', 'fullstack', 'web development', 'frontend', 'backend'],
@@ -721,48 +773,79 @@ if (aiChat) {
         .replace(/full\s*stack/g, 'full stack')
         .replace(/cyber\s*security/g, 'cyber security')
         .replace(/ui\s*\/\s*ux/g, 'ui ux')
+        .replace(/u\s*i\s*u\s*x/g, 'ui ux')
+        .replace(/datascience/g, 'data science')
+        .replace(/fullstack/g, 'full stack')
         .replace(/fees?/g, 'fees')
         .replace(/evvalavu/g, 'evlo')
+        .replace(/enna/g, 'what')
+        .replace(/irukka|iruka/g, 'available')
+        .replace(/epdi/g, 'how')
         .replace(/[^\w\s/+.-]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
 
-    const hasAny = (text, keys) => keys.some(key => text.includes(key));
+    const getAiTokens = text => text.split(' ').filter(Boolean);
+    const hasAny = (text, keys) => {
+        const tokens = new Set(getAiTokens(text));
+        return keys.some(key => key.includes(' ') ? text.includes(key) : tokens.has(key));
+    };
+    const scoreKeys = (text, keys) => keys.reduce((total, key) => {
+        if (!hasAny(text, [key])) return total;
+        return total + (key.includes(' ') ? key.split(' ').length + 1 : 1);
+    }, 0);
 
     const getAiReply = question => {
         const clean = normalizeAiText(question);
+        const tokens = new Set(getAiTokens(clean));
         if (['hi', 'hello', 'hey', 'hai', 'vanakkam'].includes(clean)) {
             return `Hi! Welcome to ${companyDetails.name}. I can help with courses, fees, internship, placement, demo class, address, contact number, timings and admission.`;
         }
         if (['thanks', 'thank you', 'ok', 'okay'].includes(clean)) {
-            return 'You are welcome. For admission help, use the free counselling form or WhatsApp button.';
+            return 'You are welcome. For admission help, use the WhatsApp button or contact the institute.';
         }
 
-        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment', 'evlo', 'rate', 'discount', 'offer']);
-        const asksCourse = hasAny(clean, ['course', 'courses', 'class', 'training', 'syllabus', 'learn', 'teach', 'available']);
-        const asksContact = hasAny(clean, ['contact', 'phone', 'call', 'whatsapp', 'number', 'mobile', 'email', 'mail']);
-        const asksLocation = hasAny(clean, ['address', 'location', 'where', 'map', 'route', 'near']);
-        const asksInternship = hasAny(clean, ['internship', 'intern', 'project', 'portfolio', 'practical']);
-        const asksPlacement = hasAny(clean, ['placement', 'job', 'career', 'interview', 'resume', 'hiring']);
-        const asksTiming = hasAny(clean, ['timing', 'time', 'batch', 'duration', 'morning', 'evening', 'weekend', 'online', 'offline']);
-        const asksAdmission = hasAny(clean, ['admission', 'join', 'enroll', 'enrol', 'apply', 'register']);
+        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment', 'pay', 'evlo', 'rate', 'discount', 'offer', 'budget']);
+        const asksCourse = hasAny(clean, ['course', 'courses', 'class', 'classes', 'training', 'syllabus', 'learn', 'teach', 'available', 'list', 'program', 'programs', 'study']);
+        const asksContact = hasAny(clean, ['contact', 'phone', 'call', 'whatsapp', 'number', 'mobile', 'email', 'mail', 'reach', 'talk']);
+        const asksLocation = hasAny(clean, ['address', 'location', 'where', 'map', 'route', 'near', 'place', 'branch', 'office']);
+        const asksInternship = hasAny(clean, ['internship', 'intern', 'project', 'projects', 'portfolio', 'practical', 'experience', 'realtime', 'live']);
+        const asksPlacement = hasAny(clean, ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work']);
+        const asksTiming = hasAny(clean, ['timing', 'timings', 'time', 'batch', 'batches', 'duration', 'morning', 'evening', 'weekend', 'online', 'offline', 'schedule', 'hours']);
+        const asksAdmission = hasAny(clean, ['admission', 'join', 'enroll', 'enrol', 'apply', 'register', 'joining']);
+        const asksDemo = hasAny(clean, ['demo', 'trial', 'counselling', 'counseling', 'visit', 'sample']);
+        const asksCertificate = hasAny(clean, ['certificate', 'certification', 'certified']);
         const courseNames = [
             ['full stack', 'Full Stack with AI'],
-            ['fullstack', 'Full Stack with AI'],
             ['web development', 'Full Stack with AI'],
+            ['frontend', 'Full Stack with AI'],
+            ['backend', 'Full Stack with AI'],
             ['data science', 'Data Science and AI'],
             ['python', 'Data Science and AI'],
-            ['ai', 'Data Science and AI'],
+            ['machine learning', 'Data Science and AI'],
+            ['artificial intelligence', 'Data Science and AI'],
             ['cyber', 'Cyber Security'],
+            ['cyber security', 'Cyber Security'],
+            ['ethical hacking', 'Cyber Security'],
             ['digital marketing', 'Digital Marketing'],
+            ['seo', 'Digital Marketing'],
             ['ui ux', 'UI/UX Design'],
             ['design', 'UI/UX Design'],
+            ['designing', 'UI/UX Design'],
             ['tally', 'Tally'],
+            ['gst', 'Tally'],
             ['basic computer', 'Basic Computer'],
             ['ms office', 'MS Office'],
             ['excel', 'MS Office and Excel'],
+            ['programming', 'Programming Languages'],
+            ['java', 'Programming Languages'],
+            ['php', 'Programming Languages'],
+            ['sql', 'Programming Languages'],
+            ['cloud', 'Cloud Computing'],
+            ['aws', 'Cloud Computing'],
+            ['devops', 'Cloud Computing'],
         ];
-        const mentionedCourse = courseNames.find(([key]) => clean.includes(key))?.[1];
+        const mentionedCourse = courseNames.find(([key]) => key.includes(' ') ? clean.includes(key) : tokens.has(key))?.[1];
 
         if (mentionedCourse && asksFee) {
             return `${mentionedCourse} fee depends on batch, duration and current offer. For the correct fee, EMI and discount, call ${companyDetails.phone1} / ${companyDetails.phone2} or send a WhatsApp enquiry.`;
@@ -774,22 +857,35 @@ if (aiChat) {
             return `${mentionedCourse} includes career support such as resume guidance, mock interview preparation and placement assistance for eligible students.`;
         }
         if (mentionedCourse && asksTiming) {
-            return `${mentionedCourse} batch timing and duration depend on the current schedule. Call ${companyDetails.phone1} or submit the free counselling form to confirm the next available batch.`;
+            return `${mentionedCourse} batch timing and duration depend on the current schedule. Call ${companyDetails.phone1} or send a WhatsApp enquiry to confirm the next available batch.`;
         }
         if (mentionedCourse && asksCourse) {
             return `${mentionedCourse} is available at ${companyDetails.name}. It includes practical training, mentor guidance, project work and career support.`;
+        }
+        if (mentionedCourse) {
+            return `${mentionedCourse} is available at ${companyDetails.name}. You can ask about its fees, duration, demo class, internship, placement support or admission process.`;
         }
         if (asksContact && asksLocation) {
             return `${companyDetails.name} is at ${companyDetails.address}. Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}.`;
         }
         if (asksAdmission && asksFee) {
-            return `Admission and fees: Submit the free counselling form or call ${companyDetails.phone1}. Our team will explain the right course, current fee, offer, EMI option and batch timing.`;
+            return `Admission and fees: Call ${companyDetails.phone1} or send a WhatsApp enquiry. Our team will explain the right course, current fee, offer, EMI option and batch timing.`;
         }
+        if (asksFee) return replies.find(item => item.keys.includes('fee')).text;
+        if (asksCourse) return replies.find(item => item.keys.includes('course')).text;
+        if (asksInternship) return replies.find(item => item.keys.includes('internship')).text;
+        if (asksPlacement) return replies.find(item => item.keys.includes('placement')).text;
+        if (asksDemo) return replies.find(item => item.keys.includes('demo')).text;
+        if (asksLocation) return replies.find(item => item.keys.includes('location')).text;
+        if (asksContact) return replies.find(item => item.keys.includes('contact')).text;
+        if (asksTiming) return replies.find(item => item.keys.includes('timing')).text;
+        if (asksCertificate) return replies.find(item => item.keys.includes('certificate')).text;
+        if (asksAdmission) return replies.find(item => item.keys.includes('admission')).text;
 
         const scoredMatches = replies
             .map(item => ({
                 item,
-                score: item.keys.reduce((total, key) => total + (clean.includes(key) ? key.split(' ').length : 0), 0)
+                score: scoreKeys(clean, item.keys)
             }))
             .filter(match => match.score > 0)
             .sort((a, b) => b.score - a.score);

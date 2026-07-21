@@ -46,22 +46,22 @@ if (!$courses) {
         body.course-list-page .course-showcase-card h3{position:static!important;display:block!important;visibility:visible!important;opacity:1!important;margin:0 0 6px!important;color:#10172a!important;-webkit-text-fill-color:#10172a!important;background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;font-size:25px!important;font-weight:900!important;line-height:1.12!important;letter-spacing:0!important}
         body.course-list-page .course-showcase-card>p{position:static!important;visibility:visible!important;opacity:1!important;margin:0 0 12px!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;color:#52627a!important;-webkit-text-fill-color:#52627a!important;font-size:14px!important;line-height:1.45!important}
         body.course-list-page .course-showcase-card .course-highlights{display:none!important}
-        body.course-list-page .course-showcase-card .course-footer{position:absolute!important;left:22px!important;right:22px!important;bottom:22px!important;display:block!important;margin:0!important;padding-top:12px!important;border-top:1px solid rgba(37,99,235,.13)!important;background:#fff!important}
+        body.course-list-page .course-showcase-card .course-footer{position:absolute!important;left:22px!important;right:22px!important;bottom:22px!important;display:block!important;margin:0!important;padding-top:12px!important;border-top:0!important;background:#fff!important}
         body.course-list-page .course-showcase-card .course-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important}
         body.course-list-page .course-showcase-card .course-actions .btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:100%!important;min-height:42px!important;height:42px!important;padding:0 12px!important;border-radius:8px!important;clip-path:none!important;font-size:13px!important;font-weight:900!important;text-decoration:none!important}
         body.course-list-page .course-showcase-card .course-enquiry-btn{background:#fff!important;color:#1554d1!important;-webkit-text-fill-color:#1554d1!important;border:1px solid rgba(79,140,255,.42)!important;box-shadow:none!important}
         body.course-list-page .course-showcase-card .course-download-btn{color:#fff!important;-webkit-text-fill-color:#fff!important;background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 48%,#d91cf6 100%)!important;border:0!important}
         @media (max-width:700px){
             body.course-list-page .course-showcase-grid{width:min(100% - 28px,420px)!important;margin:0 auto!important;grid-template-columns:1fr!important;gap:24px!important}
-            body.course-list-page .course-showcase-card{min-height:auto!important;padding:0!important;border-radius:18px!important;overflow:hidden!important;box-shadow:0 22px 58px rgba(15,23,42,.10)!important}
+            body.course-list-page .course-showcase-card{min-height:auto!important;padding:0!important;border-radius:18px!important;overflow:visible!important;box-shadow:0 22px 58px rgba(15,23,42,.10)!important}
             body.course-list-page .course-showcase-card .course-image{width:100%!important;height:210px!important;min-height:210px!important;max-height:210px!important;margin:0!important;border-radius:0!important}
             body.course-list-page .course-showcase-card .course-card-top{padding:24px 22px 0!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important}
             body.course-list-page .course-showcase-card h3{margin:26px 22px 14px!important;font-size:clamp(23px,6vw,28px)!important;line-height:1.18!important}
             body.course-list-page .course-showcase-card>p{display:block!important;margin:0 22px 24px!important;overflow:visible!important;font-size:14.5px!important;line-height:1.65!important}
-            body.course-list-page .course-showcase-card .course-footer{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;margin:0!important;padding:16px 22px 22px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border-top:1px solid rgba(79,140,255,.14)!important}
-            body.course-list-page .course-showcase-card .course-actions{display:contents!important}
-            body.course-list-page .course-showcase-card .course-actions .btn{min-height:46px!important;height:46px!important;border-radius:10px!important;gap:0!important}
-            body.course-list-page .course-showcase-card .course-actions i{display:none!important}
+            body.course-list-page .course-showcase-card .course-footer{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;margin:0!important;padding:14px 18px 18px!important;display:block!important;background:#fff!important;border-top:0!important}
+            body.course-list-page .course-showcase-card .course-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;width:100%!important}
+            body.course-list-page .course-showcase-card .course-actions .btn{width:100%!important;min-width:0!important;min-height:46px!important;height:46px!important;border-radius:10px!important;gap:6px!important}
+            body.course-list-page .course-showcase-card .course-actions i{display:inline!important}
         }
         body.course-list-page .course-showcase-card .course-footer{
             left:22px!important;
@@ -124,26 +124,37 @@ if (!$courses) {
         @media (max-width:700px){
             body.course-list-page .course-showcase-card .course-footer{
                 position:static!important;
-                padding:16px 22px 22px!important;
+                left:auto!important;right:auto!important;bottom:auto!important;
+                padding:14px 18px 18px!important;
                 display:block!important;
+                background:#fff!important;
             }
             body.course-list-page .course-showcase-card .course-actions{
                 display:grid!important;
                 grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
                 gap:10px!important;
+                width:100%!important;
             }
             body.course-list-page .course-showcase-card .course-actions .btn{
+                width:100%!important;
+                min-width:0!important;
                 height:46px!important;
                 min-height:46px!important;
                 border-radius:10px!important;
                 font-size:13px!important;
+                white-space:nowrap!important;
+                overflow:hidden!important;
+                text-overflow:ellipsis!important;
+            }
+            body.course-list-page .course-showcase-card .course-actions i{
+                display:inline!important;
             }
             body.course-list-page .course-showcase-card .course-image{
                 width:100%!important;
                 height:220px!important;
                 min-height:220px!important;
                 max-height:220px!important;
-                margin:0 0 22px!important;
+                margin:0!important;
                 border-radius:0!important;
             }
         }
@@ -239,13 +250,45 @@ if (!$courses) {
                 font-size:18px!important;
             }
         }
+        @media (max-width:700px){
+            html body.course-list-page .course-showcase-card{
+                min-height:auto!important;
+                padding:0!important;
+            }
+            html body.course-list-page .course-showcase-card .course-footer{
+                position:static!important;
+                left:auto!important;
+                right:auto!important;
+                bottom:auto!important;
+                padding:14px 18px 18px!important;
+                display:block!important;
+                background:#fff!important;
+            }
+            html body.course-list-page .course-showcase-card .course-actions{
+                display:grid!important;
+                grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+                gap:10px!important;
+                width:100%!important;
+            }
+            html body.course-list-page .course-showcase-card .course-actions .btn{
+                width:100%!important;
+                min-width:0!important;
+                height:46px!important;
+                min-height:46px!important;
+                padding:0 10px!important;
+                font-size:13px!important;
+                white-space:nowrap!important;
+                overflow:hidden!important;
+                text-overflow:ellipsis!important;
+            }
+        }
     </style>
 </head>
 <body class="static-site course-list-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>

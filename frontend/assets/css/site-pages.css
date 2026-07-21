@@ -34934,6 +34934,1031 @@ html body.download-page .download-form textarea:focus {
         0 12px 28px rgba(0, 112, 255, .10) !important;
 }
 
+/* Home about image collage: stable, properly sized image frames. */
+html body.home-page .model-about-visual {
+    min-height: clamp(360px, 35vw, 430px) !important;
+    max-width: 560px !important;
+    margin-inline: auto !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+}
+
+html body.home-page .model-about-main {
+    left: 0 !important;
+    right: auto !important;
+    top: 28px !important;
+    width: 74% !important;
+    height: clamp(270px, 29vw, 345px) !important;
+    aspect-ratio: 16 / 10 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, .13) !important;
+}
+
+html body.home-page .model-about-float {
+    left: auto !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: auto !important;
+    z-index: 2 !important;
+    width: 34% !important;
+    height: clamp(118px, 13vw, 156px) !important;
+    aspect-ratio: 4 / 3 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, .14) !important;
+    animation: none !important;
+}
+
+html body.home-page .model-about-visual img {
+    transform: none !important;
+    filter: saturate(1) contrast(1) !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual {
+        min-height: auto !important;
+        max-width: 430px !important;
+        display: grid !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10 !important;
+        border-radius: 12px !important;
+        transform: none !important;
+    }
+
+    html body.home-page .model-about-float {
+        border: 0 !important;
+    }
+}
+
+/* Home mentor section: match the cleaned section heading and image sizing model. */
+html body.home-page .model-team-section .model-center-head {
+    max-width: 900px !important;
+    margin: 0 auto clamp(30px, 4vw, 46px) !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-team-section .model-label {
+    justify-content: center !important;
+    margin-inline: auto !important;
+}
+
+html body.home-page .model-team-section .model-center-head h2 {
+    max-width: 860px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    font-size: clamp(34px, 4.4vw, 58px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+}
+
+html body.home-page .model-team-grid {
+    grid-template-columns: repeat(4, minmax(210px, 1fr)) !important;
+    gap: clamp(18px, 2.4vw, 28px) !important;
+}
+
+html body.home-page .model-team-card {
+    min-height: 390px !important;
+    height: auto !important;
+    border-radius: 14px !important;
+}
+
+html body.home-page .model-team-card img {
+    width: 100% !important;
+    height: 270px !important;
+    aspect-ratio: 4 / 3 !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    transform: none !important;
+}
+
+@media (max-width: 1040px) {
+    html body.home-page .model-team-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 620px) {
+    html body.home-page .model-team-section .model-center-head h2 {
+        font-size: clamp(32px, 10vw, 42px) !important;
+    }
+
+    html body.home-page .model-team-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-team-card img {
+        height: auto !important;
+        aspect-ratio: 4 / 3 !important;
+    }
+}
+
+/* Absolute final home about collage fix: show all 3 images fully, no crop or overlay. */
+html body.home-page .model-about-visual,
+html body.home-page .model-about-visual.reveal,
+html body.home-page .model-about-visual.reveal.is-visible,
+html body.home-page .model-about-visual.reveal:not(.is-visible) {
+    position: relative !important;
+    width: min(100%, 570px) !important;
+    min-height: 445px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    overflow: visible !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+html body.home-page .model-about-visual::before {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .model-about-main,
+html body.home-page .model-about-visual .model-about-main,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-main,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-main {
+    position: absolute !important;
+    left: 0 !important;
+    top: 38px !important;
+    width: 76% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-float,
+html body.home-page .model-about-visual .model-about-float,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-float,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-float {
+    position: absolute !important;
+    z-index: 3 !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 34% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 10 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.15) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-visual::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    right: 8px !important;
+    bottom: 0 !important;
+    width: 40% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    background-color: #ffffff !important;
+    background-image: url("../images/optimized/home3-desktop.webp") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.13) !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        width: min(430px, 100%) !important;
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-visual .model-about-main,
+    html body.home-page .model-about-visual .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        object-fit: contain !important;
+        border: 0 !important;
+    }
+
+    html body.home-page .model-about-visual::after {
+        position: static !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Mobile home about image fix: stack images in normal flow before Featured Courses. */
+@media (max-width: 760px) {
+    html body.home-page .model-about {
+        overflow: visible !important;
+        padding-bottom: 42px !important;
+    }
+
+    html body.home-page .model-about-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        align-items: start !important;
+    }
+
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        position: relative !important;
+        width: min(100%, 430px) !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        overflow: visible !important;
+        clear: both !important;
+    }
+
+    html body.home-page .model-about-visual img,
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-visual .model-about-main,
+    html body.home-page .model-about-visual .model-about-float,
+    html body.home-page .model-about-visual.reveal.is-visible .model-about-main,
+    html body.home-page .model-about-visual.reveal.is-visible .model-about-float,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-main,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-float {
+        position: static !important;
+        inset: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        display: block !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+        border: 0 !important;
+        border-radius: 12px !important;
+        transform: none !important;
+    }
+
+    html body.home-page .model-about-visual::before,
+    html body.home-page .model-about-visual::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    html body.home-page .model-projects {
+        position: relative !important;
+        z-index: 1 !important;
+        clear: both !important;
+        padding-top: 58px !important;
+    }
+}
+
+/* Final signup popup cleanup: remove the plain top close bar. */
+html body.home-page .home-enroll-close,
+html body.home-page.enroll-popup-open .home-enroll-close {
+    display: none !important;
+}
+
+/* Absolute final home about collage fix: show all 3 images fully, no crop or overlay. */
+html body.home-page .model-about-visual,
+html body.home-page .model-about-visual.reveal,
+html body.home-page .model-about-visual.reveal.is-visible,
+html body.home-page .model-about-visual.reveal:not(.is-visible) {
+    position: relative !important;
+    width: min(100%, 570px) !important;
+    min-height: 445px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    overflow: visible !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+html body.home-page .model-about-visual::before {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .model-about-main,
+html body.home-page .model-about-visual .model-about-main,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-main,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-main {
+    position: absolute !important;
+    left: 0 !important;
+    top: 38px !important;
+    width: 76% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-float,
+html body.home-page .model-about-visual .model-about-float,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-float,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-float {
+    position: absolute !important;
+    z-index: 3 !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 34% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 10 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.15) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-visual::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    right: 8px !important;
+    bottom: 0 !important;
+    width: 40% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    background-color: #ffffff !important;
+    background-image: url("../images/optimized/home3-desktop.webp") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.13) !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        width: min(430px, 100%) !important;
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-visual .model-about-main,
+    html body.home-page .model-about-visual .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        object-fit: contain !important;
+        border: 0 !important;
+    }
+
+    html body.home-page .model-about-visual::after {
+        position: static !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Final about stats: white card model, same alignment, edge-to-edge within content. */
+html body.about-page .about-highlights,
+html body.static-site.about-page .about-highlights {
+    width: 100% !important;
+    max-width: none !important;
+    margin: clamp(26px, 3vw, 34px) 0 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+}
+
+html body.about-page .about-highlights span,
+html body.static-site.about-page .about-highlights span {
+    width: 100% !important;
+    height: 142px !important;
+    min-height: 142px !important;
+    display: grid !important;
+    grid-template-rows: 58px 24px !important;
+    align-content: center !important;
+    justify-items: center !important;
+    gap: 14px !important;
+    padding: 24px 18px !important;
+    text-align: center !important;
+    color: #233044 !important;
+    -webkit-text-fill-color: #233044 !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    line-height: 1.25 !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(119, 91, 255, 0.34) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.07) !important;
+}
+
+html body.about-page .about-highlights strong,
+html body.static-site.about-page .about-highlights strong {
+    height: 58px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #5b3fff !important;
+    -webkit-text-fill-color: #5b3fff !important;
+    font-size: clamp(44px, 4vw, 54px) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 700px) {
+    html body.about-page .about-highlights,
+    html body.static-site.about-page .about-highlights {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.about-page .about-highlights span,
+    html body.static-site.about-page .about-highlights span {
+        height: 126px !important;
+        min-height: 126px !important;
+        grid-template-rows: 48px 22px !important;
+    }
+
+    html body.about-page .about-highlights strong,
+    html body.static-site.about-page .about-highlights strong {
+        height: 48px !important;
+        font-size: 40px !important;
+    }
+}
+
+/* Final home hire card: move the blue-bar content into the white card. */
+html body.home-page .model-hire-title {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 18px !important;
+    color: #07142d !important;
+    -webkit-text-fill-color: #07142d !important;
+}
+
+html body.home-page .model-hire-title > span,
+html body.home-page .model-hire-title > h2 {
+    display: none !important;
+}
+
+html body.home-page .model-hire-title .model-hire-stat {
+    display: block !important;
+    margin: 0 !important;
+    color: #1d5bd8 !important;
+    -webkit-text-fill-color: #1d5bd8 !important;
+    font-size: clamp(58px, 5vw, 82px) !important;
+    font-weight: 900 !important;
+    line-height: 0.95 !important;
+    letter-spacing: 0 !important;
+}
+
+html body.home-page .model-hire-title p {
+    max-width: 390px !important;
+    margin: 0 !important;
+    color: #0d2343 !important;
+    -webkit-text-fill-color: #0d2343 !important;
+    font-size: clamp(18px, 1.5vw, 22px) !important;
+    font-weight: 900 !important;
+    line-height: 1.35 !important;
+}
+
+html body.home-page .model-hire-title ul {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    margin: 6px 0 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+html body.home-page .model-hire-title li {
+    min-height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    padding: 10px 12px !important;
+    color: #10203a !important;
+    -webkit-text-fill-color: #10203a !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    line-height: 1.25 !important;
+    border: 1px solid rgba(91, 131, 255, 0.2) !important;
+    border-radius: 10px !important;
+    background: #f7fbff !important;
+}
+
+html body.home-page .model-hire-title li i {
+    color: #0b82ff !important;
+    -webkit-text-fill-color: #0b82ff !important;
+    font-size: 14px !important;
+}
+
+@media (max-width: 640px) {
+    html body.home-page .model-hire-title ul {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-hire-title .model-hire-stat {
+        font-size: 52px !important;
+    }
+}
+
+/* Final home about image collage: cleaner crop, balanced spacing, no awkward cut-off. */
+html body.home-page .model-about-visual,
+html body.home-page .model-about-visual.reveal {
+    position: relative !important;
+    width: min(100%, 560px) !important;
+    min-height: 430px !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    display: block !important;
+}
+
+html body.home-page .model-about-main {
+    position: absolute !important;
+    left: 0 !important;
+    top: 34px !important;
+    width: 78% !important;
+    height: 338px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 0 !important;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12) !important;
+}
+
+html body.home-page .model-about-float {
+    position: absolute !important;
+    z-index: 3 !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 34% !important;
+    height: 128px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.15) !important;
+}
+
+html body.home-page .model-about-visual::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    right: 4px !important;
+    bottom: 0 !important;
+    width: 39% !important;
+    height: 132px !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    background-image: url("../images/optimized/home3-desktop.webp") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.13) !important;
+}
+
+html body.home-page .model-about-visual::before {
+    left: 34px !important;
+    bottom: 62px !important;
+    z-index: 4 !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal {
+        width: min(430px, 100%) !important;
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10 !important;
+        border: 0 !important;
+        object-fit: contain !important;
+    }
+
+    html body.home-page .model-about-visual::before,
+    html body.home-page .model-about-visual::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+/* Final home about right image fix: keep the visual visible and properly sized. */
+html body.home-page .model-about-grid {
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.9fr) !important;
+    gap: clamp(42px, 5vw, 72px) !important;
+    align-items: center !important;
+}
+
+html body.home-page .model-about-visual,
+html body.home-page .model-about-visual.reveal,
+html body.home-page .model-about-visual.reveal:not(.is-visible),
+html body.home-page .model-about-visual.reveal.is-visible {
+    position: relative !important;
+    display: block !important;
+    width: min(100%, 560px) !important;
+    min-height: clamp(360px, 34vw, 430px) !important;
+    margin: 0 auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+}
+
+html body.home-page .model-about-visual img,
+html body.home-page .model-about-visual.is-visible img,
+html body.home-page .model-about-visual.reveal:not(.is-visible) img {
+    position: absolute !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    transform: none !important;
+    filter: saturate(1.02) contrast(1.01) !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+html body.home-page .model-about-main {
+    top: 18px !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 76% !important;
+    height: clamp(285px, 29vw, 355px) !important;
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, .13) !important;
+    z-index: 1 !important;
+}
+
+html body.home-page .model-about-float {
+    top: auto !important;
+    left: auto !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 42% !important;
+    height: clamp(150px, 15vw, 190px) !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, .14) !important;
+    z-index: 2 !important;
+}
+
+@media (max-width: 980px) {
+    html body.home-page .model-about-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal {
+        width: min(100%, 560px) !important;
+        margin-inline: auto !important;
+    }
+}
+
+@media (max-width: 620px) {
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        display: grid !important;
+        gap: 14px !important;
+        min-height: 0 !important;
+    }
+
+    html body.home-page .model-about-visual img,
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10 !important;
+        border: 0 !important;
+        border-radius: 12px !important;
+    }
+}
+
+/* Final about stats equal alignment: same box size, different content preserved. */
+html body.about-page .about-highlights,
+html body.static-site.about-page .about-highlights {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: clamp(26px, 3vw, 34px) 0 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+html body.about-page .about-highlights span,
+html body.static-site.about-page .about-highlights span {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 142px !important;
+    height: 142px !important;
+    display: grid !important;
+    grid-template-rows: 58px 24px !important;
+    align-content: center !important;
+    justify-items: center !important;
+    row-gap: 12px !important;
+    padding: 22px 16px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+html body.about-page .about-highlights strong,
+html body.static-site.about-page .about-highlights strong {
+    width: 100% !important;
+    height: 58px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: clamp(36px, 3.5vw, 48px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+}
+
+@media (max-width: 780px) {
+    html body.about-page .about-highlights,
+    html body.static-site.about-page .about-highlights {
+        grid-template-columns: 1fr !important;
+        width: min(430px, 100%) !important;
+        margin-inline: auto !important;
+    }
+
+    html body.about-page .about-highlights span,
+    html body.static-site.about-page .about-highlights span {
+        height: 126px !important;
+        min-height: 126px !important;
+        grid-template-rows: 48px 22px !important;
+    }
+
+    html body.about-page .about-highlights strong,
+    html body.static-site.about-page .about-highlights strong {
+        height: 48px !important;
+        font-size: 40px !important;
+    }
+}
+
+/* Final course detail popup spacing: keep a clear gap below the sticky header on every page. */
+html body .course-detail-modal.is-open {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483000 !important;
+    display: block !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    padding: calc(var(--header-height, 86px) + 22px) 24px 28px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background: rgba(5, 14, 30, 0.72) !important;
+}
+
+html body .course-detail-modal.is-open .course-detail-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    background: rgba(5, 14, 30, 0.72) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+html body .course-detail-modal.is-open .course-detail-panel {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1 !important;
+    width: min(920px, calc(100vw - 48px)) !important;
+    max-width: 920px !important;
+    max-height: calc(100dvh - var(--header-height, 86px) - 54px) !important;
+    margin: 0 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-radius: 12px !important;
+}
+
+html body .course-detail-modal.is-open .course-detail-close {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+    z-index: 2 !important;
+}
+
+@media (max-width: 700px) {
+    html body .course-detail-modal.is-open {
+        padding: calc(var(--header-height, 78px) + 12px) 10px 10px !important;
+    }
+
+    html body .course-detail-modal.is-open .course-detail-panel {
+        width: 100% !important;
+        max-width: none !important;
+        max-height: calc(100dvh - var(--header-height, 78px) - 22px) !important;
+        padding-top: 58px !important;
+    }
+
+    html body .course-detail-modal.is-open .course-detail-close {
+        position: absolute !important;
+        top: 12px !important;
+        right: 12px !important;
+        margin: 0 !important;
+    }
+}
+
+/* Contact map: use a stable frame with a visible fallback link. */
+html body.contact-page .contact-map {
+    position: relative !important;
+    min-height: 520px !important;
+    overflow: hidden !important;
+    background: #eaf2fb !important;
+}
+
+html body.contact-page .contact-map iframe {
+    position: relative !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    min-height: 520px !important;
+    height: clamp(520px, 58vh, 680px) !important;
+    display: block !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+html body.contact-page .contact-map-fallback {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 12px !important;
+    color: #0b4db3 !important;
+    -webkit-text-fill-color: #0b4db3 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    font-weight: 900 !important;
+}
+
+html body.contact-page .contact-map-fallback i {
+    font-size: 38px !important;
+}
+
+@media (max-width: 760px) {
+    html body.contact-page .contact-map,
+    html body.contact-page .contact-map iframe {
+        min-height: 380px !important;
+        height: 380px !important;
+    }
+}
+
+/* Course cards: remove the double separator lines above action buttons. */
+html body.catalog-body .catalog-grid > .catalog-card .catalog-actions,
+html body.catalog-body.compact-catalog .catalog-grid > .catalog-card .catalog-actions,
+html body.course-list-page .course-showcase-card .course-footer,
+html body.course-list-page .course-showcase-card .course-actions {
+    border-top: 0 !important;
+    box-shadow: none !important;
+}
+
+html body.catalog-body .catalog-grid > .catalog-card > p,
+html body.course-list-page .course-showcase-card > p {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Secure brochure form additions: OTP and captcha controls match the existing form style. */
+html body.download-page .download-inline-control {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+}
+
+html body.download-page .download-small-btn {
+    min-width: 118px !important;
+    min-height: 46px !important;
+    padding: 0 14px !important;
+    border: 0 !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: linear-gradient(135deg, #4f8cff 0%, #d91cf6 100%) !important;
+    font: inherit !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+html body.download-page .download-small-btn:disabled,
+html body.download-page .download-form button:disabled {
+    cursor: not-allowed !important;
+    opacity: .62 !important;
+}
+
+html body.download-page .download-otp-status {
+    min-height: 18px !important;
+    color: #166534 !important;
+    -webkit-text-fill-color: #166534 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+}
+
+html body.download-page .download-otp-status i {
+    margin-right: 5px !important;
+}
+
+html body.download-page .download-captcha {
+    display: grid !important;
+    gap: 8px !important;
+    margin: 0 0 15px !important;
+}
+
+html body.download-page .download-captcha small {
+    color: #52627a !important;
+    -webkit-text-fill-color: #52627a !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+html body.download-page .download-form input.is-invalid,
+html body.download-page .download-form select.is-invalid,
+html body.download-page .download-form textarea.is-invalid {
+    border-color: rgba(220, 38, 38, .72) !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, .10) !important;
+}
+
+@media (max-width: 560px) {
+    html body.download-page .download-inline-control {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.download-page .download-small-btn {
+        width: 100% !important;
+    }
+}
+
 html body.download-page .download-form .btn,
 html body.download-page .download-form button[type="submit"] {
     width: 100% !important;
@@ -48637,5 +49662,925 @@ html body.home-page .model-service-center > img {
 
     html body.home-page .model-service-center {
         max-width: min(620px, 100%) !important;
+    }
+}
+
+/* Others menu icon fix: every submenu row uses a real compact icon. */
+html body .site-header .more-menu .nav-menu a.nav-menu-rich-link {
+    display: grid !important;
+    grid-template-columns: 32px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 12px !important;
+    color: #071a3a !important;
+    -webkit-text-fill-color: #071a3a !important;
+}
+
+html body .site-header .more-menu .nav-menu a.nav-menu-rich-link i {
+    position: static !important;
+    inset: auto !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+    opacity: 1 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    filter: none !important;
+}
+
+html body .site-header .more-menu .nav-menu a.nav-menu-rich-link span {
+    min-width: 0 !important;
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
+@media (max-width: 980px) {
+    html body .site-header .site-nav.open .more-menu .nav-menu a.nav-menu-rich-link,
+    html body.nav-open .site-header .site-nav.open .more-menu .nav-menu a.nav-menu-rich-link {
+        display: grid !important;
+        grid-template-columns: 32px minmax(0, 1fr) !important;
+        padding: 8px 12px !important;
+        min-height: 48px !important;
+    }
+}
+
+/* Home signup course dropdown: keep the arrow slightly inside the right edge. */
+html body.home-page .home-counselling-form select#home-course {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    padding-right: 42px !important;
+    background-color: #f7fbff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5l5 5 5-5' stroke='%23071a3a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 24px center !important;
+    background-size: 14px 14px !important;
+}
+
+/* AI chat header controls: always show back and exit buttons clearly. */
+html body.home-page .home-ai-head {
+    grid-template-columns: 38px minmax(0, 1fr) 38px !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back,
+html body.home-page .home-ai-head .home-ai-close {
+    position: relative !important;
+    z-index: 2 !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 12px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back::before,
+html body.home-page .home-ai-head .home-ai-close::before {
+    display: block !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-family: Arial, sans-serif !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back::before {
+    content: "<" !important;
+    font-size: 22px !important;
+}
+
+html body.home-page .home-ai-head .home-ai-close::before {
+    content: "x" !important;
+    font-size: 20px !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back i,
+html body.home-page .home-ai-head .home-ai-close i {
+    display: none !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back:hover,
+html body.home-page .home-ai-head .home-ai-back:focus-visible,
+html body.home-page .home-ai-head .home-ai-close:hover,
+html body.home-page .home-ai-head .home-ai-close:focus-visible {
+    background: rgba(255, 255, 255, 0.32) !important;
+}
+
+/* Contact info cards: remove the colored top border strip. */
+html body.contact-page .contact-card,
+html body.contact-page .contact-card:hover,
+html body.contact-page .contact-card:focus-within {
+    border-top: 0 !important;
+}
+
+/* Home stats cards: larger boxes with stronger text contrast. */
+html body.home-page .home-hero + .section .stats-grid {
+    width: min(1280px, calc(100% - 56px)) !important;
+    grid-template-columns: repeat(3, minmax(240px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+html body.home-page .home-hero + .section .stat-card {
+    min-height: 164px !important;
+    padding: 28px 34px !important;
+    border: 1px solid rgba(91, 63, 255, 0.28) !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08) !important;
+}
+
+html body.home-page .home-hero + .section .stat-card strong {
+    color: #4f3cff !important;
+    -webkit-text-fill-color: #4f3cff !important;
+    font-size: clamp(46px, 4.4vw, 64px) !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+}
+
+html body.home-page .home-hero + .section .stat-card span {
+    margin-top: 16px !important;
+    color: #172033 !important;
+    -webkit-text-fill-color: #172033 !important;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+}
+
+@media (max-width: 860px) {
+    html body.home-page .home-hero + .section .stats-grid {
+        grid-template-columns: 1fr !important;
+        width: min(430px, calc(100% - 32px)) !important;
+    }
+}
+
+html.enroll-popup-open,
+html body.enroll-popup-open {
+    overflow: hidden !important;
+}
+
+html body.home-page.enroll-popup-open::before {
+    content: "" !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10090 !important;
+    background: rgba(4, 13, 34, 0.62) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+html body.home-page.enroll-popup-open .hero-counselling-form,
+html body.home-page.enroll-popup-open .hero-slider-col .home-counselling-card {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    z-index: 10100 !important;
+    display: block !important;
+    width: min(390px, calc(100vw - 32px)) !important;
+    max-height: calc(100vh - 36px) !important;
+    overflow-y: auto !important;
+    transform: translate(-50%, -50%) !important;
+    border-top: 7px solid #c51cff !important;
+}
+
+html body.home-page.enroll-popup-open .home-enroll-close {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #527dff, #c21cf2) !important;
+    cursor: pointer !important;
+}
+
+html body.home-page.enroll-popup-open .home-counselling-card h2 {
+    padding-right: 46px !important;
+}
+
+/* Download student details form: remove top color strip and red invalid borders. */
+html body.download-page .download-form,
+html body.download-page .download-form:hover,
+html body.download-page .download-form:focus-within {
+    border-top: 1px solid rgba(79, 140, 255, .22) !important;
+}
+
+html body.download-page .download-form::before {
+    display: none !important;
+    content: none !important;
+}
+
+html body.download-page .download-form input,
+html body.download-page .download-form select,
+html body.download-page .download-form textarea,
+html body.download-page .download-form input:invalid,
+html body.download-page .download-form select:invalid,
+html body.download-page .download-form textarea:invalid,
+html body.download-page .download-form input:user-invalid,
+html body.download-page .download-form select:user-invalid,
+html body.download-page .download-form textarea:user-invalid,
+html body.download-page .download-form input:invalid:not(:placeholder-shown),
+html body.download-page .download-form select:invalid:not(:focus),
+html body.download-page .download-form textarea:invalid:not(:placeholder-shown) {
+    border-color: rgba(79, 140, 255, .24) !important;
+    background: #f8fbff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.86) !important;
+}
+
+html body.download-page .download-form input:focus,
+html body.download-page .download-form select:focus,
+html body.download-page .download-form textarea:focus {
+    border-color: #009dff !important;
+    background: #ffffff !important;
+    box-shadow:
+        0 0 0 4px rgba(0, 168, 255, .12),
+        0 12px 28px rgba(0, 112, 255, .10) !important;
+}
+
+html body.download-page .download-form [hidden] {
+    display: none !important;
+}
+
+/* Download form final sizing: compact student details form with strict name/mobile fields. */
+html body.download-page .download-layout {
+    align-items: start !important;
+}
+
+html body.download-page .download-form,
+html body.download-page .download-form:hover,
+html body.download-page .download-form:focus-within {
+    max-width: 470px !important;
+    padding: 32px 36px !important;
+    border-radius: 10px !important;
+}
+
+html body.download-page .download-form h2 {
+    margin-bottom: 22px !important;
+    font-size: 28px !important;
+}
+
+html body.download-page .download-form label {
+    gap: 7px !important;
+    margin-bottom: 13px !important;
+}
+
+html body.download-page .download-form input,
+html body.download-page .download-form select,
+html body.download-page .download-form textarea {
+    min-height: 44px !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+}
+
+html body.download-page .download-form textarea {
+    min-height: 76px !important;
+}
+
+html body.download-page .download-inline-control {
+    gap: 10px !important;
+}
+
+html body.download-page .download-small-btn {
+    min-width: 112px !important;
+    min-height: 44px !important;
+    border-radius: 4px !important;
+}
+
+html body.download-page .download-form .btn,
+html body.download-page .download-form button[type="submit"] {
+    min-height: 48px !important;
+    margin-top: 4px !important;
+    border-radius: 8px !important;
+}
+
+@media (max-width: 980px) {
+    html body.download-page .download-form,
+    html body.download-page .download-form:hover,
+    html body.download-page .download-form:focus-within {
+        max-width: 470px !important;
+        margin-inline: auto !important;
+    }
+}
+
+@media (max-width: 560px) {
+    html body.download-page .download-form,
+    html body.download-page .download-form:hover,
+    html body.download-page .download-form:focus-within {
+        max-width: 100% !important;
+        padding: 24px 20px !important;
+    }
+}
+
+/* Final mentor section alignment and image sizing override. */
+html body.home-page .model-team-section .model-center-head {
+    max-width: 900px !important;
+    margin: 0 auto clamp(30px, 4vw, 46px) !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-team-section .model-label {
+    justify-content: center !important;
+    margin-inline: auto !important;
+}
+
+html body.home-page .model-team-section .model-center-head h2 {
+    max-width: 860px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    font-size: clamp(34px, 4.4vw, 58px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+}
+
+html body.home-page .model-team-grid {
+    grid-template-columns: repeat(4, minmax(210px, 1fr)) !important;
+    gap: clamp(18px, 2.4vw, 28px) !important;
+}
+
+html body.home-page .model-team-card {
+    min-height: 390px !important;
+    height: auto !important;
+    border-radius: 14px !important;
+}
+
+html body.home-page .model-team-card img {
+    width: 100% !important;
+    height: 270px !important;
+    aspect-ratio: 4 / 3 !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    transform: none !important;
+}
+
+@media (max-width: 1040px) {
+    html body.home-page .model-team-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 620px) {
+    html body.home-page .model-team-section .model-center-head h2 {
+        font-size: clamp(32px, 10vw, 42px) !important;
+    }
+
+    html body.home-page .model-team-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    html body.home-page .model-team-card img {
+        height: auto !important;
+        aspect-ratio: 4 / 3 !important;
+    }
+}
+
+/* Absolute final home about collage fix: show all 3 images fully, no crop or overlay. */
+html body.home-page .model-about-visual,
+html body.home-page .model-about-visual.reveal,
+html body.home-page .model-about-visual.reveal.is-visible,
+html body.home-page .model-about-visual.reveal:not(.is-visible) {
+    position: relative !important;
+    width: min(100%, 570px) !important;
+    min-height: 445px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    overflow: visible !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+html body.home-page .model-about-visual::before {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .model-about-main,
+html body.home-page .model-about-visual .model-about-main,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-main,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-main {
+    position: absolute !important;
+    left: 0 !important;
+    top: 38px !important;
+    width: 76% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-float,
+html body.home-page .model-about-visual .model-about-float,
+html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-float,
+html body.home-page .model-about-visual.reveal.is-visible .model-about-float {
+    position: absolute !important;
+    z-index: 3 !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 34% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 10 !important;
+    display: block !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.15) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+html body.home-page .model-about-visual::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    right: 8px !important;
+    bottom: 0 !important;
+    width: 40% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    border: 6px solid #ffffff !important;
+    border-radius: 14px !important;
+    background-color: #ffffff !important;
+    background-image: url("../images/optimized/home3-desktop.webp") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.13) !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        width: min(430px, 100%) !important;
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-visual .model-about-main,
+    html body.home-page .model-about-visual .model-about-float {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        object-fit: contain !important;
+        border: 0 !important;
+    }
+
+    html body.home-page .model-about-visual::after {
+        position: static !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Mobile home about image fix: stack images in normal flow before Featured Courses. */
+@media (max-width: 760px) {
+    html body.home-page .model-about {
+        overflow: visible !important;
+        padding-bottom: 42px !important;
+    }
+
+    html body.home-page .model-about-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        align-items: start !important;
+    }
+
+    html body.home-page .model-about-visual,
+    html body.home-page .model-about-visual.reveal,
+    html body.home-page .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) {
+        position: relative !important;
+        width: min(100%, 430px) !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        overflow: visible !important;
+        clear: both !important;
+    }
+
+    html body.home-page .model-about-visual img,
+    html body.home-page .model-about-main,
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-visual .model-about-main,
+    html body.home-page .model-about-visual .model-about-float,
+    html body.home-page .model-about-visual.reveal.is-visible .model-about-main,
+    html body.home-page .model-about-visual.reveal.is-visible .model-about-float,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-main,
+    html body.home-page .model-about-visual.reveal:not(.is-visible) .model-about-float {
+        position: static !important;
+        inset: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
+        display: block !important;
+        object-fit: contain !important;
+        object-position: center center !important;
+        border: 0 !important;
+        border-radius: 12px !important;
+        transform: none !important;
+    }
+
+    html body.home-page .model-about-visual::before,
+    html body.home-page .model-about-visual::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    html body.home-page .model-projects {
+        position: relative !important;
+        z-index: 1 !important;
+        clear: both !important;
+        padding-top: 58px !important;
+    }
+}
+
+/* === About collage: 3 images fully visible === */
+html body.home-page .model-about-visual::after,
+html body.home-page .model-about-visual::before {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .model-about-visual {
+    position: relative !important;
+    width: min(100%, 570px) !important;
+    min-height: 460px !important;
+    display: block !important;
+    overflow: visible !important;
+}
+
+html body.home-page .model-about-main {
+    position: absolute !important;
+    left: 0 !important;
+    top: 30px !important;
+    width: 64% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+    object-fit: cover !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 58px rgba(15,23,42,.14) !important;
+    display: block !important;
+    transform: none !important;
+}
+
+html body.home-page .model-about-float {
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 34% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    border: 4px solid #fff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 40px rgba(15,23,42,.15) !important;
+    display: block !important;
+    z-index: 3 !important;
+    transform: none !important;
+}
+
+html body.home-page .model-about-third {
+    position: absolute !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 34% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    border: 4px solid #fff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 40px rgba(15,23,42,.13) !important;
+    display: block !important;
+    z-index: 3 !important;
+    transform: none !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about-visual {
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+    html body.home-page .model-about-main {
+        position: static !important;
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        aspect-ratio: 3 / 2 !important;
+    }
+    html body.home-page .model-about-float,
+    html body.home-page .model-about-third {
+        position: static !important;
+        width: 100% !important;
+        aspect-ratio: 1 / 1 !important;
+        border: 3px solid #fff !important;
+    }
+}
+
+
+/* ============================================================
+   TT STAT CARDS — Premium SaaS redesign
+   ============================================================ */
+html body.about-page .tt-stat-row,
+html body.static-site.about-page .tt-stat-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 24px !important;
+    margin-top: 36px !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+html body.about-page .tt-stat-card,
+html body.static-site.about-page .tt-stat-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    padding: 40px 32px !important;
+    background: #ffffff !important;
+    border: 1px solid #C7C3FF !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 30px rgba(99,102,241,0.08) !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+    cursor: default !important;
+    min-height: 0 !important;
+}
+
+html body.about-page .tt-stat-card:hover,
+html body.static-site.about-page .tt-stat-card:hover {
+    transform: translateY(-8px) !important;
+    border-color: #6C63FF !important;
+    box-shadow: 0 20px 40px rgba(91,75,255,0.18) !important;
+}
+
+html body.about-page .tt-stat-num,
+html body.static-site.about-page .tt-stat-num {
+    display: block !important;
+    font-size: 56px !important;
+    font-weight: 800 !important;
+    color: #5B4BFF !important;
+    line-height: 1 !important;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif) !important;
+    white-space: nowrap !important;
+}
+
+html body.about-page .tt-stat-title,
+html body.static-site.about-page .tt-stat-title {
+    display: block !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    color: #4B5563 !important;
+    line-height: 1.4 !important;
+    white-space: nowrap !important;
+}
+
+/* Responsive — tablet */
+@media (max-width: 900px) {
+    html body.about-page .tt-stat-row,
+    html body.static-site.about-page .tt-stat-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    html body.about-page .tt-stat-card:last-child,
+    html body.static-site.about-page .tt-stat-card:last-child {
+        grid-column: 1 / -1 !important;
+        max-width: calc(50% - 12px) !important;
+        margin-inline: auto !important;
+    }
+}
+
+/* Responsive — mobile */
+@media (max-width: 560px) {
+    html body.about-page .tt-stat-row,
+    html body.static-site.about-page .tt-stat-row {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    html body.about-page .tt-stat-card:last-child,
+    html body.static-site.about-page .tt-stat-card:last-child {
+        grid-column: auto !important;
+        max-width: 100% !important;
+        margin-inline: 0 !important;
+    }
+    html body.about-page .tt-stat-num,
+    html body.static-site.about-page .tt-stat-num {
+        font-size: 44px !important;
+    }
+    html body.about-page .tt-stat-title,
+    html body.static-site.about-page .tt-stat-title {
+        font-size: 16px !important;
+        white-space: normal !important;
+    }
+}
+
+/* Final mobile polish: keep header brand and menu aligned, and place image-card icons cleanly. */
+@media (max-width: 700px) {
+    html body .site-header,
+    html body.home-page .site-header,
+    html body.static-site .site-header {
+        --header-height: 58px !important;
+        min-height: 58px !important;
+    }
+
+    html body .site-header .nav-wrap,
+    html body.home-page .site-header .nav-wrap,
+    html body.static-site .site-header .nav-wrap {
+        min-height: 58px !important;
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 36px !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 6px 7px !important;
+    }
+
+    html body .site-header .brand,
+    html body.home-page .site-header .brand,
+    html body.static-site .site-header .brand {
+        min-height: 46px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        display: grid !important;
+        grid-template-columns: 44px minmax(0, 1fr) !important;
+        align-items: center !important;
+        gap: 7px !important;
+        overflow: hidden !important;
+    }
+
+    html body .site-header .brand-mark.logo-mark,
+    html body.home-page .site-header .brand-mark.logo-mark,
+    html body.static-site .site-header .brand-mark.logo-mark {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
+    }
+
+    html body .site-header .brand > span:last-child,
+    html body.home-page .site-header .brand > span:last-child,
+    html body.static-site .site-header .brand > span:last-child {
+        min-width: 0 !important;
+        max-width: none !important;
+        overflow: hidden !important;
+    }
+
+    html body .site-header .brand-name,
+    html body.home-page .site-header .brand-name,
+    html body.static-site .site-header .brand-name {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        overflow: hidden !important;
+        text-overflow: clip !important;
+        white-space: nowrap !important;
+        font-size: clamp(16px, 5vw, 22px) !important;
+        line-height: 1 !important;
+        letter-spacing: 0 !important;
+    }
+
+    html body .site-header .brand-sub,
+    html body.home-page .site-header .brand-sub,
+    html body.static-site .site-header .brand-sub {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 3px !important;
+        display: block !important;
+        overflow: hidden !important;
+        text-overflow: clip !important;
+        white-space: nowrap !important;
+        font-size: clamp(6px, 1.8vw, 8.5px) !important;
+        line-height: 1 !important;
+        letter-spacing: clamp(1.5px, .7vw, 3px) !important;
+    }
+
+    html body .site-header .menu-button,
+    html body.home-page .site-header .menu-button,
+    html body.static-site .site-header .menu-button {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
+        padding: 0 !important;
+        border-radius: 10px !important;
+        justify-self: end !important;
+        align-self: center !important;
+    }
+
+    html body .rich-detail-card,
+    html body.static-site .rich-detail-card {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    html body .rich-detail-card .rich-detail-image,
+    html body.static-site .rich-detail-card .rich-detail-image {
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    html body .rich-detail-card .rich-detail-body,
+    html body.static-site .rich-detail-card .rich-detail-body {
+        position: relative !important;
+        padding: 38px 28px 28px !important;
+    }
+
+    html body .rich-detail-card .rich-detail-body > i,
+    html body.static-site .rich-detail-card .rich-detail-body > i {
+        position: absolute !important;
+        left: 28px !important;
+        top: -29px !important;
+        width: 58px !important;
+        height: 58px !important;
+        min-width: 58px !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 1px solid rgba(255, 255, 255, .62) !important;
+        border-radius: 14px !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        background: linear-gradient(135deg, #4f8cff 0%, #8b5cf6 56%, #d91cf6 100%) !important;
+        box-shadow: 0 14px 30px rgba(79, 140, 255, .22) !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        z-index: 3 !important;
+    }
+}
+
+/* Mobile fix: force 2-column enquiry+download buttons on course cards */
+@media (max-width: 700px) {
+    html body.course-list-page .course-showcase-card {
+        min-height: auto !important;
+        padding: 0 !important;
+    }
+
+    html body.course-list-page .course-showcase-card .course-footer {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 14px 18px 18px !important;
+        display: block !important;
+        background: #fff !important;
+    }
+
+    html body.course-list-page .course-showcase-card .course-actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    html body.course-list-page .course-showcase-card .course-actions .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 46px !important;
+        min-height: 46px !important;
+        padding: 0 10px !important;
+        font-size: 13px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 }

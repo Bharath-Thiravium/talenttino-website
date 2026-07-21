@@ -2,8 +2,9 @@
 require_once __DIR__ . '/includes/site-data.php';
 
 $settings = tt_settings();
-$homeWhatsappPhone = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
-$homeWhatsappUrl = 'https://web.whatsapp.com/send?phone=' . $homeWhatsappPhone . '&text=' . rawurlencode('Hello Talentteno, I would like course information.');
+$homePhoneLink = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
+$homeWhatsappPhone = '918248415023';
+$homeWhatsappUrl = 'https://wa.me/' . $homeWhatsappPhone . '?text=' . rawurlencode('Hello Talentteno, I would like course information.');
 $allCourses = tt_courses();
 $featuredCourses = tt_courses(6, true);
 $services = tt_services(6);
@@ -19,6 +20,7 @@ $homeFirstHeroPreload = tt_home_optimized_image($homeFirstHeroImage, 1400) ?: $h
 $homeFirstHeroSrcset = tt_home_optimized_srcset($homeFirstHeroImage, [430, 900, 1400]);
 $homeFirstHeroMobilePreload = tt_home_optimized_image($homeFirstHeroMobileImage, 430) ?: $homeFirstHeroMobileImage;
 $homeFirstHeroMobileSrcset = tt_home_optimized_srcset($homeFirstHeroMobileImage, [430, 900]);
+$homeFormResult = null;
 function tt_home_css_asset_url(string $url): string
 {
     if (str_starts_with($url, 'uploads/')) {
@@ -31,7 +33,6 @@ function tt_home_css_asset_url(string $url): string
 
     return $url;
 }
-$homeFormResult = null;
 $fallbackCourses = [
     ['title' => 'Full Stack Development', 'category' => 'Development', 'short_desc' => 'Frontend, backend, database and deployment training with project practice.', 'description' => 'Complete full stack development training with live project support.', 'fee' => 15000, 'original_fee' => 25000],
     ['title' => 'Data Science & AI', 'category' => 'Data & AI', 'short_desc' => 'Python, analytics, machine learning basics and AI project workflow.', 'description' => 'Practical data science and AI training for job-ready skills.', 'fee' => 18000, 'original_fee' => 30000],
@@ -254,7 +255,7 @@ function tt_home_image_src(string $image, int $preferredWidth): string
     return tt_home_optimized_image($image, $preferredWidth) ?: $image;
 }
 
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_source'] ?? ''), ['home_counselling', 'home_signup'], true)) {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?? '') === 'home_signup') {
     $homeFormResult = tt_submit_enquiry($_POST, 'enquiry');
 }
 ?>
@@ -291,13 +292,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
         @media(max-width:980px){html body.nav-open,html.nav-open{overflow:hidden!important}html body .site-header{--header-height:78px!important;background:#fff!important;border-bottom:1px solid #d8e8ff!important;box-shadow:none!important}html body .site-header .nav-wrap{width:100%!important;min-height:77px!important;margin:0!important;padding:8px 7px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 48px!important;gap:8px!important;background:#fff!important}html body .site-header .brand{min-width:0!important;gap:10px!important}html body .site-header .brand-mark.logo-mark{width:56px!important;height:56px!important;min-width:56px!important;border-radius:12px!important}html body .site-header .brand-name{max-width:calc(100vw - 134px)!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:25px!important}html body .site-header .brand-sub{max-width:calc(100vw - 134px)!important;overflow:hidden!important;white-space:nowrap!important;font-size:11px!important;letter-spacing:4px!important}html body .site-header .menu-button{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;justify-self:end!important;border:1px solid #b9d8ff!important;border-radius:12px!important;color:#0750d8!important;background:#eff7ff!important}html body.nav-open .site-header .site-nav.open{position:fixed!important;inset:var(--header-height) 0 0 0!important;width:100vw!important;height:calc(100vh - var(--header-height))!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:10px!important;padding:12px 7px 26px!important;overflow-y:auto!important;border-top:1px solid #d8e8ff!important;border-radius:0!important;background:#edf6ff!important;z-index:10040!important}html body.nav-open .site-header .site-nav.open>a,html body.nav-open .site-header .site-nav.open>.nav-item>a,html body.nav-open .site-header .site-nav.open .nav-enroll-cta{width:100%!important;min-height:54px!important;height:54px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;margin:0!important;padding:0 16px!important;color:#061632!important;border:1px solid #cfe3ff!important;border-radius:14px!important;background:rgba(255,255,255,.9)!important;text-align:left!important}html body.nav-open .site-header .site-nav.open>.nav-item>a{justify-content:space-between!important}html body.nav-open .site-header .site-nav.open .nav-item{width:100%!important;height:auto!important;display:flex!important;flex-direction:column!important;align-items:stretch!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu.open .nav-menu{position:static!important;width:100%!important;display:grid!important;gap:6px!important;margin:8px 0 0!important;padding:8px!important;border:1px solid #d6e7ff!important;border-radius:14px!important;background:#fff!important;opacity:1!important;visibility:visible!important;transform:none!important}html body.nav-open .site-header .site-nav.open .nav-item.has-menu:not(.open) .nav-menu{display:none!important}html body.nav-open .site-header .site-nav.open .nav-enroll-cta{justify-content:center!important;color:#fff!important;border:0!important;background:linear-gradient(135deg,#5d82ff 0%,#c51cff 100%)!important}}
     </style>
     <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260720-servicefullview1">
+    <style>
+        html body.home-page .home-enroll-modal{display:none!important}
+        html body.home-page.enroll-popup-open::before{content:""!important;position:fixed!important;inset:0!important;z-index:10090!important;background:rgba(4,13,34,.62)!important;backdrop-filter:blur(8px)!important}
+        html body.home-page.enroll-popup-open .home-enroll-modal{position:fixed!important;top:50%!important;left:50%!important;right:auto!important;z-index:10100!important;display:block!important;width:min(390px,calc(100vw - 32px))!important;max-height:calc(100vh - 36px)!important;overflow-y:auto!important;transform:translate(-50%,-50%)!important;border-top:7px solid #c51cff!important}
+        html body.home-page .home-enroll-close{position:absolute!important;top:12px!important;right:12px!important;width:38px!important;height:38px!important;display:inline-grid!important;place-items:center!important;border:0!important;border-radius:12px!important;color:#fff!important;background:linear-gradient(135deg,#527dff,#c21cf2)!important;cursor:pointer!important}
+        html body.home-page .home-enroll-modal h2{padding-right:46px!important}
+    </style>
 </head>
-<body class="static-site home-page">
+<body class="static-site home-page<?= $homeFormResult ? ' enroll-popup-open' : '' ?>">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
             <a class="brand" href="index.php">
-                <span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span>
+                <span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span>
                 <span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span>
             </a>
             <nav class="site-nav">
@@ -368,36 +376,38 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                         </div>
                         <?php endif; ?>
                     </div>
-                    <div class="home-counselling-card hero-counselling-form" id="home-signup">
-                        <h2>Sign Up for Free Counselling</h2>
-                        <p>Share your details. Our admission counsellor will contact you.</p>
-                        <?php if ($homeFormResult): ?>
-                        <div class="form-alert <?= $homeFormResult['ok'] ? 'success' : 'error' ?>" role="<?= $homeFormResult['ok'] ? 'status' : 'alert' ?>"><?= tt_h($homeFormResult['message']) ?></div>
-                        <?php endif; ?>
-                        <form class="home-counselling-form" method="POST" action="index.php#home-signup">
-                            <input type="hidden" name="form_source" value="home_signup">
-                            <input type="hidden" name="message" value="Home page sign up form - free course counselling request.">
-                            <label class="sr-only" for="home-name">Your full name</label>
-                            <input id="home-name" type="text" name="name" placeholder="Your Full Name" autocomplete="name" minlength="2" maxlength="80" required>
-                            <label class="sr-only" for="home-phone">Phone number</label>
-                            <input id="home-phone" type="tel" name="phone" placeholder="10 Digit Mobile Number" autocomplete="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required>
-                            <label class="sr-only" for="home-email">Email address</label>
-                            <input id="home-email" type="email" name="email" placeholder="Email Address" autocomplete="email" maxlength="190" required>
-                            <label class="sr-only" for="home-course">Course of interest</label>
-                            <select id="home-course" name="course" required>
-                                <option value="">Select Course</option>
-                                <?php foreach ($allCourses as $course): ?>
-                                <option><?= tt_h($course['title']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <label class="form-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-                            <button type="submit">Sign Up Now <i class="fa-solid fa-arrow-right"></i></button>
-                        </form>
-                        <span class="form-note"><i class="fa-solid fa-shield-halved"></i> 100% Free. No Spam.</span>
-                    </div>
                 </div>
             </div>
         </section>
+
+        <div class="home-counselling-card hero-counselling-form home-enroll-modal" id="home-signup" role="dialog" aria-modal="true" aria-labelledby="home-signup-title" aria-hidden="<?= $homeFormResult ? 'false' : 'true' ?>">
+            <button class="home-enroll-close" type="button" data-enroll-close aria-label="Close enrolment form"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <h2 id="home-signup-title">Sign Up for Free Counselling</h2>
+            <p>Share your details. Our admission counsellor will contact you.</p>
+            <?php if ($homeFormResult): ?>
+            <div class="form-alert <?= $homeFormResult['ok'] ? 'success' : 'error' ?>" role="<?= $homeFormResult['ok'] ? 'status' : 'alert' ?>"><?= tt_h($homeFormResult['message']) ?></div>
+            <?php endif; ?>
+            <form class="home-counselling-form" method="POST" action="index.php#home-signup">
+                <input type="hidden" name="form_source" value="home_signup">
+                <input type="hidden" name="message" value="Home page enrolment form - free course counselling request.">
+                <label class="sr-only" for="home-name">Your full name</label>
+                <input id="home-name" type="text" name="name" placeholder="Your Full Name" autocomplete="name" minlength="2" maxlength="80" required>
+                <label class="sr-only" for="home-phone">Phone number</label>
+                <input id="home-phone" type="tel" name="phone" placeholder="10 Digit Mobile Number" autocomplete="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required>
+                <label class="sr-only" for="home-email">Email address</label>
+                <input id="home-email" type="email" name="email" placeholder="Email Address" autocomplete="email" maxlength="190" required>
+                <label class="sr-only" for="home-course">Course of interest</label>
+                <select id="home-course" name="course" required>
+                    <option value="">Select Course</option>
+                    <?php foreach ($allCourses as $course): ?>
+                    <option><?= tt_h($course['title']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <label class="form-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                <button type="submit">Sign Up Now <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+            <span class="form-note"><i class="fa-solid fa-shield-halved"></i> 100% Free. No Spam.</span>
+        </div>
 
         <section class="model-section model-about">
             <div class="site-container model-about-grid">
@@ -418,37 +428,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                     <img class="model-about-main" src="<?= tt_h(tt_home_image_src($aboutMainImage, 800)) ?>"<?= $aboutMainSrcset !== '' ? ' srcset="' . tt_h($aboutMainSrcset) . '" sizes="(max-width: 767px) 100vw, 645px"' : '' ?> alt="Full stack project training visual" loading="lazy" decoding="async" width="645" height="430">
                     <?php $aboutFloatImage = 'assets/images/home2.webp'; $aboutFloatSrcset = tt_home_optimized_srcset($aboutFloatImage, [430, 900]); ?>
                     <img class="model-about-float" src="<?= tt_h(tt_home_image_src($aboutFloatImage, 430)) ?>"<?= $aboutFloatSrcset !== '' ? ' srcset="' . tt_h($aboutFloatSrcset) . '" sizes="220px"' : '' ?> alt="Students learning with mentor" loading="lazy" decoding="async" width="220" height="147">
-                </div>
-            </div>
-        </section>
-
-        <section class="model-section model-services">
-            <div class="site-container">
-                <div class="model-split-head reveal">
-                    <div><span class="model-label">IT Services</span><h2>Our career-focused training programs</h2></div>
-                    <p>Each course combines classroom learning, guided practice, assignments, project work and career preparation for students who want practical confidence.</p>
-                </div>
-                <div class="model-services-layout">
-                    <div class="model-service-stack">
-                        <?php foreach (array_slice($popularTracks, 0, 2) as $course): ?>
-                        <article class="model-service-card reveal">
-                            <span><i class="fa-solid <?= tt_h(tt_home_course_icon($course)) ?>"></i></span>
-                            <h3><?= tt_h($course['title']) ?></h3>
-                            <p><?= tt_h(tt_home_course_summary($course)) ?></p>
-                        </article>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php $serviceCenterImage = 'assets/images/home1.webp'; $serviceCenterSrcset = tt_home_optimized_srcset($serviceCenterImage, [430, 900]); ?>
-                    <div class="model-service-center reveal"><a href="course.php">View More Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a><img src="<?= tt_h(tt_home_image_src($serviceCenterImage, 900)) ?>"<?= $serviceCenterSrcset !== '' ? ' srcset="' . tt_h($serviceCenterSrcset) . '" sizes="(max-width: 767px) 100vw, 430px"' : '' ?> alt="IT training discussion" loading="lazy" decoding="async" width="430" height="287"></div>
-                    <div class="model-service-stack">
-                        <?php foreach (array_slice($popularTracks, 2, 2) as $course): ?>
-                        <article class="model-service-card reveal">
-                            <span><i class="fa-solid <?= tt_h(tt_home_course_icon($course)) ?>"></i></span>
-                            <h3><?= tt_h($course['title']) ?></h3>
-                            <p><?= tt_h(tt_home_course_summary($course)) ?></p>
-                        </article>
-                        <?php endforeach; ?>
-                    </div>
+                    <?php $aboutThirdImage = 'assets/images/home3.webp'; $aboutThirdSrcset = tt_home_optimized_srcset($aboutThirdImage, [430, 900]); ?>
+                    <img class="model-about-third" src="<?= tt_h(tt_home_image_src($aboutThirdImage, 430)) ?>"<?= $aboutThirdSrcset !== '' ? ' srcset="' . tt_h($aboutThirdSrcset) . '" sizes="220px"' : '' ?> alt="AI and technology training" loading="lazy" decoding="async" width="220" height="147">
                 </div>
             </div>
         </section>
@@ -528,14 +509,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
                 <div class="model-hire-hero reveal">
                     <?php $hireImage = 'assets/images/home4.webp'; $hireImageSrcset = tt_home_optimized_srcset($hireImage, [430, 900]); ?>
                     <img src="<?= tt_h(tt_home_image_src($hireImage, 900)) ?>"<?= $hireImageSrcset !== '' ? ' srcset="' . tt_h($hireImageSrcset) . '" sizes="(max-width: 767px) 100vw, 700px"' : '' ?> alt="Students discussing project work" loading="lazy" decoding="async" width="700" height="467">
-                    <div class="model-hire-title"><span>Why students choose</span><h2>Talentteno Institute</h2></div>
+                    <div class="model-hire-title">
+                        <strong class="model-hire-stat">90%</strong>
+                        <p>Skill confidence improvement through practice-led learning</p>
+                        <ul>
+                            <li><i class="fa-solid fa-check"></i> Updated IT Lab Practice</li>
+                            <li><i class="fa-solid fa-check"></i> Experienced Trainers</li>
+                            <li><i class="fa-solid fa-check"></i> Live Project Training</li>
+                            <li><i class="fa-solid fa-check"></i> Placement Guidance</li>
+                        </ul>
+                    </div>
                     <aside><ul><li><i class="fa-solid fa-circle-check"></i> Mentor-led classes</li><li><i class="fa-solid fa-circle-check"></i> Project practice</li><li><i class="fa-solid fa-circle-check"></i> Interview guidance</li><li><i class="fa-solid fa-circle-check"></i> Placement support</li></ul><strong>90%</strong><span>Skill confidence improvement through practice-led learning</span></aside>
-                </div>
-                <div class="model-hire-points">
-                    <div><i class="fa-solid fa-check"></i><span>Updated IT Lab Practice</span></div>
-                    <div><i class="fa-solid fa-check"></i><span>Experienced Trainers</span></div>
-                    <div><i class="fa-solid fa-check"></i><span>Live Project Training</span></div>
-                    <div><i class="fa-solid fa-check"></i><span>Placement Guidance</span></div>
                 </div>
             </div>
         </section>
@@ -590,7 +574,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array(($_POST['form_s
     </main>
     <div class="home-social-rail" aria-label="Talentteno social links">
         <a href="<?= tt_h(!empty($settings['instagram_url']) && $settings['instagram_url'] !== '#' ? $settings['instagram_url'] : 'https://www.instagram.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="<?= tt_h(!empty($settings['linkedin_url']) && $settings['linkedin_url'] !== '#' ? $settings['linkedin_url'] : 'https://www.linkedin.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="tel:+<?= tt_h($homePhoneLink) ?>" aria-label="Call Talentteno at <?= tt_h($settings['phone1']) ?>" title="<?= tt_h($settings['phone1']) ?>"><i class="fa-solid fa-phone"></i></a>
         <a href="<?= tt_h($homeWhatsappUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat"><i class="fa-brands fa-whatsapp"></i></a>
     </div>
     <div class="course-detail-modal" id="courseDetailModal" aria-hidden="true">

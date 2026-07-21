@@ -47,7 +47,7 @@ foreach ($contactCourses as $course) {
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -118,6 +118,10 @@ foreach ($contactCourses as $course) {
                 </form>
                 <div class="contact-map reveal">
                     <iframe src="<?= tt_h($mapEmbedUrl) ?>" title="Talentteno Institute location on Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                    <a class="contact-map-fallback" href="<?= tt_h($mapUrl) ?>" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+                        <span>Open location in Google Maps</span>
+                    </a>
                     <div class="contact-map-details">
                         <div><i class="fa-solid fa-location-dot"></i><span><strong>Visit Talentteno Institute</strong><?= tt_h($settings['address']) ?></span></div>
                         <a href="<?= tt_h($mapUrl) ?>" target="_blank" rel="noopener">Directions <i class="fa-solid fa-arrow-up-right-from-square"></i></a>

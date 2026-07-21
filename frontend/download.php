@@ -18,6 +18,8 @@ if ($courseId && $db) {
 
 $courseTitle = trim((string)($course['title'] ?? $fallbackTitle));
 $courseTitle = $courseTitle !== '' ? $courseTitle : 'Talentteno Course Brochure';
+$brochureApiBase = rtrim((string)(getenv('BROCHURE_API_BASE') ?: ''), '/');
+$turnstileSiteKey = trim((string)(getenv('TURNSTILE_SITE_KEY') ?: ''));
 
 $form = [
     'name' => trim((string)($_POST['name'] ?? '')),
@@ -29,7 +31,7 @@ $form = [
     'study_year' => trim((string)($_POST['study_year'] ?? '')),
 ];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (false && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $allowedYears = ['1st Year', '2nd Year', '3rd Year', 'Passout'];
 
     foreach (['name', 'email', 'phone', 'degree', 'college', 'address', 'study_year'] as $field) {
@@ -283,13 +285,17 @@ function tt_looks_fake_phone(string $phone): bool
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260718-brandfix1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260720-downloadform1">
+    <?php if ($turnstileSiteKey !== ''): ?>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>function ttOnCaptcha(){document.querySelectorAll('[data-download-form]').forEach(f=>{const b=f.querySelector('[data-download-submit]');if(b&&b._updateState)b._updateState();});}</script>
+    <?php endif; ?>
 </head>
 <body class="static-site download-page">
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="uploads/optimized/logot-transparent-w64.webp" srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" sizes="(max-width: 980px) 58px, 68px" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="about.php">About</a>
@@ -309,17 +315,31 @@ function tt_looks_fake_phone(string $phone): bool
                     <h1><?= tt_h($courseTitle) ?></h1>
                     <p>Fill the student details to download the course brochure. Our counsellor can use this information to guide the right batch and course path.</p>
                 </div>
-                <form class="download-form reveal reveal-right" method="POST" data-download-form>
+                <form class="download-form reveal reveal-right" method="POST" data-download-form data-api-base="<?= tt_h($brochureApiBase) ?>" data-turnstile-site-key="<?= tt_h($turnstileSiteKey) ?>" novalidate>
                     <input type="hidden" name="course_id" value="<?= (int)($courseId ?: 0) ?>">
                     <input type="hidden" name="course_title" value="<?= tt_h($courseTitle) ?>">
                     <h2>Student Details</h2>
-                    <?php if ($errors): ?><div class="form-alert error">Please fill all required details correctly.</div><?php endif; ?>
-                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" minlength="3" data-real-check="name" data-error-message="Enter your real full name" required><?php if (isset($errors['name'])): ?><span class="field-error"><?= tt_h($errors['name']) ?></span><?php endif; ?></label>
-                    <label>Email ID<input type="email" name="email" value="<?= tt_h($form['email']) ?>" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" data-error-message="Enter a valid email address, example: name@example.com" required><?php if (isset($errors['email'])): ?><span class="field-error"><?= tt_h($errors['email']) ?></span><?php endif; ?></label>
-                    <label>Mobile Number<input type="tel" name="phone" value="<?= tt_h($form['phone']) ?>" inputmode="numeric" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" data-error-message="Enter a valid 10 digit mobile number" required><?php if (isset($errors['phone'])): ?><span class="field-error"><?= tt_h($errors['phone']) ?></span><?php endif; ?></label>
-                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" minlength="3" data-real-check="text" data-error-message="Enter your actual degree" required><?php if (isset($errors['degree'])): ?><span class="field-error"><?= tt_h($errors['degree']) ?></span><?php endif; ?></label>
-                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" minlength="4" data-real-check="text" data-error-message="Enter your actual college name" required><?php if (isset($errors['college'])): ?><span class="field-error"><?= tt_h($errors['college']) ?></span><?php endif; ?></label>
-                    <label>Address<textarea name="address" rows="3" minlength="10" data-real-check="address" data-error-message="Enter your actual address" required><?= tt_h($form['address']) ?></textarea><?php if (isset($errors['address'])): ?><span class="field-error"><?= tt_h($errors['address']) ?></span><?php endif; ?></label>
+                    <div class="form-alert error" data-form-error hidden></div>
+                    <div class="form-alert success" data-form-success hidden></div>
+                    <label>Full Name<input type="text" name="name" value="<?= tt_h($form['name']) ?>" maxlength="50" autocomplete="name" pattern="[A-Za-z ]+" required><div class="field-error" id="nameError"></div></label>
+                    <label>Email ID<input type="email" name="email" value="<?= tt_h($form['email']) ?>" maxlength="190" autocomplete="email" required><div class="field-error" id="emailError"></div></label>
+                    <label class="download-otp-field">Mobile Number
+                        <div class="download-inline-control">
+                            <input type="tel" name="phone" value="<?= tt_h($form['phone']) ?>" inputmode="numeric" maxlength="10" autocomplete="tel" pattern="[0-9]{10}" required>
+                            <button type="button" id="sendOtpBtn" class="download-small-btn" data-send-otp>Send OTP</button>
+                        </div>
+                        <div class="field-error" id="mobileError"></div>
+                        <div class="download-otp-status" data-otp-status></div>
+                    </label>
+                    <label class="download-otp-verify" data-otp-wrap hidden>Enter OTP
+                        <div class="download-inline-control">
+                            <input type="text" name="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+                            <button type="button" class="download-small-btn" data-verify-otp>Verify OTP</button>
+                        </div>
+                        <div class="field-error" id="otpError"></div>
+                    </label>
+                    <label>Degree<input type="text" name="degree" value="<?= tt_h($form['degree']) ?>" placeholder="Example: B.Sc CS, BCA, B.E CSE" maxlength="100" required><div class="field-error" id="degreeError"></div></label>
+                    <label>College<input type="text" name="college" value="<?= tt_h($form['college']) ?>" maxlength="150" required><div class="field-error" id="collegeError"></div></label>
                     <label>Current Year / Status
                         <select name="study_year" required>
                             <option value="">Select year/status</option>
@@ -327,9 +347,18 @@ function tt_looks_fake_phone(string $phone): bool
                             <option value="<?= tt_h($year) ?>" <?= $form['study_year'] === $year ? 'selected' : '' ?>><?= tt_h($year) ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php if (isset($errors['study_year'])): ?><span class="field-error"><?= tt_h($errors['study_year']) ?></span><?php endif; ?>
+                        <div class="field-error" id="studyYearError"></div>
                     </label>
-                    <button class="btn btn-primary" type="submit" data-download-submit><i class="fa-solid fa-download"></i> Submit & Download</button>
+                    <div class="download-captcha" data-captcha-wrap>
+                        <?php if ($turnstileSiteKey !== ''): ?>
+                        <div class="cf-turnstile" data-sitekey="<?= tt_h($turnstileSiteKey) ?>" data-callback="ttOnCaptcha" data-expired-callback="ttOnCaptcha"></div>
+                        <?php else: ?>
+                        <input type="hidden" name="cf-turnstile-response" value="dev-turnstile">
+                        <small>Captcha is in development mode.</small>
+                        <?php endif; ?>
+                        <div class="field-error" id="captchaError"></div>
+                    </div>
+                    <button class="btn btn-primary" type="submit" data-download-submit disabled><i class="fa-solid fa-download"></i> Download Brochure</button>
                 </form>
             </div>
         </section>
@@ -339,90 +368,327 @@ function tt_looks_fake_phone(string $phone): bool
 <script src="assets/js/site-pages.min.js?v=20260718-scrollsmooth1" defer></script>
 <script>
 document.querySelectorAll('[data-download-form]').forEach((form) => {
-    const button = form.querySelector('[data-download-submit]');
-    const originalText = button ? button.innerHTML : '';
-    const fakeWords = /\b(test|testing|dummy|fake|sample|example|asdf|qwerty|abcd|xyz|none|null|na|n\/a|admin|user)\b/i;
-    const normalizeValue = (value) => String(value || '').trim().replace(/\s+/g, ' ');
-    const looksFakePhone = (value) => {
-        const phone = String(value || '').replace(/\D+/g, '');
-        return !/^[6-9][0-9]{9}$/.test(phone)
-            || /(\d)\1{4,}/.test(phone)
-            || ['9876543210', '9123456789', '9999999999', '8888888888', '7777777777', '6666666666', '1234567890'].includes(phone);
+    const configuredApiBase = form.dataset.apiBase || '';
+    const isLocalPage = ['127.0.0.1', 'localhost'].includes(window.location.hostname);
+    const apiBase = configuredApiBase || (isLocalPage ? 'http://127.0.0.1:5010' : '');
+    const fields = {
+        name: form.elements.name,
+        email: form.elements.email,
+        mobile: form.elements.phone,
+        otp: form.elements.otp,
+        degree: form.elements.degree,
+        college: form.elements.college,
+        study_year: form.elements.study_year
     };
-    const looksFakeValue = (field) => {
-        const value = normalizeValue(field.value);
-        const compact = value.replace(/\s+/g, '');
-        if (!value || fakeWords.test(value) || /(.)\1{4,}/i.test(compact)) return true;
+    const sendOtpButton = form.querySelector('[data-send-otp]');
+    const verifyOtpButton = form.querySelector('[data-verify-otp]');
+    const submitButton = form.querySelector('[data-download-submit]');
+    const otpWrap = form.querySelector('[data-otp-wrap]');
+    const otpStatus = form.querySelector('[data-otp-status]');
+    const formError = form.querySelector('[data-form-error]');
+    const formSuccess = form.querySelector('[data-form-success]');
+    const originalSubmit = submitButton.innerHTML;
+    let verificationRef = '';
+    let verifiedMobile = '';
+    let resendTimer = 0;
+    let resendInterval = 0;
+    let isSendingOtp = false;
 
-        if (field.name === 'phone') return looksFakePhone(value);
-        if (field.name === 'email') {
-            const local = value.split('@')[0] || '';
-            return fakeWords.test(local) || /(.)\1{5,}/i.test(local);
-        }
-        if (field.dataset.realCheck === 'name') {
-            return value.length < 3 || !/^[a-zA-Z][a-zA-Z.' -]*\s+[a-zA-Z][a-zA-Z.' -]*$/.test(value);
-        }
-        if (field.dataset.realCheck === 'address') {
-            return value.length < 10 || !/[a-zA-Z]{3,}/.test(value) || value.split(/\s+/).length < 3;
-        }
-        if (field.dataset.realCheck === 'text') {
-            return value.length < Number(field.getAttribute('minlength') || 3) || !/[a-zA-Z]{2,}/.test(value);
-        }
-
-        return false;
+    const errorMap = {
+        name: 'nameError',
+        email: 'emailError',
+        mobile: 'mobileError',
+        phone: 'mobileError',
+        otp: 'otpError',
+        degree: 'degreeError',
+        college: 'collegeError',
+        study_year: 'studyYearError',
+        currentStatus: 'studyYearError',
+        captcha: 'captchaError',
+        courseTitle: 'courseTitleError',
+        form: 'captchaError'
     };
-    const showFieldError = (field) => {
-        let error = field.parentElement.querySelector('.field-error.client-error');
-        if (!error) {
-            error = document.createElement('span');
-            error.className = 'field-error client-error';
-            field.insertAdjacentElement('afterend', error);
+    const fakeNames = new Set(['test', 'testing', 'demo', 'admin', 'user', 'abc', 'xyz', 'none', 'unknown', 'sample', 'fake', 'null']);
+    const blockedDomains = new Set(['mailinator.com', 'tempmail.com', '10minutemail.com', 'guerrillamail.com', 'yopmail.com', 'throwawaymail.com', 'fakeinbox.com']);
+    const blockedMobiles = new Set(['0000000000', '1111111111', '2222222222', '3333333333', '4444444444', '5555555555', '6666666666', '7777777777', '8888888888', '9999999999', '1234567890', '9876543210']);
+    const cleanText = value => String(value || '').trim().replace(/\s+/g, ' ');
+    const cleanEmail = value => String(value || '').trim().replace(/\s+/g, '').toLowerCase();
+    const cleanMobile = value => {
+        let mobile = String(value || '').trim().replace(/[\s-]+/g, '');
+        if (mobile.startsWith('+91')) mobile = mobile.slice(3);
+        else if (/^91[6-9][0-9]{9}$/.test(mobile)) mobile = mobile.slice(2);
+        return mobile.replace(/\D+/g, '');
+    };
+    const setButton = (button, text, disabled) => {
+        if (!button) return;
+        button.disabled = Boolean(disabled);
+        button.innerHTML = text;
+    };
+    const showError = (key, message) => {
+        const id = errorMap[key] || `${key}Error`;
+        const box = document.getElementById(id);
+        if (box) box.textContent = message || '';
+        const field = fields[key] || (key === 'mobile' ? fields.mobile : null);
+        field?.classList.toggle('is-invalid', Boolean(message));
+    };
+    const clearErrors = () => {
+        form.querySelectorAll('.field-error').forEach(item => { item.textContent = ''; });
+        form.querySelectorAll('.is-invalid').forEach(item => item.classList.remove('is-invalid'));
+        formError.hidden = true;
+        formSuccess.hidden = true;
+    };
+    const showFormMessage = (box, message) => {
+        box.textContent = message;
+        box.hidden = false;
+    };
+    const applyApiErrors = (payload) => {
+        Object.entries(payload.errors || {}).forEach(([key, message]) => showError(key, message));
+        showFormMessage(formError, payload.message || 'Please correct the highlighted fields.');
+        const first = form.querySelector('.field-error:not(:empty)');
+        first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    const clearOtpErrors = () => {
+        showError('mobile', '');
+        showError('otp', '');
+        formError.hidden = true;
+    };
+    const showOtpError = (key, message) => {
+        showError(key, message);
+        formError.hidden = true;
+    };
+    const isFieldsFilled = () => {
+        return cleanText(fields.name.value).length >= 3
+            && cleanEmail(fields.email.value).includes('@')
+            && cleanMobile(fields.mobile.value).length === 10
+            && cleanText(fields.degree.value).length >= 2
+            && cleanText(fields.college.value).length >= 2
+            && fields.study_year.value !== '';
+    };
+    const isCaptchaReady = () => {
+        const token = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
+        return token !== '' && token !== 'EXPIRED';
+    };
+    const updateSubmitState = () => {
+        const otpVerified = !!(verificationRef && verifiedMobile && cleanMobile(fields.mobile.value) === verifiedMobile);
+        submitButton.disabled = !(otpVerified && isFieldsFilled() && isCaptchaReady());
+    };
+    const isMobileValid = () => {
+        const mobile = cleanMobile(fields.mobile.value);
+        return /^[6-9][0-9]{9}$/.test(mobile) && !blockedMobiles.has(mobile);
+    };
+    const updateSendOtpState = () => {
+        if (isSendingOtp || resendTimer > 0) return;
+        sendOtpButton.disabled = !isMobileValid();
+        sendOtpButton.innerHTML = sendOtpButton.dataset.hasSent === 'true' ? 'Resend OTP' : 'Send OTP';
+    };
+    const validateAll = (includeOtp = false) => {
+        clearErrors();
+        const name = cleanText(fields.name.value);
+        const email = cleanEmail(fields.email.value);
+        const mobile = cleanMobile(fields.mobile.value);
+        let valid = true;
+        if (name.length < 3 || name.length > 50 || !/^[A-Za-z ]+$/.test(name) || /^(.)\1{4,}$/i.test(name.replace(/\s+/g, '')) || fakeNames.has(name.toLowerCase())) {
+            showError('name', 'Name should contain letters only.'); valid = false;
         }
-        error.textContent = field.dataset.errorMessage || field.validationMessage || 'Please enter a valid value';
+        if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(email)) {
+            showError('email', 'Please enter a valid email address.'); valid = false;
+        } else if (blockedDomains.has(email.split('@').pop())) {
+            showError('email', 'Temporary email addresses are not allowed.'); valid = false;
+        }
+        if (!/^[6-9][0-9]{9}$/.test(mobile) || blockedMobiles.has(mobile)) {
+            showError('mobile', 'Mobile number should contain 10 digits only.'); valid = false;
+        }
+        if (cleanText(fields.degree.value).length < 2 || cleanText(fields.degree.value).length > 100) { showError('degree', 'Please enter your degree.'); valid = false; }
+        if (cleanText(fields.college.value).length < 2 || cleanText(fields.college.value).length > 150) { showError('college', 'Please enter your college name.'); valid = false; }
+        if (!fields.study_year.value) { showError('study_year', 'Please select your current year or status.'); valid = false; }
+        if (includeOtp && !/^[0-9]{6}$/.test(fields.otp.value)) { showError('otp', 'Please enter the 6-digit OTP.'); valid = false; }
+        if (!valid) form.querySelector('.field-error:not(:empty)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return valid;
     };
-    const clearFieldError = (field) => {
-        field.parentElement.querySelector('.field-error.client-error')?.remove();
-    };
-
-    form.querySelectorAll('input, select, textarea').forEach((field) => {
-        field.addEventListener('input', () => {
-            field.setCustomValidity('');
-            if (field.checkValidity() && !looksFakeValue(field)) clearFieldError(field);
-        });
-        field.addEventListener('invalid', () => showFieldError(field));
-    });
-
-    form.addEventListener('submit', (event) => {
-        form.querySelectorAll('input, textarea').forEach((field) => {
-            field.setCustomValidity('');
-            if (looksFakeValue(field)) {
-                field.setCustomValidity(field.dataset.errorMessage || 'Please enter real details');
+    const postJson = async (path, body) => {
+        let response;
+        try {
+            response = await fetch(`${apiBase}${path}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(body)
+            });
+        } catch (error) {
+            if (error instanceof TypeError) {
+                throw {
+                    success: false,
+                    code: 'OTP_SERVICE_UNAVAILABLE',
+                    message: isLocalPage
+                        ? 'OTP service is not connected. Please start the local backend and try again.'
+                        : 'Unable to connect to OTP service. Please try again later.',
+                    errors: {}
+                };
             }
-        });
-
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            form.reportValidity();
-            const firstInvalid = form.querySelector(':invalid');
-            if (firstInvalid) {
-                showFieldError(firstInvalid);
-                firstInvalid.focus();
+            throw error;
+        }
+        const payload = await response.json().catch(() => ({ success: false, message: 'Server error. Please try again later.' }));
+        if (!response.ok || !payload.success) throw payload;
+        return payload;
+    };
+    const startResendTimer = (seconds) => {
+        window.clearInterval(resendInterval);
+        resendTimer = seconds;
+        const tick = () => {
+            if (resendTimer <= 0) {
+                window.clearInterval(resendInterval);
+                updateSendOtpState();
+                return;
             }
+            setButton(sendOtpButton, `Resend in ${resendTimer}s`, true);
+            resendTimer -= 1;
+        };
+        tick();
+        resendInterval = window.setInterval(tick, 1000);
+    };
+    const resetVerification = () => {
+        verificationRef = '';
+        verifiedMobile = '';
+        fields.otp.value = '';
+        otpWrap.hidden = true;
+        otpStatus.textContent = '';
+        updateSubmitState();
+    };
+    const resetSendOtpButton = () => {
+        window.clearInterval(resendInterval);
+        resendTimer = 0;
+        isSendingOtp = false;
+        sendOtpButton.dataset.hasSent = '';
+        updateSendOtpState();
+    };
+    const handleOtpSendError = (payload) => {
+        const code = payload.code || '';
+        const message = payload.errors?.mobile || payload.message || 'Unable to send OTP right now. Please try again.';
+        if (code === 'OTP_RESEND_WAIT') {
+            const retryAfter = Number(payload.retryAfter || 60);
+            showOtpError('mobile', `Please wait ${retryAfter} seconds before requesting another OTP.`);
+            startResendTimer(retryAfter);
             return;
         }
+        showOtpError('mobile', message);
+        setButton(sendOtpButton, sendOtpButton.dataset.hasSent === 'true' ? 'Resend OTP' : 'Send OTP', false);
+        updateSendOtpState();
+    };
 
-        if (button) {
-            button.disabled = true;
-            button.innerHTML = '<i class="fa-solid fa-download"></i> Downloading...';
-        }
-
-        window.setTimeout(() => {
-            if (button) {
-                button.disabled = false;
-                button.innerHTML = originalText;
-            }
-        }, 2500);
+    fields.name.addEventListener('input', () => {
+        fields.name.value = fields.name.value.replace(/[^A-Za-z ]+/g, '').replace(/\s{2,}/g, ' ').slice(0, 50);
     });
+    fields.mobile.addEventListener('input', () => {
+        fields.mobile.value = fields.mobile.value.replace(/\D+/g, '').slice(0, 10);
+        clearOtpErrors();
+        resetSendOtpButton();
+        if (verifiedMobile && cleanMobile(fields.mobile.value) !== verifiedMobile) resetVerification();
+        updateSendOtpState();
+    });
+    fields.otp.addEventListener('input', () => {
+        fields.otp.value = fields.otp.value.replace(/\D+/g, '').slice(0, 6);
+    });
+    Object.values(fields).forEach(field => field?.addEventListener('input', () => {
+        const key = field.name === 'phone' ? 'mobile' : field.name;
+        showError(key, '');
+        formError.hidden = true;
+        updateSubmitState();
+    }));
+    fields.study_year.addEventListener('change', updateSubmitState);
+
+    sendOtpButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+        if (isSendingOtp) return;
+        clearOtpErrors();
+        if (!isMobileValid()) {
+            showOtpError('mobile', 'Mobile number should contain 10 digits only.');
+            updateSendOtpState();
+            return;
+        }
+        isSendingOtp = true;
+        setButton(sendOtpButton, 'Sending...', true);
+        try {
+            const payload = await postJson('/api/brochure/send-otp', {
+                mobile: cleanMobile(fields.mobile.value),
+                courseTitle: form.elements.course_title.value
+            });
+            resetVerification();
+            otpWrap.hidden = false;
+            otpStatus.textContent = `${payload.message} OTP expires in 5 minutes.`;
+            sendOtpButton.dataset.hasSent = 'true';
+            startResendTimer(Number(payload.resendAfterSeconds || 60));
+        } catch (payload) {
+            handleOtpSendError(payload);
+        } finally {
+            isSendingOtp = false;
+            if (resendTimer <= 0) updateSendOtpState();
+        }
+    });
+
+    verifyOtpButton.addEventListener('click', async () => {
+        showError('otp', '');
+        if (!validateAll(true)) return;
+        setButton(verifyOtpButton, 'Verifying...', true);
+        try {
+            const payload = await postJson('/api/brochure/verify-otp', {
+                mobile: cleanMobile(fields.mobile.value),
+                courseTitle: form.elements.course_title.value,
+                otp: fields.otp.value
+            });
+            verificationRef = payload.verificationRef || '';
+            verifiedMobile = cleanMobile(fields.mobile.value);
+            otpStatus.innerHTML = '<i class="fa-solid fa-check"></i> Mobile number verified successfully.';
+            setButton(verifyOtpButton, 'Verified', true);
+            updateSubmitState();
+        } catch (payload) {
+            showOtpError(payload.errors?.mobile ? 'mobile' : 'otp', payload.errors?.mobile || payload.errors?.otp || payload.message || 'Unable to verify OTP.');
+            setButton(verifyOtpButton, 'Verify OTP', false);
+            updateSubmitState();
+        }
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearErrors();
+        if (!validateAll(false)) return;
+        if (!verificationRef || cleanMobile(fields.mobile.value) !== verifiedMobile) {
+            showError('mobile', 'Please verify your mobile number with OTP.');
+            updateSubmitState();
+            return;
+        }
+        const captchaToken = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
+        if (!captchaToken) {
+            showError('captcha', 'Captcha verification failed. Please try again.');
+            return;
+        }
+        setButton(submitButton, 'Validating...', true);
+        try {
+            setButton(submitButton, 'Preparing Download...', true);
+            const payload = await postJson('/api/brochure/submit', {
+                courseTitle: form.elements.course_title.value,
+                fullName: cleanText(fields.name.value),
+                email: cleanEmail(fields.email.value),
+                mobile: cleanMobile(fields.mobile.value),
+                degree: cleanText(fields.degree.value),
+                college: cleanText(fields.college.value),
+                address: '',
+                currentStatus: fields.study_year.value,
+                otpVerificationRef: verificationRef,
+                captchaToken
+            });
+            showFormMessage(formSuccess, 'Your brochure download has started successfully.');
+            setButton(submitButton, '<i class="fa-solid fa-check"></i> Downloaded', true);
+            window.location.href = `${apiBase}${payload.downloadUrl}`;
+        } catch (payload) {
+            applyApiErrors(payload);
+            if (window.turnstile) window.turnstile.reset();
+            setButton(submitButton, originalSubmit, false);
+            updateSubmitState();
+        }
+    });
+    updateSubmitState();
+    submitButton._updateState = updateSubmitState;
+    updateSendOtpState();
 });
 </script>
 </body>

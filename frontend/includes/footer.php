@@ -5,7 +5,8 @@ if (!isset($settings) || !is_array($settings)) {
 
 $phone1Link = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
 $phone2Link = preg_replace('/\D+/', '', (string)($settings['phone2'] ?? ''));
-$whatsappUrl = 'https://web.whatsapp.com/send?phone=' . $phone1Link . '&text=' . rawurlencode('Hello Talentteno, I would like course information.');
+$whatsappPhone = '918248415023';
+$whatsappUrl = 'https://wa.me/' . $whatsappPhone . '?text=' . rawurlencode('Hello Talentteno, I would like course information.');
 $mapUrl = function_exists('tt_google_maps_url')
     ? tt_google_maps_url($settings)
     : 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
@@ -40,7 +41,7 @@ $mapUrl = function_exists('tt_google_maps_url')
             <div class="footer-social">
                 <a class="social-facebook" href="<?= tt_h(!empty($settings['facebook_url']) && $settings['facebook_url'] !== '#' ? $settings['facebook_url'] : 'https://www.facebook.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
                 <a class="social-instagram" href="<?= tt_h(!empty($settings['instagram_url']) && $settings['instagram_url'] !== '#' ? $settings['instagram_url'] : 'https://www.instagram.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a class="social-linkedin" href="<?= tt_h(!empty($settings['linkedin_url']) && $settings['linkedin_url'] !== '#' ? $settings['linkedin_url'] : 'https://www.linkedin.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                <a class="social-call" href="tel:+<?= tt_h($phone1Link) ?>" aria-label="Call Talentteno at <?= tt_h($settings['phone1']) ?>" title="<?= tt_h($settings['phone1']) ?>"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
                 <a class="social-youtube" href="<?= tt_h(!empty($settings['youtube_url']) && $settings['youtube_url'] !== '#' ? $settings['youtube_url'] : 'https://www.youtube.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
             </div>
         </div>
