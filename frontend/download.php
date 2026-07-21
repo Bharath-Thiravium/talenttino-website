@@ -31,10 +31,10 @@ $form = [
     'study_year' => trim((string)($_POST['study_year'] ?? '')),
 ];
 
-if (false && $_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $allowedYears = ['1st Year', '2nd Year', '3rd Year', 'Passout'];
 
-    foreach (['name', 'email', 'phone', 'degree', 'college', 'address', 'study_year'] as $field) {
+    foreach (['name', 'email', 'phone', 'degree', 'college', 'study_year'] as $field) {
         if ($form[$field] === '') {
             $errors[$field] = 'Required';
         }
@@ -285,7 +285,7 @@ function tt_looks_fake_phone(string $phone): bool
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260720-downloadform1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260721-downloadfix1">
     <?php if ($turnstileSiteKey !== ''): ?>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>function ttOnCaptcha(){document.querySelectorAll('[data-download-form]').forEach(f=>{const b=f.querySelector('[data-download-submit]');if(b&&b._updateState)b._updateState();});}</script>
@@ -365,12 +365,13 @@ function tt_looks_fake_phone(string $phone): bool
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260718-scrollsmooth1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260721-navbarfix1" defer></script>
 <script>
 document.querySelectorAll('[data-download-form]').forEach((form) => {
     const configuredApiBase = form.dataset.apiBase || '';
     const isLocalPage = ['127.0.0.1', 'localhost'].includes(window.location.hostname);
-    const apiBase = configuredApiBase || (isLocalPage ? 'http://127.0.0.1:5010' : '');
+    const apiBase = configuredApiBase;
+    const useOtpApi = apiBase !== '';
     const fields = {
         name: form.elements.name,
         email: form.elements.email,
@@ -393,6 +394,14 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
     let resendTimer = 0;
     let resendInterval = 0;
     let isSendingOtp = false;
+
+    if (!useOtpApi) {
+        form.dataset.directDownload = 'true';
+        sendOtpButton?.closest('.download-inline-control')?.classList.add('direct-download-mobile');
+        if (sendOtpButton) sendOtpButton.hidden = true;
+        if (otpWrap) otpWrap.hidden = true;
+        if (otpStatus) otpStatus.hidden = true;
+    }
 
     const errorMap = {
         name: 'nameError',
@@ -469,7 +478,7 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
         return token !== '' && token !== 'EXPIRED';
     };
     const updateSubmitState = () => {
-        const otpVerified = !!(verificationRef && verifiedMobile && cleanMobile(fields.mobile.value) === verifiedMobile);
+        const otpVerified = !useOtpApi || !!(verificationRef && verifiedMobile && cleanMobile(fields.mobile.value) === verifiedMobile);
         submitButton.disabled = !(otpVerified && isFieldsFilled() && isCaptchaReady());
     };
     const isMobileValid = () => {
@@ -581,6 +590,10 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
     fields.mobile.addEventListener('input', () => {
         fields.mobile.value = fields.mobile.value.replace(/\D+/g, '').slice(0, 10);
         clearOtpErrors();
+        if (!useOtpApi) {
+            updateSubmitState();
+            return;
+        }
         resetSendOtpButton();
         if (verifiedMobile && cleanMobile(fields.mobile.value) !== verifiedMobile) resetVerification();
         updateSendOtpState();
@@ -598,6 +611,7 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
 
     sendOtpButton.addEventListener('click', async (event) => {
         event.preventDefault();
+        if (!useOtpApi) return;
         if (isSendingOtp) return;
         clearOtpErrors();
         if (!isMobileValid()) {
@@ -626,6 +640,7 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
     });
 
     verifyOtpButton.addEventListener('click', async () => {
+        if (!useOtpApi) return;
         showError('otp', '');
         if (!validateAll(true)) return;
         setButton(verifyOtpButton, 'Verifying...', true);
@@ -651,7 +666,7 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
         event.preventDefault();
         clearErrors();
         if (!validateAll(false)) return;
-        if (!verificationRef || cleanMobile(fields.mobile.value) !== verifiedMobile) {
+        if (useOtpApi && (!verificationRef || cleanMobile(fields.mobile.value) !== verifiedMobile)) {
             showError('mobile', 'Please verify your mobile number with OTP.');
             updateSubmitState();
             return;
@@ -659,6 +674,11 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
         const captchaToken = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
         if (!captchaToken) {
             showError('captcha', 'Captcha verification failed. Please try again.');
+            return;
+        }
+        if (!useOtpApi) {
+            setButton(submitButton, 'Preparing Download...', true);
+            form.submit();
             return;
         }
         setButton(submitButton, 'Validating...', true);
@@ -688,7 +708,7 @@ document.querySelectorAll('[data-download-form]').forEach((form) => {
     });
     updateSubmitState();
     submitButton._updateState = updateSubmitState;
-    updateSendOtpState();
+    if (useOtpApi) updateSendOtpState();
 });
 </script>
 </body>

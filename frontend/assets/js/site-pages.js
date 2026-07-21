@@ -40,18 +40,25 @@ if (nav) {
         nav.appendChild(enrollCta);
     }
     const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
-    if (courseMenu && !courseMenu.querySelector('a[href="designingcourse.php"]')) {
-        const designCourseLink = document.createElement('a');
-        designCourseLink.href = 'designingcourse.php';
-        designCourseLink.textContent = 'Designing Course';
-        courseMenu.appendChild(designCourseLink);
-    }
-    if (courseMenu && !courseMenu.querySelector('a[data-course-menu-cyber]')) {
-        const cyberCourseLink = document.createElement('a');
-        cyberCourseLink.href = 'cybersecuritycourse.php';
-        cyberCourseLink.textContent = 'Cyber Security';
-        cyberCourseLink.dataset.courseMenuCyber = 'true';
-        courseMenu.appendChild(cyberCourseLink);
+    if (courseMenu) {
+        const courseLinks = [
+            ['shorttermcourse.php', 'Short Term Course', 'fa-clock'],
+            ['popularcourse.php', 'Popular Course', 'fa-fire'],
+            ['advancecourse.php', 'Advance Course', 'fa-layer-group'],
+            ['designingcourse.php', 'Designing Course', 'fa-pen-nib'],
+            ['cybersecuritycourse.php', 'Cyber Security', 'fa-shield-halved'],
+        ];
+        courseLinks.forEach(([href, label, icon]) => {
+            let link = courseMenu.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                courseMenu.appendChild(link);
+            }
+            if (link.querySelector('i')) return;
+            link.className = 'nav-menu-rich-link';
+            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
+        });
     }
     const moreMenu = nav.querySelector('.nav-item.has-menu.more-menu');
     const moreTrigger = moreMenu?.querySelector(':scope > a');

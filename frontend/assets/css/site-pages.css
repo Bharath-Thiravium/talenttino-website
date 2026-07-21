@@ -50584,3 +50584,105 @@ html body.static-site.about-page .tt-stat-title {
         text-overflow: ellipsis !important;
     }
 }
+
+/* Navbar model fix: transparent logo mark and consistent dropdown rows. */
+html body .site-header .brand-mark.logo-mark,
+html body .site-header:not(.is-scrolled) .brand-mark.logo-mark,
+html body .site-header.is-scrolled .brand-mark.logo-mark,
+html body.home-page .site-header .brand-mark.logo-mark,
+html body.home-page .site-header:not(.is-scrolled) .brand-mark.logo-mark,
+html body.home-page .site-header.is-scrolled .brand-mark.logo-mark,
+html body.static-site .site-header .brand-mark.logo-mark,
+html body.static-site:not(.home-page) .site-header .brand-mark.logo-mark {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    clip-path: circle(50% at 50% 50%) !important;
+}
+
+html body .site-header .brand-mark.logo-mark img,
+html body.home-page .site-header .brand-mark.logo-mark img,
+html body.static-site .site-header .brand-mark.logo-mark img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    clip-path: circle(50% at 50% 50%) !important;
+}
+
+html body.download-page .download-inline-control.direct-download-mobile {
+    display: block !important;
+}
+
+html body.download-page .download-inline-control.direct-download-mobile input {
+    width: 100% !important;
+}
+
+@media (min-width: 981px) {
+    html body .site-header .nav-item.has-menu .nav-menu,
+    html body .site-header .nav-item.has-menu:hover .nav-menu,
+    html body .site-header .nav-item.has-menu:focus-within .nav-menu,
+    html body .site-header .nav-item.has-menu.open .nav-menu {
+        min-width: 250px !important;
+        padding: 12px !important;
+        border: 1px solid rgba(39, 103, 212, .12) !important;
+        border-radius: 16px !important;
+        background: rgba(248, 252, 255, .96) !important;
+        box-shadow: 0 18px 42px rgba(15, 44, 95, .16) !important;
+        backdrop-filter: blur(18px) !important;
+    }
+
+    html body .site-header .nav-menu a.nav-menu-rich-link,
+    html body .site-header .more-menu .nav-menu a.nav-menu-rich-link {
+        min-height: 52px !important;
+        height: auto !important;
+        display: grid !important;
+        grid-template-columns: 32px minmax(0, 1fr) !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin: 0 !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        color: #071a3a !important;
+        -webkit-text-fill-color: #071a3a !important;
+        box-shadow: none !important;
+        font-size: 14px !important;
+        font-weight: 900 !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+    }
+
+    html body .site-header .nav-menu a.nav-menu-rich-link + a.nav-menu-rich-link {
+        margin-top: 7px !important;
+    }
+
+    html body .site-header .nav-menu a.nav-menu-rich-link i {
+        position: static !important;
+        inset: auto !important;
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+        font-size: 13px !important;
+        line-height: 1 !important;
+    }
+
+    html body .site-header .nav-menu a.nav-menu-rich-link:hover,
+    html body .site-header .nav-menu a.nav-menu-rich-link:focus-visible,
+    html body .site-header .nav-menu a.nav-menu-rich-link.active {
+        background: #f2f7ff !important;
+        color: #005bea !important;
+        -webkit-text-fill-color: #005bea !important;
+        transform: none !important;
+    }
+}
