@@ -51572,3 +51572,62 @@ html body.static-site .site-footer .footer-logo strong {
         background: #ffffff !important;
     }
 }
+/* Admin-managed review showcase: single horizontal scroll row. */
+html body.home-page .model-review-section {
+    overflow: hidden !important;
+}
+html body.home-page .review-scroll-stage {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+html body.home-page .review-scroll-stage::before,
+html body.home-page .review-scroll-stage::after,
+html body.home-page .review-scroll-row-two {
+    display: none !important;
+    content: none !important;
+}
+html body.home-page .review-scroll-row,
+html body.home-page .review-scroll-row-one {
+    width: 100% !important;
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: minmax(300px, 420px) !important;
+    gap: 22px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-padding-inline: max(18px, calc((100vw - 1200px) / 2)) !important;
+    padding: 0 max(18px, calc((100vw - 1200px) / 2)) 18px !important;
+    animation: none !important;
+    transform: none !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+html body.home-page .review-scroll-card,
+html body.home-page .review-scroll-card-small {
+    width: auto !important;
+    min-width: 0 !important;
+    height: clamp(290px, 36vw, 350px) !important;
+    scroll-snap-align: start !important;
+}
+html body.home-page .review-scroll-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+@media (max-width: 760px) {
+    html body.home-page .review-scroll-row,
+    html body.home-page .review-scroll-row-one {
+        grid-auto-columns: minmax(260px, 84vw) !important;
+        gap: 14px !important;
+        padding-inline: 14px !important;
+        scroll-padding-inline: 14px !important;
+    }
+    html body.home-page .review-scroll-card,
+    html body.home-page .review-scroll-card-small {
+        height: 310px !important;
+    }
+}

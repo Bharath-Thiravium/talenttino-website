@@ -5,11 +5,35 @@ $error = '';
 
 $conn->query("ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS image VARCHAR(255) AFTER company");
 
-function tt_admin_testimonial_image_url(?string $image): string
+function tt_admin_testimonial_fallback_image(?string $course): string
+{
+    $courseKey = strtolower(trim((string)$course));
+    if ($courseKey === '') return '';
+
+    if (str_contains($courseKey, 'digital')) {
+        return 'uploads/media/digital-marketing-20260703-133146-981935.png';
+    }
+
+    if (str_contains($courseKey, 'full stack') || str_contains($courseKey, 'web development')) {
+        return 'uploads/media/full-stack-development-20260703-133158-761383.png';
+    }
+
+    if (str_contains($courseKey, 'data') || str_contains($courseKey, 'ai') || str_contains($courseKey, 'machine')) {
+        return 'uploads/media/data-science-ai-20260703-133112-527863.png';
+    }
+
+    return '';
+}
+
+function tt_admin_testimonial_image_url(?string $image, ?string $course = null): string
 {
     $image = ltrim(trim((string)$image), '/');
+    $fallback = tt_admin_testimonial_fallback_image($course);
+    if ($image === '') $image = $fallback;
     if ($image === '') return '';
     if (preg_match('/^https?:\/\//i', $image)) return $image;
+    $filePath = __DIR__ . '/../../frontend/' . $image;
+    if (!is_file($filePath) && $fallback !== '') $image = $fallback;
     return '../../frontend/' . $image;
 }
 
@@ -124,7 +148,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC")->fet
                     <input type="hidden" name="image_existing" value="<?= htmlspecialchars($edit['image'] ?? '') ?>">
                     <div class="form-group"><label>Student Name *</label><input type="text" name="student_name" required value="<?= htmlspecialchars($edit['student_name'] ?? '') ?>"></div>
                     <div class="form-group"><label>Company</label><input type="text" name="company" value="<?= htmlspecialchars($edit['company'] ?? '') ?>"></div>
-                    <div class="form-group"><label>Image</label><input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image.</small><?php if (!empty($edit['image'])): ?><div class="content-current-image"><img src="<?= htmlspecialchars(tt_admin_testimonial_image_url($edit['image'])) ?>" alt=""><span>Current image</span></div><?php endif; ?></div>
+                    <div class="form-group"><label>Image</label><input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image.</small><?php $editImageUrl = $edit ? tt_admin_testimonial_image_url($edit['image'] ?? '', $edit['course'] ?? '') : ''; if ($editImageUrl !== ''): ?><div class="content-current-image"><img src="<?= htmlspecialchars($editImageUrl) ?>" alt=""><span>Current image</span></div><?php endif; ?></div>
                     <div class="form-group"><label>Course</label><input type="text" name="course" value="<?= htmlspecialchars($edit['course'] ?? '') ?>"></div>
                     <div class="form-group"><label>Review *</label><textarea name="review" rows="4" required><?= htmlspecialchars($edit['review'] ?? '') ?></textarea></div>
                     <div class="form-row">
@@ -144,7 +168,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC")->fet
                             <?php foreach ($testimonials as $t): ?>
                             <tr>
                                 <td><strong><?= htmlspecialchars($t['student_name']) ?></strong></td>
-                                <td><?php if (!empty($t['image'])): ?><img class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_testimonial_image_url($t['image'])) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
+                                <td><?php $testimonialImageUrl = tt_admin_testimonial_image_url($t['image'] ?? '', $t['course'] ?? ''); if ($testimonialImageUrl !== ''): ?><img class="content-admin-thumb" src="<?= htmlspecialchars($testimonialImageUrl) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
                                 <td class="content-detail-cell"><strong><?= htmlspecialchars($t['course'] ?: '—') ?></strong><span><?= htmlspecialchars($t['review'] ?: '') ?></span></td>
                                 <td><?= str_repeat('★', $t['rating']) ?></td>
                                 <td><span class="badge badge-<?= $t['is_active']?'green':'gray' ?>"><?= $t['is_active']?'Active':'Hidden' ?></span></td>
