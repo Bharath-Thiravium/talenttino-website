@@ -359,9 +359,9 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
 <script>
 (function(){
     const API_BASE_URL =
-        ['127.0.0.1', 'localhost'].includes(window.location.hostname)
-            ? 'http://127.0.0.1:5010'
-            : 'REPLACE_WITH_LIVE_BACKEND_URL';
+        ['localhost', '127.0.0.1'].includes(window.location.hostname)
+            ? 'http://127.0.0.1:5000'
+            : '/api';
     const emailInput  = document.getElementById('emailInput');
     const phoneInput  = document.getElementById('phoneInput');
     const dlForm      = document.getElementById('dlForm');
@@ -435,9 +435,17 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     }
 
     async function parseJson(response){
+        const contentType = response.headers.get('Content-Type') || '';
+        if(!contentType.toLowerCase().includes('application/json')){
+            await response.text().catch(() => '');
+            return {
+                success: false,
+                message: 'Server returned invalid response.'
+            };
+        }
         return response.json().catch(() => ({
             success: false,
-            message: 'Invalid response from server.'
+            message: 'Server returned invalid response.'
         }));
     }
 
@@ -544,7 +552,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         otpSendMsg.className = 'otp-msg'; otpSendMsg.textContent = '';
         resetVerification();
         try {
-            const res = await fetch(`${API_BASE_URL}/api/brochure/send-otp`, {
+            const res = await fetch(`${API_BASE_URL}/brochure/send-otp`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -581,7 +589,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         otpErr.textContent='';
         verifyBtn.disabled=true; verifyBtn.textContent='Verifying...';
         try {
-            const res = await fetch(`${API_BASE_URL}/api/brochure/verify-otp`, {
+            const res = await fetch(`${API_BASE_URL}/brochure/verify-otp`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, otp})
@@ -609,7 +617,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         dlSubmit.disabled = true;
         dlSubmit.textContent = 'Preparing Download...';
         try {
-            const response = await fetch(`${API_BASE_URL}/api/brochure/download`, {
+            const response = await fetch(`${API_BASE_URL}/brochure/download`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -623,7 +631,8 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
                     verificationToken
                 })
             });
-            if(!response.ok){
+            const contentType = response.headers.get('Content-Type') || '';
+            if(!response.ok || contentType.toLowerCase().includes('application/json') || contentType.toLowerCase().includes('text/html')){
                 const data = await parseJson(response);
                 setMessage(otpVerifyMsg, false, data.message || 'Unable to download brochure. Please try again.');
                 showServerErrors(data.errors);

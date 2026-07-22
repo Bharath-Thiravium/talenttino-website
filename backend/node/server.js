@@ -1,7 +1,7 @@
+import './env.js';
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
-import dotenv from 'dotenv';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -18,13 +18,10 @@ import {
 } from './emailService.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dotenvPath = path.join(__dirname, '.env');
-dotenv.config({ path: dotenvPath });
-process.env.DOTENV_CONFIG_PATH = dotenvPath;
 
 const app = express();
-const port = Number(process.env.PORT || 5010);
-const host = process.env.HOST || '127.0.0.1';
+const PORT = Number(process.env.PORT) || 5000;
+const HOST = process.env.HOST || '127.0.0.1';
 const projectRoot = path.resolve(__dirname, '../..');
 const brochureDir = path.join(projectRoot, 'frontend/uploads/brochures');
 const generatedBrochureSecret = process.env.BROCHURE_TOKEN_SECRET || process.env.SESSION_SECRET || 'talentteno-local-brochure-secret';
@@ -692,6 +689,7 @@ app.get('/api/health', (_req, res) => {
   res.json({
     success: true,
     server: 'running',
+    port: PORT,
     emailConfigured: isEmailConfigured()
   });
 });
@@ -1179,8 +1177,8 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ success: false, message: 'Server error. Please try again later.', errors: {} });
 });
 
-app.listen(port, host, () => {
-  console.log(`Talentteno Node backend running on http://${host}:${port}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Talentteno Node backend running on http://${HOST}:${PORT}`);
   logMaskedSmtpConfig();
   verifySmtpConnection();
 });

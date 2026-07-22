@@ -1,3 +1,4 @@
+import './env.js';
 import nodemailer from 'nodemailer';
 
 const REQUIRED_SMTP_FIELDS = [
@@ -67,7 +68,7 @@ export function smtpConfigMissingPayload() {
 }
 
 function normalizedSmtpPass() {
-  return String(process.env.SMTP_PASS || '').replace(/\s+/g, '');
+  return String(process.env.SMTP_PASS || '').trim();
 }
 
 export function getSmtpCredentialProblem() {
@@ -159,13 +160,14 @@ let transporter;
 
 export function getTransporter() {
   if (!transporter) {
+    const smtpPass = (process.env.SMTP_PASS || '').trim();
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
       secure: String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true',
       auth: {
         user: process.env.SMTP_USER,
-        pass: normalizedSmtpPass()
+        pass: smtpPass
       },
       requireTLS: true,
       connectionTimeout: 10000,

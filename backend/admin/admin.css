@@ -273,47 +273,81 @@ body.modal-open { overflow: hidden; }
 }
 
 @media (max-width: 760px) {
-    body { display: block; }
+    body { display: block; overflow-x: hidden; }
     .admin-sidebar {
         position: static;
+        z-index: 300;
         width: 100%;
         height: auto;
         max-height: none;
+        overflow: visible;
     }
-    .sidebar-logo { padding: 16px; }
+    .sidebar-logo { gap: 10px; padding: 12px 14px; }
+    .sidebar-logo img { width: 36px; height: 36px; border-radius: 9px; }
+    .sidebar-name { font-size: 14px; }
+    .sidebar-role { font-size: 10px; }
     .sidebar-nav {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4px;
-        padding: 10px;
+        gap: 8px;
+        padding: 12px;
+        overflow: visible;
     }
     .sidebar-nav a {
-        min-height: 44px;
-        padding: 10px 12px;
-        border-radius: 8px;
+        min-width: 0;
+        min-height: 42px;
+        max-width: none;
+        padding: 9px 12px;
+        border-radius: 10px;
         border-right: 0;
+        gap: 8px;
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
     }
+    .sidebar-nav a span,
+    .sidebar-nav a {
+        overflow-wrap: anywhere;
+    }
+    .sidebar-nav a i { width: 15px; }
+    .sidebar-nav a .badge-count { margin-left: 4px; }
     .sidebar-nav a.active { border-right: 0; }
     .sidebar-divider { display: none; }
     .admin-main { margin-left: 0; }
     .admin-topbar {
         position: static;
+        z-index: 250;
         align-items: flex-start;
-        gap: 12px;
-        padding: 16px;
+        gap: 10px;
+        padding: 14px 16px;
         flex-direction: column;
     }
+    .page-title { font-size: 18px; line-height: 1.25; }
     .topbar-right {
         width: 100%;
         justify-content: space-between;
+        gap: 10px;
     }
-    .admin-content { padding: 16px; }
+    .admin-name { min-width: 0; font-size: 12px; }
+    .btn-logout { flex: 0 0 auto; padding: 8px 12px; font-size: 12px; }
+    .admin-content { width: 100%; padding: 14px 12px 24px; overflow-x: hidden; }
     .stats-cards,
     .form-row,
     div[style*="grid-template-columns:1fr 1.5fr"] {
         grid-template-columns: 1fr !important;
+        gap: 14px !important;
     }
-    .admin-card { padding: 18px; }
+    .admin-card { width: 100%; min-width: 0; padding: 16px; border-radius: 10px; }
+    .admin-form { max-width: none; }
+    .form-group { margin-bottom: 13px; }
+    .form-group input, .form-group select, .form-group textarea { min-height: 42px; font-size: 14px; }
+    .btn-save { width: 100%; justify-content: center; min-height: 42px; padding: 0 18px; }
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 9px; }
+    .admin-table { min-width: 620px; }
+    .admin-table th, .admin-table td { padding: 10px; }
+    .content-admin-thumb,
+    .content-admin-placeholder { width: 68px; height: 46px; }
+    .content-detail-cell { min-width: 220px; max-width: 280px; }
     .enquiry-filter-form { grid-template-columns: 1fr; }
     .record-count { justify-content: flex-start; flex-direction: column; gap: 4px; }
     .filter-actions { align-items: stretch; }

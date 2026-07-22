@@ -25,7 +25,7 @@ $top_downloads = $conn->query("SELECT title, download_count FROM courses WHERE i
     <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=20260722-adminmobile3">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
