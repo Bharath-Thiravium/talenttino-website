@@ -23,7 +23,7 @@ html body .site-footer .footer-logo strong,html body.home-page .site-footer .foo
     <div class="site-container footer-grid">
         <div class="footer-brand-block">
             <a class="footer-logo" href="index.php">
-                <span class="brand-mark footer-logo-mark"><img src="assets/images/logot-transparent.png" alt="<?= tt_h($settings['site_name']) ?> logo" loading="lazy" decoding="async"></span>
+                <span class="brand-mark footer-logo-mark"><img src="assets/images/logot-transparent.png?v=20260722-logo2" alt="<?= tt_h($settings['site_name']) ?> logo" loading="lazy" decoding="async"></span>
                 <span><strong><?= tt_h($settings['site_name']) ?></strong><span>IT TRAINING INSTITUTE</span></span>
             </a>
             <p><?= tt_h($settings['footer_description']) ?></p>

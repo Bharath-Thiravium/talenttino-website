@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 session_start();
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 require_once __DIR__ . '/includes/site-data.php';
 
 $courseId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
@@ -272,7 +275,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
 <div class="site-shell">
     <header class="site-header">
         <div class="site-container nav-wrap">
-            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
+            <a class="brand" href="index.php"><span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png?v=20260722-logo2" alt="Talentteno" width="68" height="68" decoding="async"></span><span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a><a href="about.php">About</a>
                 <div class="nav-item has-menu"><a href="course.php">Course <i class="fa-solid fa-chevron-down"></i></a><div class="nav-menu"><a href="shorttermcourse.php">Short Term Course</a><a href="popularcourse.php">Popular Course</a><a href="advancecourse.php">Advance Course</a></div></div>
@@ -358,10 +361,28 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
 <script src="assets/js/site-pages.min.js?v=20260721-navbarfix1" defer></script>
 <script>
 (function(){
-    const API_BASE_URL =
-        ['localhost', '127.0.0.1'].includes(window.location.hostname)
-            ? 'http://127.0.0.1:5000'
-            : '/api';
+    const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const pathParts = window.location.pathname.split('/');
+    const frontendIndex = pathParts.findIndex(part => part === 'frontend');
+    const appBasePath = frontendIndex > 1 ? '/' + pathParts.slice(1, frontendIndex).join('/') : '';
+    const currentDirPath = window.location.pathname.replace(/\/[^/]*$/, '');
+    function joinPath(base, path){
+        const cleanBase = String(base || '').replace(/\/+$/, '');
+        const cleanPath = String(path || '').replace(/^\/+/, '');
+        return `${cleanBase}/${cleanPath}`;
+    }
+    const sameHostApiUrls = [
+        joinPath(appBasePath, 'api/index.php'),
+        joinPath(appBasePath, 'frontend/api/index.php'),
+        joinPath(currentDirPath, 'api/index.php'),
+        joinPath(appBasePath, 'api'),
+        joinPath(currentDirPath, 'api'),
+        '/api'
+    ];
+    const API_BASE_URLS = Array.from(new Set([
+        ...sameHostApiUrls,
+        ...(isLocalHost ? ['http://127.0.0.1:5000/api'] : [])
+    ].filter(Boolean)));
     const emailInput  = document.getElementById('emailInput');
     const phoneInput  = document.getElementById('phoneInput');
     const dlForm      = document.getElementById('dlForm');
@@ -447,6 +468,33 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
             success: false,
             message: 'Server returned invalid response.'
         }));
+    }
+
+    async function apiFetch(path, options){
+        let lastResponse = null;
+        let lastUrl = '';
+        const triedUrls = [];
+        for(const baseUrl of API_BASE_URLS){
+            const cleanBase = baseUrl.replace(/\/+$/, '');
+            const url = `${cleanBase}${path}`;
+            triedUrls.push(url);
+            const response = await fetch(url, options);
+            lastResponse = response;
+            lastUrl = url;
+            const contentType = response.headers.get('Content-Type') || '';
+            const lowerType = contentType.toLowerCase();
+            if(lowerType.includes('application/json') || lowerType.includes('application/pdf')){
+                return response;
+            }
+            if(response.ok && !lowerType.includes('text/html')){
+                return response;
+            }
+        }
+        if(lastResponse){
+            lastResponse.apiUrl = lastUrl;
+        }
+        console.warn('Talentteno brochure API returned a non-JSON response.', {path, triedUrls});
+        return lastResponse;
     }
 
     function resetVerification(){
@@ -552,7 +600,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         otpSendMsg.className = 'otp-msg'; otpSendMsg.textContent = '';
         resetVerification();
         try {
-            const res = await fetch(`${API_BASE_URL}/brochure/send-otp`, {
+            const res = await apiFetch('/brochure/send-otp', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -589,7 +637,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         otpErr.textContent='';
         verifyBtn.disabled=true; verifyBtn.textContent='Verifying...';
         try {
-            const res = await fetch(`${API_BASE_URL}/brochure/verify-otp`, {
+            const res = await apiFetch('/brochure/verify-otp', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, otp})
@@ -617,7 +665,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         dlSubmit.disabled = true;
         dlSubmit.textContent = 'Preparing Download...';
         try {
-            const response = await fetch(`${API_BASE_URL}/brochure/download`, {
+            const response = await apiFetch('/brochure/download', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

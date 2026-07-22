@@ -27,6 +27,7 @@ $loadEnvFile = static function (string $file): void {
 
 $loadEnvFile(dirname(__DIR__, 2) . '/.env');
 $loadEnvFile(dirname(__DIR__) . '/node/.env');
+$loadEnvFile(dirname(__DIR__, 2) . '/frontend/.env');
 
 $env = static function (string $key, string $default = ''): string {
     $value = getenv($key);

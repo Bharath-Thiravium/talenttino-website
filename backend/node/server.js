@@ -1172,6 +1172,14 @@ app.post('/api/admin/login', asyncRoute(async (req, res) => {
   });
 }));
 
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    code: 'NOT_FOUND',
+    message: `API endpoint not found: ${req.method} ${req.originalUrl}`
+  });
+});
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ success: false, message: 'Server error. Please try again later.', errors: {} });

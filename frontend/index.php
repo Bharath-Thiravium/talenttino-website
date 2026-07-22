@@ -312,7 +312,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?
     <header class="site-header">
         <div class="site-container nav-wrap">
             <a class="brand" href="index.php">
-                <span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span>
+                <span class="brand-mark logo-mark"><img src="assets/images/logot-transparent.png?v=20260722-logo2" alt="Talentteno Institute logo" width="68" height="68" decoding="async"></span>
                 <span><span class="brand-name">Talentteno Institute</span><span class="brand-sub">IT TRAINING INSTITUTE</span></span>
             </a>
             <nav class="site-nav">

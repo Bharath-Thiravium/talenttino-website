@@ -209,12 +209,12 @@ function tt_render_seo(array $page = []): void
     $description = tt_plain_text((string)($page['description'] ?? $settings['seo_description'] ?? $settings['footer_description']), 170);
     $keywords = trim((string)($page['keywords'] ?? $settings['seo_keywords'] ?? ''));
     $canonical = tt_seo_url((string)($page['canonical'] ?? basename($_SERVER['SCRIPT_NAME'] ?? 'index.php')));
-    $image = tt_seo_url((string)($page['image'] ?? 'assets/images/logot-transparent.png'));
+    $image = tt_seo_url((string)($page['image'] ?? 'assets/images/logot-transparent.png?v=20260722-logo2'));
     $type = $page['type'] ?? 'website';
     $robots = $page['robots'] ?? 'index, follow, max-image-preview:large';
     $company = tt_company_profile($settings);
     $sameAs = array_values(array_filter($company['social'], static fn($url): bool => is_string($url) && $url !== '' && $url !== '#'));
-    $logo = tt_abs_url('assets/images/logot-transparent.png');
+    $logo = tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2');
     $organizationId = tt_site_base_url() . '#organization';
     $websiteId = tt_site_base_url() . '#website';
     $webpageId = $canonical . '#webpage';
@@ -323,8 +323,8 @@ function tt_render_seo(array $page = []): void
     }
     echo '    <meta name="robots" content="' . tt_h($robots) . '">' . PHP_EOL;
     echo '    <meta name="theme-color" content="#11143d">' . PHP_EOL;
-    echo '    <link rel="icon" type="image/png" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png')) . '">' . PHP_EOL;
-    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png')) . '">' . PHP_EOL;
+    echo '    <link rel="icon" type="image/png" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2')) . '">' . PHP_EOL;
+    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2')) . '">' . PHP_EOL;
     echo '    <link rel="canonical" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="en-IN" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="x-default" href="' . tt_h($canonical) . '">' . PHP_EOL;

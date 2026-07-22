@@ -1,6 +1,6 @@
 <div class="admin-sidebar">
     <div class="sidebar-logo">
-        <img src="../../frontend/assets/images/logot-transparent.png" alt="Talentteno logo">
+        <img src="../../frontend/assets/images/logot-transparent.png?v=20260722-logo2" alt="Talentteno logo">
         <div>
             <span class="sidebar-name">Talentteno</span>
             <span class="sidebar-role">Admin Panel</span>

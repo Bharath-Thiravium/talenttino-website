@@ -47,7 +47,24 @@ function api_input(): array
 function envv(string $key, string $default = ''): string
 {
     $value = getenv($key);
-    return $value === false ? $default : $value;
+    if ($value !== false) {
+        return $value;
+    }
+    $aliases = [
+        'SMTP_HOST' => 'MAIL_HOST',
+        'SMTP_PORT' => 'MAIL_PORT',
+        'SMTP_USER' => 'MAIL_USERNAME',
+        'SMTP_PASS' => 'MAIL_PASSWORD',
+        'SMTP_FROM_EMAIL' => 'MAIL_FROM',
+        'SMTP_FROM_NAME' => 'MAIL_FROM_NAME',
+    ];
+    if (isset($aliases[$key])) {
+        $aliasValue = getenv($aliases[$key]);
+        if ($aliasValue !== false) {
+            return $aliasValue;
+        }
+    }
+    return $default;
 }
 
 function normalize_text(mixed $value): string
@@ -193,7 +210,7 @@ function smtp_missing_fields(): array
     $missing = [];
     foreach ($required as $field) {
         $value = trim(envv($field));
-        if ($value === '' || ($field === 'SMTP_PASS' && preg_match('/^your[_-]|google[_-]?app[_-]?password|app[_-]?password[_-]?here/i', $value))) {
+        if ($value === '' || ($field === 'SMTP_PASS' && preg_match('/^your[_-]|google[_-]?app[_-]?password|app[_-]?password[_-]?here|your[_-]?gmail[_-]?app[_-]?password/i', $value))) {
             $missing[] = $field;
         }
     }

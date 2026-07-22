@@ -258,8 +258,8 @@ $mediaImages = tt_home_slide_media_images();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Slider - Talentteno Admin</title>
-    <link rel="icon" type="image/png" href="../../frontend/assets/images/logot-transparent.png">
-    <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png">
+    <link rel="icon" type="image/png" href="../../frontend/assets/images/logot-transparent.png?v=20260722-logo2">
+    <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png?v=20260722-logo2">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css?v=20260722-adminmobile3">
