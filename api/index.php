@@ -217,19 +217,58 @@ function smtp_missing_fields(): array
     return $missing;
 }
 
+function fallback_from_email(): string
+{
+    $configured = trim(envv('SMTP_FROM_EMAIL', envv('SMTP_USER', envv('MAIL_FROM', ''))));
+    if ($configured !== '' && filter_var($configured, FILTER_VALIDATE_EMAIL)) {
+        return $configured;
+    }
+    $host = preg_replace('/:\d+$/', '', (string)($_SERVER['HTTP_HOST'] ?? 'talentteno.local'));
+    $host = preg_replace('/[^a-z0-9.-]/i', '', $host) ?: 'talentteno.local';
+    return 'no-reply@' . $host;
+}
+
+function send_otp_with_php_mail(string $name, string $email, string $otp, string $course): bool
+{
+    $fromEmail = fallback_from_email();
+    $fromName = trim(envv('SMTP_FROM_NAME', envv('MAIL_FROM_NAME', 'Talentteno Institute')));
+    $expires = (int)envv('OTP_EXPIRY_MINUTES', '10');
+    $subject = 'Your OTP for Talentteno Brochure Download';
+    $body = implode("\n", [
+        'Talentteno Institute',
+        '',
+        'Hi ' . ($name ?: 'Student') . ',',
+        '',
+        'Your 6-digit OTP for ' . ($course ?: 'Talentteno Course Brochure') . ' is ' . $otp . '.',
+        'This OTP is valid for ' . $expires . ' minutes.',
+        '',
+        'Do not share this OTP with anyone.',
+        '',
+        'Talentteno Institute',
+    ]);
+    $headers = [
+        'From: ' . $fromName . ' <' . $fromEmail . '>',
+        'Reply-To: ' . $fromEmail,
+        'Content-Type: text/plain; charset=UTF-8',
+        'X-Mailer: PHP/' . PHP_VERSION,
+    ];
+    return @mail($email, $subject, $body, implode("\r\n", $headers));
+}
+
 function send_otp_email(string $name, string $email, string $otp, string $course): void
 {
     $missing = smtp_missing_fields();
     if ($missing) {
-        api_json(500, [
-            'success' => false,
-            'code' => 'SMTP_CONFIG_MISSING',
-            'message' => 'Email service is not configured. Please contact the administrator.',
-            'missingFields' => $missing,
-        ]);
+        if (send_otp_with_php_mail($name, $email, $otp, $course)) {
+            return;
+        }
+        api_fail(500, 'EMAIL_SEND_FAILED', 'Unable to send OTP email. Please try again.');
     }
     if (!class_exists(PHPMailer::class)) {
-        api_fail(500, 'EMAIL_SEND_FAILED', 'Email library is not installed on the server.');
+        if (send_otp_with_php_mail($name, $email, $otp, $course)) {
+            return;
+        }
+        api_fail(500, 'EMAIL_SEND_FAILED', 'Unable to send OTP email. Please try again.');
     }
 
     $mail = new PHPMailer(true);
@@ -265,6 +304,9 @@ function send_otp_email(string $name, string $email, string $otp, string $course
         $mail->send();
     } catch (MailException $e) {
         error_log('OTP email send failed: ' . $e->getMessage());
+        if (send_otp_with_php_mail($name, $email, $otp, $course)) {
+            return;
+        }
         api_fail(500, 'EMAIL_SEND_FAILED', 'Unable to send OTP email. Please try again.');
     }
 }
@@ -463,7 +505,7 @@ $path = preg_replace('#^/index\.php#', '', $path) ?: '/';
 
 try {
     if ($method === 'GET' && $path === '/health') {
-        api_ok(['server' => 'running', 'port' => 5000, 'emailConfigured' => smtp_missing_fields() === []]);
+        api_ok(['server' => 'running', 'port' => 5000, 'emailConfigured' => smtp_missing_fields() === [] || function_exists('mail')]);
     }
     if ($method === 'POST' && $path === '/brochure/send-otp') {
         handle_send_otp();
