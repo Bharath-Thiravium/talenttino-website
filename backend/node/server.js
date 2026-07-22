@@ -7,13 +7,24 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { query } from './db.js';
+import {
+  classifyEmailError,
+  isEmailConfigured,
+  logEmailError,
+  logMaskedSmtpConfig,
+  sendOtpEmail,
+  smtpConfigMissingPayload,
+  verifySmtpConnection
+} from './emailService.js';
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dotenvPath = path.join(__dirname, '.env');
+dotenv.config({ path: dotenvPath });
+process.env.DOTENV_CONFIG_PATH = dotenvPath;
 
 const app = express();
 const port = Number(process.env.PORT || 5010);
 const host = process.env.HOST || '127.0.0.1';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '../..');
 const brochureDir = path.join(projectRoot, 'frontend/uploads/brochures');
 const generatedBrochureSecret = process.env.BROCHURE_TOKEN_SECRET || process.env.SESSION_SECRET || 'talentteno-local-brochure-secret';
@@ -25,7 +36,7 @@ function positiveIntEnv(name, fallback) {
 const otpMobileLimitPerHour = positiveIntEnv('OTP_MOBILE_LIMIT_PER_HOUR', isDevelopment ? 20 : 5);
 const otpIpLimitPerHour = positiveIntEnv('OTP_IP_LIMIT_PER_HOUR', isDevelopment ? 100 : 15);
 const otpResendSeconds = positiveIntEnv('OTP_RESEND_SECONDS', 60);
-const otpExpiryMinutes = positiveIntEnv('OTP_EXPIRY_MINUTES', 5);
+const otpExpiryMinutes = positiveIntEnv('OTP_EXPIRY_MINUTES', 10);
 
 app.set('trust proxy', Number(process.env.TRUST_PROXY || 1));
 const allowedOrigins = (process.env.FRONTEND_ORIGIN || '')
@@ -36,7 +47,9 @@ app.use(cors({
     if (isDevelopment && /^https?:\/\/(127\.0\.0\.1|localhost)(:[0-9]+)?$/.test(origin)) return cb(null, true);
     cb(new Error('CORS'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 }));
 app.use(express.json({ limit: '32kb', type: ['application/json'] }));
 app.use((req, res, next) => {
@@ -62,6 +75,10 @@ function fail(res, status, code, message, errors = {}, extra = {}) {
 
 function hashValue(value) {
   return crypto.createHmac('sha256', generatedBrochureSecret).update(String(value)).digest('hex');
+}
+
+function hashOtp(value) {
+  return crypto.createHash('sha256').update(String(value)).digest('hex');
 }
 
 function randomToken(bytes = 32) {
@@ -98,7 +115,7 @@ const blockedMobiles = new Set(['0000000000', '1111111111', '2222222222', '33333
 function validateName(value) {
   const name = normalizeName(value);
   if (!name || name.length < 3 || name.length > 50) return 'Please enter a valid full name.';
-  if (!/^[A-Za-z ]+$/.test(name)) return 'Please enter a valid full name.';
+  if (!/^[A-Za-z][A-Za-z .'-]*[A-Za-z.]$/.test(name)) return 'Please enter a valid full name.';
   if (isRepeatedChars(name, 5)) return 'Please enter a valid full name.';
   if (fakeWords.has(name.toLowerCase())) return 'Please enter a valid full name.';
   return '';
@@ -157,10 +174,13 @@ function clientIp(req) {
 async function ensureBrochureTables() {
   await query(`CREATE TABLE IF NOT EXISTS brochure_otp_verifications (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(190) NULL,
     mobile VARCHAR(10) NOT NULL,
     course_title VARCHAR(150) NOT NULL,
     otp_hash VARCHAR(255) NOT NULL,
     verification_ref_hash VARCHAR(255) NULL,
+    verification_token_hash VARCHAR(255) NULL,
+    token_expires_at DATETIME NULL,
     expires_at DATETIME NOT NULL,
     resend_available_at DATETIME NOT NULL,
     attempt_count INT NOT NULL DEFAULT 0,
@@ -170,9 +190,11 @@ async function ensureBrochureTables() {
     ip_address VARCHAR(64) NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_bov_email (email),
     INDEX idx_bov_mobile (mobile),
     INDEX idx_bov_ip_created (ip_address, created_at),
-    INDEX idx_bov_ref (verification_ref_hash)
+    INDEX idx_bov_ref (verification_ref_hash),
+    INDEX idx_bov_token (verification_token_hash)
   )`);
   await query(`CREATE TABLE IF NOT EXISTS brochure_download_leads (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -201,14 +223,72 @@ async function ensureBrochureTables() {
     INDEX idx_bdl_created_at (created_at),
     INDEX idx_bdl_download_token_hash (download_token_hash)
   )`);
+
+  await ensureColumn('brochure_otp_verifications', 'email', 'email VARCHAR(190) NULL AFTER id');
+  await ensureColumn('brochure_otp_verifications', 'verification_token_hash', 'verification_token_hash VARCHAR(255) NULL AFTER verification_ref_hash');
+  await ensureColumn('brochure_otp_verifications', 'token_expires_at', 'token_expires_at DATETIME NULL AFTER verification_token_hash');
+  await ensureIndex('brochure_otp_verifications', 'idx_bov_email', 'CREATE INDEX idx_bov_email ON brochure_otp_verifications (email)');
+  await ensureIndex('brochure_otp_verifications', 'idx_bov_token', 'CREATE INDEX idx_bov_token ON brochure_otp_verifications (verification_token_hash)');
+}
+
+async function ensureColumn(table, column, definition) {
+  const rows = await query(
+    `SELECT COUNT(*) AS total
+     FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table AND COLUMN_NAME = :column`,
+    { table, column }
+  );
+  if (Number(rows[0]?.total || 0) === 0) {
+    try {
+      await query(`ALTER TABLE ${table} ADD COLUMN ${definition}`);
+    } catch (error) {
+      if (error?.code !== 'ER_DUP_FIELDNAME') throw error;
+    }
+  }
+}
+
+async function ensureIndex(table, index, statement) {
+  const rows = await query(
+    `SELECT COUNT(*) AS total
+     FROM INFORMATION_SCHEMA.STATISTICS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table AND INDEX_NAME = :index`,
+    { table, index }
+  );
+  if (Number(rows[0]?.total || 0) === 0) {
+    try {
+      await query(statement);
+    } catch (error) {
+      if (error?.code !== 'ER_DUP_KEYNAME') throw error;
+    }
+  }
 }
 
 async function findCourse(courseTitle) {
+  const title = normalizeFreeText(courseTitle);
   const rows = await query(
     'SELECT id, title, slug, brochure_file FROM courses WHERE is_active = 1 AND LOWER(title) = LOWER(:title) LIMIT 1',
-    { title: courseTitle }
+    { title }
   );
-  return rows[0] || null;
+  if (rows[0]) return rows[0];
+
+  const fallbackTitle = title
+    .replace(/\s+with\s+ai$/i, '')
+    .replace(/\s*&\s*ai$/i, '')
+    .trim();
+  if (fallbackTitle && fallbackTitle !== title) {
+    const fallbackRows = await query(
+      'SELECT id, title, slug, brochure_file FROM courses WHERE is_active = 1 AND LOWER(title) = LOWER(:title) LIMIT 1',
+      { title: fallbackTitle }
+    );
+    if (fallbackRows[0]) return fallbackRows[0];
+  }
+
+  const compactTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const allRows = await query('SELECT id, title, slug, brochure_file FROM courses WHERE is_active = 1');
+  return allRows.find((row) => {
+    const compactRowTitle = String(row.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+    return compactTitle.includes(compactRowTitle) || compactRowTitle.includes(compactTitle);
+  }) || null;
 }
 
 async function sendSmsOtp(mobile, otp) {
@@ -608,10 +688,13 @@ function buildSeoPayload(req, settings, overrides = {}) {
   };
 }
 
-app.get('/api/health', asyncRoute(async (_req, res) => {
-  await query('SELECT 1');
-  res.json({ ok: true, service: 'talentteno-node-backend' });
-}));
+app.get('/api/health', (_req, res) => {
+  res.json({
+    success: true,
+    server: 'running',
+    emailConfigured: isEmailConfigured()
+  });
+});
 
 app.get('/api/settings', asyncRoute(async (_req, res) => {
   res.json(await getSettings());
@@ -719,27 +802,34 @@ app.post('/api/enquiries', asyncRoute(async (req, res) => {
 }));
 
 app.post('/api/brochure/send-otp', asyncRoute(async (req, res) => {
-  await ensureBrochureTables();
-  const mobile = normalizeMobile(req.body.mobile);
-  const courseTitle = normalizeFreeText(req.body.courseTitle);
+  const name = normalizeName(req.body.name);
+  const email = normalizeEmail(req.body.email);
+  const mobile = normalizeMobile(req.body.mobile || req.body.phone);
+  const courseTitle = normalizeFreeText(req.body.course || req.body.courseTitle);
   const ip = clientIp(req);
   const errors = {};
-  const mobileError = validateMobile(mobile);
-  if (mobileError) errors.mobile = mobileError;
-  if (!courseTitle || /[<>]/.test(courseTitle)) errors.courseTitle = 'Please select a valid course.';
+  const missingSmtp = smtpConfigMissingPayload();
+  if (missingSmtp.missingFields.length) return res.status(500).json(missingSmtp);
+
+  await ensureBrochureTables();
+
+  if (!name) errors.name = 'Name is required.';
+  if (validateEmail(email)) errors.email = 'Please enter a valid email address.';
+  if (!/^[0-9]{10}$/.test(mobile)) errors.mobile = 'Please enter a valid 10-digit mobile number.';
+  if (!courseTitle || /[<>]/.test(courseTitle)) errors.course = 'Course is required.';
   const course = courseTitle ? await findCourse(courseTitle) : null;
-  if (!course) errors.courseTitle = 'Please select a valid course.';
+  if (!course) errors.course = 'Please select a valid course.';
   if (Object.keys(errors).length) {
-    return fail(res, 422, mobileError ? 'INVALID_MOBILE' : 'INVALID_COURSE', 'Please correct the highlighted fields.', errors);
+    return fail(res, 422, 'VALIDATION_FAILED', 'Please correct the highlighted fields.', errors);
   }
 
   const recent = await query(
     `SELECT GREATEST(TIMESTAMPDIFF(SECOND, NOW(), resend_available_at), 0) AS retry_after
      FROM brochure_otp_verifications
-     WHERE mobile = :mobile AND course_title = :courseTitle
+     WHERE email = :email AND course_title = :courseTitle
        AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
      ORDER BY id DESC LIMIT 1`,
-    { mobile, courseTitle: course.title }
+    { email, courseTitle: course.title }
   );
   const retryAfter = Number(recent[0]?.retry_after || 0);
   if (retryAfter > 0) {
@@ -748,22 +838,22 @@ app.post('/api/brochure/send-otp', asyncRoute(async (req, res) => {
       429,
       'OTP_RESEND_WAIT',
       'Please wait before requesting another OTP.',
-      { mobile: `Please wait ${retryAfter} seconds before requesting another OTP.` },
-      { retryAfter }
+      { email: `Please wait ${retryAfter} seconds before requesting another OTP.` },
+      { resendAfter: retryAfter }
     );
   }
 
-  const mobileCount = await query(
-    'SELECT COUNT(*) AS total FROM brochure_otp_verifications WHERE mobile = :mobile AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)',
-    { mobile }
+  const emailCount = await query(
+    'SELECT COUNT(*) AS total FROM brochure_otp_verifications WHERE email = :email AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)',
+    { email }
   );
-  if (Number(mobileCount[0]?.total || 0) >= otpMobileLimitPerHour) {
+  if (Number(emailCount[0]?.total || 0) >= otpMobileLimitPerHour) {
     return fail(
       res,
       429,
-      'OTP_MOBILE_LIMIT',
-      'Too many OTP requests for this mobile number. Please try again after one hour.',
-      { mobile: 'Too many OTP requests for this mobile number. Please try again after one hour.' }
+      'OTP_EMAIL_LIMIT',
+      'Too many OTP requests for this email address. Please try again after one hour.',
+      { email: 'Too many OTP requests for this email address. Please try again after one hour.' }
     );
   }
 
@@ -781,70 +871,73 @@ app.post('/api/brochure/send-otp', asyncRoute(async (req, res) => {
     );
   }
 
-  const isDevelopmentOtp = isDevelopment && process.env.DEV_OTP;
-  const otp = isDevelopmentOtp
-    ? String(process.env.DEV_OTP).padStart(6, '0').slice(0, 6)
-    : String(crypto.randomInt(100000, 1000000));
-  const smsResult = await sendSmsOtp(mobile, otp);
-  if (!smsResult.sent) {
-    return fail(
-      res,
-      503,
-      smsResult.code || 'OTP_SEND_FAILED',
-      smsResult.message || 'Unable to send OTP right now. Please try again.',
-      { mobile: smsResult.message || 'Unable to send OTP right now. Please try again.' }
-    );
+  const otp = crypto.randomInt(100000, 1000000).toString();
+  try {
+    await sendOtpEmail({ name, email, otp, course: course.title });
+  } catch (error) {
+    if (error?.code === 'SMTP_CONFIG_MISSING') {
+      return res.status(500).json(smtpConfigMissingPayload());
+    }
+    const mapped = classifyEmailError(error);
+    logEmailError('OTP email send error', error);
+    return res.status(mapped.status).json({
+      success: false,
+      code: mapped.code,
+      message: mapped.message
+    });
   }
 
-  const otpHash = await bcrypt.hash(otp, 10);
+  const otpHash = hashOtp(otp);
   await query(
-    'UPDATE brochure_otp_verifications SET used_at = NOW() WHERE mobile = :mobile AND course_title = :courseTitle AND used_at IS NULL',
-    { mobile, courseTitle: course.title }
+    'UPDATE brochure_otp_verifications SET used_at = NOW() WHERE email = :email AND course_title = :courseTitle AND used_at IS NULL',
+    { email, courseTitle: course.title }
   );
   await query(
     `INSERT INTO brochure_otp_verifications
-      (mobile, course_title, otp_hash, expires_at, resend_available_at, ip_address)
-      VALUES (:mobile, :courseTitle, :otpHash, DATE_ADD(NOW(), INTERVAL ${otpExpiryMinutes} MINUTE), DATE_ADD(NOW(), INTERVAL ${otpResendSeconds} SECOND), :ip)`,
-    { mobile, courseTitle: course.title, otpHash, ip }
+      (email, mobile, course_title, otp_hash, expires_at, resend_available_at, ip_address)
+      VALUES (:email, :mobile, :courseTitle, :otpHash, DATE_ADD(NOW(), INTERVAL ${otpExpiryMinutes} MINUTE), DATE_ADD(NOW(), INTERVAL ${otpResendSeconds} SECOND), :ip)`,
+    { email, mobile, courseTitle: course.title, otpHash, ip }
   );
 
-  return ok(res, { message: 'OTP sent successfully.', resendAfterSeconds: otpResendSeconds, expiresInSeconds: otpExpiryMinutes * 60 });
+  return ok(res, {
+    message: 'OTP sent successfully. Please check your email.',
+    resendAfter: otpResendSeconds,
+    expiresIn: otpExpiryMinutes * 60
+  });
 }));
 
 app.post('/api/brochure/verify-otp', asyncRoute(async (req, res) => {
   await ensureBrochureTables();
-  const mobile = normalizeMobile(req.body.mobile);
+  const email = normalizeEmail(req.body.email);
   const otp = String(req.body.otp || '').trim();
-  const courseTitle = normalizeFreeText(req.body.courseTitle);
-  const mobileError = validateMobile(mobile);
-  if (mobileError || !/^[0-9]{6}$/.test(otp)) {
-    return fail(res, 422, mobileError ? 'INVALID_MOBILE' : 'INVALID_OTP', 'Please correct the highlighted fields.', {
-      ...(mobileError ? { mobile: mobileError } : {}),
+  if (validateEmail(email) || !/^[0-9]{6}$/.test(otp)) {
+    return fail(res, 422, validateEmail(email) ? 'INVALID_EMAIL' : 'INVALID_OTP', 'Please correct the highlighted fields.', {
+      ...(validateEmail(email) ? { email: 'Please enter a valid email address.' } : {}),
       ...(!/^[0-9]{6}$/.test(otp) ? { otp: 'Please enter the 6-digit OTP.' } : {})
     });
   }
   const rows = await query(
     `SELECT * FROM brochure_otp_verifications
-     WHERE mobile = :mobile AND course_title = :courseTitle AND used_at IS NULL
+     WHERE email = :email AND used_at IS NULL
      ORDER BY id DESC LIMIT 1`,
-    { mobile, courseTitle }
+    { email }
   );
   const record = rows[0];
   if (!record || new Date(record.expires_at).getTime() < Date.now()) return fail(res, 422, 'OTP_EXPIRED', 'OTP expired. Please request a new OTP.', { otp: 'OTP expired. Please request a new OTP.' });
-  if (Number(record.attempt_count || 0) >= 3) return fail(res, 429, 'OTP_ATTEMPT_LIMIT', 'Maximum OTP attempts reached. Please request a new OTP.', { otp: 'Maximum OTP attempts reached.' });
+  if (Number(record.attempt_count || 0) >= 5) return fail(res, 429, 'OTP_ATTEMPT_LIMIT', 'Maximum OTP attempts reached. Please request a new OTP.', { otp: 'Maximum OTP attempts reached.' });
 
-  const valid = await bcrypt.compare(otp, record.otp_hash);
+  const valid = hashOtp(otp) === record.otp_hash;
   if (!valid) {
     await query('UPDATE brochure_otp_verifications SET attempt_count = attempt_count + 1 WHERE id = :id', { id: record.id });
     return fail(res, 422, 'INVALID_OTP', 'Incorrect OTP. Please try again.', { otp: 'Incorrect OTP. Please try again.' });
   }
 
-  const verificationRef = randomToken(24);
+  const verificationToken = randomToken(32);
   await query(
-    'UPDATE brochure_otp_verifications SET verified_at = NOW(), verification_ref_hash = :refHash WHERE id = :id',
-    { refHash: hashValue(verificationRef), id: record.id }
+    'UPDATE brochure_otp_verifications SET verified_at = NOW(), verification_token_hash = :tokenHash, token_expires_at = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE id = :id',
+    { tokenHash: hashValue(verificationToken), id: record.id }
   );
-  return ok(res, { message: 'Mobile number verified successfully.', verificationRef });
+  return ok(res, { message: 'Email verified successfully.', verificationToken });
 }));
 
 app.post('/api/brochure/submit', asyncRoute(async (req, res) => {
@@ -927,6 +1020,101 @@ app.post('/api/brochure/submit', asyncRoute(async (req, res) => {
   });
 }));
 
+app.post('/api/brochure/download', asyncRoute(async (req, res) => {
+  await ensureBrochureTables();
+  const ip = clientIp(req);
+  const data = {
+    courseTitle: normalizeFreeText(req.body.course || req.body.courseTitle || req.body.course_title),
+    fullName: normalizeName(req.body.name || req.body.fullName),
+    email: normalizeEmail(req.body.email),
+    mobile: normalizeMobile(req.body.mobile || req.body.phone),
+    degree: normalizeFreeText(req.body.degree),
+    college: normalizeFreeText(req.body.college),
+    address: normalizeFreeText(req.body.address) || 'Not provided',
+    currentStatus: normalizeFreeText(req.body.currentStatus || req.body.study_year),
+    verificationToken: normalizeFreeText(req.body.verificationToken)
+  };
+  const errors = {};
+  if (validateName(data.fullName)) errors.name = validateName(data.fullName);
+  if (validateEmail(data.email)) errors.email = 'Please enter a valid email address.';
+  if (!/^[0-9]{10}$/.test(data.mobile)) errors.mobile = 'Please enter a valid 10-digit mobile number.';
+  if (data.degree.length < 2 || data.degree.length > 100) errors.degree = 'Please enter your degree.';
+  if (data.college.length < 2 || data.college.length > 150) errors.college = 'Please enter your college name.';
+  if (!['1st Year', '2nd Year', '3rd Year', 'Passout'].includes(data.currentStatus)) errors.study_year = 'Please select your current year or status.';
+  if (!data.courseTitle || /[<>]/.test(data.courseTitle)) errors.course = 'Please select a valid course.';
+  if (!/^[A-Za-z0-9_-]{32,}$/.test(data.verificationToken)) errors.verificationToken = 'Email verification expired. Please verify OTP again.';
+  if (Object.keys(errors).length) return fail(res, 422, 'VALIDATION_FAILED', 'Please correct the highlighted fields.', errors);
+
+  const course = await findCourse(data.courseTitle);
+  if (!course) return fail(res, 422, 'INVALID_COURSE', 'Please select a valid course.', { course: 'Please select a valid course.' });
+
+  const otpRows = await query(
+    `SELECT * FROM brochure_otp_verifications
+     WHERE verification_token_hash = :tokenHash
+       AND email = :email
+       AND course_title = :courseTitle
+       AND verified_at IS NOT NULL
+       AND used_at IS NULL
+       AND token_expires_at >= NOW()
+     ORDER BY id DESC LIMIT 1`,
+    { tokenHash: hashValue(data.verificationToken), email: data.email, courseTitle: course.title }
+  );
+  const otpRecord = otpRows[0];
+  if (!otpRecord) {
+    return fail(res, 403, 'VERIFICATION_REQUIRED', 'Email verification expired. Please verify OTP again.', {
+      verificationToken: 'Email verification expired. Please verify OTP again.'
+    });
+  }
+
+  const token = randomToken(32);
+  const tokenHash = hashValue(token);
+  const lead = await query(
+    `INSERT INTO brochure_download_leads
+      (course_id, course_title, full_name, email, mobile, degree, college, address, current_status, mobile_verified, otp_verification_id, captcha_verified, ip_address, user_agent, download_token_hash, token_expires_at)
+      VALUES (:courseId, :courseTitle, :fullName, :email, :mobile, :degree, :college, :address, :currentStatus, 1, :otpId, 1, :ip, :userAgent, :tokenHash, DATE_ADD(NOW(), INTERVAL 10 MINUTE))`,
+    {
+      courseId: course.id,
+      courseTitle: course.title,
+      fullName: data.fullName,
+      email: data.email,
+      mobile: data.mobile,
+      degree: data.degree,
+      college: data.college,
+      address: data.address,
+      currentStatus: data.currentStatus,
+      otpId: otpRecord.id,
+      ip,
+      userAgent: String(req.get('user-agent') || '').slice(0, 255),
+      tokenHash
+    }
+  );
+  await query('UPDATE brochure_otp_verifications SET used_at = NOW() WHERE id = :id', { id: otpRecord.id });
+  await query(
+    'INSERT INTO enquiries (name, email, phone, course_id, course_name, message, type, status) VALUES (:name, :email, :phone, :courseId, :courseTitle, :message, "download", "new")',
+    {
+      name: data.fullName,
+      email: data.email,
+      phone: data.mobile,
+      courseId: course.id,
+      courseTitle: course.title,
+      message: `Degree: ${data.degree}\nCollege: ${data.college}\nAddress: ${data.address}\nYear Status: ${data.currentStatus}\nVerified brochure lead ID: ${lead.insertId}`
+    }
+  );
+
+  const brochureName = path.basename(String(course.brochure_file || ''));
+  const filePath = brochureName ? path.join(brochureDir, brochureName) : '';
+  if (!filePath || !filePath.startsWith(brochureDir) || !fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    const pdf = buildGeneratedBrochurePdf(course.title);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${safeDownloadName(course)}"`);
+    res.setHeader('Content-Length', String(pdf.length));
+    return res.end(pdf);
+  }
+  return res.download(filePath, safeDownloadName(course), (err) => {
+    if (err && !res.headersSent) res.status(500).json({ success: false, message: 'Unable to download brochure right now.' });
+  });
+}));
+
 app.get('/api/brochure/download/:token', asyncRoute(async (req, res) => {
   await ensureBrochureTables();
   const token = String(req.params.token || '');
@@ -993,4 +1181,6 @@ app.use((err, _req, res, _next) => {
 
 app.listen(port, host, () => {
   console.log(`Talentteno Node backend running on http://${host}:${port}`);
+  logMaskedSmtpConfig();
+  verifySmtpConnection();
 });

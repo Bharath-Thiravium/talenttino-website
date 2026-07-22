@@ -27,6 +27,9 @@
         <a href="home_slider.php" class="<?= basename($_SERVER['PHP_SELF']) === 'home_slider.php' ? 'active' : '' ?>">
             <i class="fas fa-images"></i> Home Slider
         </a>
+        <a href="review_showcase.php" class="<?= basename($_SERVER['PHP_SELF']) === 'review_showcase.php' ? 'active' : '' ?>">
+            <i class="fas fa-star-half-stroke"></i> Review Showcase
+        </a>
         <a href="services.php" class="<?= basename($_SERVER['PHP_SELF']) === 'services.php' ? 'active' : '' ?>">
             <i class="fas fa-concierge-bell"></i> Manage Services
         </a>

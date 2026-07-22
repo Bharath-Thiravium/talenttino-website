@@ -425,6 +425,20 @@ function tt_testimonials(int $limit = 3): array
     return tt_fetch_all("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY id DESC LIMIT $limit");
 }
 
+function tt_review_showcase(): array
+{
+    $rows = tt_fetch_all("SELECT * FROM review_showcase WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+    if ($rows) return $rows;
+    return [
+        ['image' => 'uploads/media/full-stack-development-20260703-133158-761383.png', 'title' => 'Full Stack Development', 'icon' => 'fa-code'],
+        ['image' => 'uploads/media/data-science-ai-20260703-133112-527863.png', 'title' => 'AI & Machine Learning', 'icon' => 'fa-brain'],
+        ['image' => 'uploads/media/cyber-security-20260703-133329-242125.png', 'title' => 'Cyber Security', 'icon' => 'fa-shield-halved'],
+        ['image' => 'uploads/media/data-analyst-20260703-133130-702998.png', 'title' => 'Data Analyst', 'icon' => 'fa-chart-line'],
+        ['image' => 'uploads/media/digital-marketing-20260703-133146-981935.png', 'title' => 'Digital Marketing', 'icon' => 'fa-bullhorn'],
+        ['image' => 'uploads/media/programming-languages-20260703-133210-630417.png', 'title' => 'Programming Languages', 'icon' => 'fa-terminal'],
+    ];
+}
+
 function tt_content_items(string $table, int $limit = 0): array
 {
     if (!in_array($table, ['careers', 'blog_posts', 'projects', 'why_items', 'hiring_items', 'franchise_items'], true)) {

@@ -259,3 +259,22 @@ INSERT INTO site_settings (id, site_name, tagline, about_title, about_content, m
 '2020', '2000+', '15+', '100%', '4.9',
 'Plot 81, Poriyalar Nagar, Tiruppalai, Madurai, Tamil Nadu - 625014',
 '+91 82484 15023', '+91 63836 43141', 'talentteno.socials@gmail.com');
+
+-- Review Showcase Images (Student Review section on home page)
+CREATE TABLE IF NOT EXISTS review_showcase (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(120) NOT NULL,
+    icon VARCHAR(60) NOT NULL DEFAULT 'fa-image',
+    image VARCHAR(255) NOT NULL DEFAULT '',
+    sort_order INT NOT NULL DEFAULT 0,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO review_showcase (title, icon, image, sort_order, is_active) VALUES
+('Full Stack Development', 'fa-code', 'uploads/media/full-stack-development-20260703-133158-761383.png', 1, 1),
+('AI & Machine Learning', 'fa-brain', 'uploads/media/data-science-ai-20260703-133112-527863.png', 2, 1),
+('Cyber Security', 'fa-shield-halved', 'uploads/media/cyber-security-20260703-133329-242125.png', 3, 1),
+('Data Analyst', 'fa-chart-line', 'uploads/media/data-analyst-20260703-133130-702998.png', 4, 1),
+('Digital Marketing', 'fa-bullhorn', 'uploads/media/digital-marketing-20260703-133146-981935.png', 5, 1),
+('Programming Languages', 'fa-terminal', 'uploads/media/programming-languages-20260703-133210-630417.png', 6, 1);

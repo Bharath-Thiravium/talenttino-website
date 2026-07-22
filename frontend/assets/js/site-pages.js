@@ -363,6 +363,7 @@ const scrollRevealSelectors = [
     '.catalog-card',
     '.price-card',
     '.contact-card',
+    '.tt-stat-card',
     '.home-course-card',
     '.home-process-card',
     '.home-highlight-item',
@@ -444,7 +445,7 @@ if (reduceMotion) {
     revealItems.forEach(item => item.classList.add('is-visible'));
 }
 
-const counterItems = document.querySelectorAll('.stat-card strong, .about-highlights strong, .home-stats strong');
+const counterItems = document.querySelectorAll('.stat-card strong, .about-highlights strong, .home-stats strong, .tt-stat-num');
 
 const homeStatsBar = document.querySelector('.home-stats');
 if (homeStatsBar) {
