@@ -215,6 +215,263 @@ html body.home-page .home-hero + .section .stat-card span {
     }
 }
 
+/* Home section heading center alignment on every viewport. */
+html body.home-page .model-copy,
+html body.home-page .model-split-head,
+html body.home-page .model-center-head,
+html body.home-page .model-dark-head {
+    text-align: center !important;
+    justify-items: center !important;
+}
+
+html body.home-page .model-split-head {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+}
+
+html body.home-page .model-split-head > div,
+html body.home-page .model-dark-head > div {
+    width: 100% !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-label {
+    width: fit-content !important;
+    margin-inline: auto !important;
+    justify-content: center !important;
+}
+
+html body.home-page .model-copy h2,
+html body.home-page .model-split-head h2,
+html body.home-page .model-center-head h2,
+html body.home-page .model-dark-head h2 {
+    margin-inline: auto !important;
+    text-align: center !important;
+    text-wrap: balance !important;
+}
+
+html body.home-page .model-copy strong,
+html body.home-page .model-copy p,
+html body.home-page .model-check-list {
+    margin-inline: auto !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-check-list {
+    width: fit-content !important;
+    max-width: 100% !important;
+}
+
+/* Home section headings: keep titles on one line where viewport allows it. */
+html body.home-page .model-copy h2,
+html body.home-page .model-split-head h2,
+html body.home-page .model-center-head h2,
+html body.home-page .model-dark-head h2 {
+    width: max-content !important;
+    max-width: calc(100vw - 180px) !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(30px, 3.6vw, 44px) !important;
+    line-height: 1.08 !important;
+}
+
+html body.home-page .model-about .model-copy h2 {
+    font-size: clamp(28px, 3.25vw, 42px) !important;
+}
+
+@media (max-width: 900px) {
+    html body.home-page .model-copy h2,
+    html body.home-page .model-split-head h2,
+    html body.home-page .model-center-head h2,
+    html body.home-page .model-dark-head h2 {
+        max-width: calc(100vw - 40px) !important;
+        font-size: clamp(22px, 5.8vw, 34px) !important;
+    }
+}
+
+@media (max-width: 520px) {
+    html body.home-page .model-copy h2,
+    html body.home-page .model-split-head h2,
+    html body.home-page .model-center-head h2,
+    html body.home-page .model-dark-head h2 {
+        font-size: clamp(18px, 5.2vw, 28px) !important;
+        letter-spacing: 0 !important;
+    }
+}
+
+/* About section final layout: no heading/image overlap, centered and readable. */
+html body.home-page .model-about .model-about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+    justify-items: center !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-about .model-copy {
+    width: min(1180px, calc(100vw - 64px)) !important;
+    max-width: 1180px !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+}
+
+html body.home-page .model-about .model-copy h2 {
+    width: min(980px, calc(100vw - 72px)) !important;
+    max-width: 980px !important;
+    margin-inline: auto !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
+    font-size: clamp(34px, 3.4vw, 48px) !important;
+    line-height: 1.12 !important;
+}
+
+html body.home-page .model-about .model-copy strong,
+html body.home-page .model-about .model-copy p {
+    max-width: 760px !important;
+    margin-inline: auto !important;
+}
+
+html body.home-page .model-about .model-gradient-btn {
+    margin-inline: auto !important;
+}
+
+html body.home-page .model-about .model-about-visual,
+html body.home-page .model-about .model-about-visual.reveal,
+html body.home-page .model-about .model-about-visual.reveal.is-visible,
+html body.home-page .model-about .model-about-visual.reveal:not(.is-visible) {
+    width: min(760px, calc(100vw - 64px)) !important;
+    max-width: 760px !important;
+    margin-inline: auto !important;
+}
+
+@media (max-width: 760px) {
+    html body.home-page .model-about .model-copy {
+        width: min(100%, calc(100vw - 28px)) !important;
+    }
+
+    html body.home-page .model-about .model-copy h2 {
+        width: min(100%, calc(100vw - 28px)) !important;
+        max-width: calc(100vw - 28px) !important;
+        font-size: clamp(28px, 8vw, 36px) !important;
+    }
+
+    html body.home-page .model-about .model-about-visual,
+    html body.home-page .model-about .model-about-visual.reveal,
+    html body.home-page .model-about .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about .model-about-visual.reveal:not(.is-visible) {
+        width: min(100%, calc(100vw - 28px)) !important;
+    }
+}
+
+/* About section desktop model final: two-column, aligned, no text/image collision. */
+@media (min-width: 901px) {
+    html body.home-page .model-about .model-about-grid {
+        width: min(1200px, calc(100% - 64px)) !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.88fr) !important;
+        gap: clamp(48px, 5vw, 72px) !important;
+        align-items: center !important;
+        justify-items: stretch !important;
+        text-align: left !important;
+    }
+
+    html body.home-page .model-about .model-copy {
+        width: 100% !important;
+        max-width: 640px !important;
+        margin: 0 !important;
+        text-align: left !important;
+        justify-items: start !important;
+    }
+
+    html body.home-page .model-about .model-label {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    html body.home-page .model-about .model-copy h2 {
+        width: 100% !important;
+        max-width: 640px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        white-space: normal !important;
+        text-wrap: balance !important;
+        text-align: left !important;
+        font-size: clamp(42px, 4vw, 64px) !important;
+        line-height: 1.08 !important;
+    }
+
+    html body.home-page .model-about .model-copy strong,
+    html body.home-page .model-about .model-copy p {
+        max-width: 620px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+
+    html body.home-page .model-about .model-check-list {
+        width: 100% !important;
+        max-width: 560px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+
+    html body.home-page .model-about .model-gradient-btn {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    html body.home-page .model-about .model-about-visual,
+    html body.home-page .model-about .model-about-visual.reveal,
+    html body.home-page .model-about .model-about-visual.reveal.is-visible,
+    html body.home-page .model-about .model-about-visual.reveal:not(.is-visible) {
+        width: min(100%, 560px) !important;
+        max-width: 560px !important;
+        min-height: 430px !important;
+        justify-self: center !important;
+        margin: 0 auto !important;
+    }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+    html body.home-page .model-about .model-about-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 0.82fr) !important;
+        gap: 40px !important;
+    }
+
+    html body.home-page .model-about .model-copy h2 {
+        font-size: clamp(36px, 4.2vw, 48px) !important;
+    }
+}
+
+/* Review showcase marquee final: contain animation and hide page horizontal overflow. */
+html body.home-page {
+    overflow-x: hidden !important;
+}
+
+html body.home-page .model-review-section,
+html body.home-page .review-scroll-stage {
+    max-width: 100vw !important;
+    overflow: hidden !important;
+}
+
+html body.home-page .review-scroll-row-one {
+    width: max-content !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    scrollbar-width: none !important;
+    padding-right: 22px !important;
+}
+
+html body.home-page .review-scroll-row-one::-webkit-scrollbar {
+    display: none !important;
+}
+
+html body.home-page .review-scroll-row-one [data-auto-clone="true"] {
+    pointer-events: none !important;
+}
+
 /* About page single-image model: one centered media card, no floating thumbnails. */
 html body.about-page .about-intro {
     grid-template-columns: minmax(0, 1fr) minmax(420px, 0.92fr) !important;
@@ -51579,6 +51836,7 @@ html body.home-page .model-review-section {
 html body.home-page .review-scroll-stage {
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 0 !important;
     overflow: hidden !important;
     padding: 0 !important;
     mask-image: none !important;
@@ -51593,6 +51851,8 @@ html body.home-page .review-scroll-row-two {
 html body.home-page .review-scroll-row,
 html body.home-page .review-scroll-row-one {
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     display: grid !important;
     grid-auto-flow: column !important;
     grid-auto-columns: minmax(300px, 420px) !important;
@@ -51604,6 +51864,9 @@ html body.home-page .review-scroll-row-one {
     padding: 0 max(18px, calc((100vw - 1200px) / 2)) 18px !important;
     animation: none !important;
     transform: none !important;
+    translate: none !important;
+    margin: 0 !important;
+    overscroll-behavior-inline: contain !important;
     -webkit-overflow-scrolling: touch !important;
 }
 html body.home-page .review-scroll-card,
@@ -51629,5 +51892,589 @@ html body.home-page .review-scroll-card img {
     html body.home-page .review-scroll-card,
     html body.home-page .review-scroll-card-small {
         height: 310px !important;
+    }
+}
+
+/* Home review row: fit complete cards instead of clipping the last visible item. */
+html body.home-page .model-review-section .site-container {
+    overflow: visible !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one {
+    display: flex !important;
+    gap: 22px !important;
+    padding: 0 0 18px !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 0 0 calc((100% - 66px) / 4) !important;
+}
+
+html body.home-page .review-scroll-content {
+    left: 22px !important;
+    right: 22px !important;
+}
+
+html body.home-page .review-scroll-content p {
+    display: -webkit-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+@media (max-width: 1180px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: calc((100% - 44px) / 3) !important;
+    }
+}
+
+@media (max-width: 860px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one {
+        gap: 16px !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: calc((100% - 16px) / 2) !important;
+    }
+}
+
+@media (max-width: 560px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one {
+        gap: 14px !important;
+        padding-inline: 0 !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: min(86vw, 360px) !important;
+    }
+
+    html body.home-page .review-scroll-content {
+        left: 18px !important;
+        right: 18px !important;
+    }
+}
+
+/* Home interaction final alignment: enrol modal, AI chat, and hero arrows. */
+html body.home-page.enroll-popup-open {
+    overflow: hidden !important;
+}
+
+html body.home-page.enroll-popup-open .home-enroll-modal,
+html body.home-page.enroll-popup-open .hero-counselling-form,
+html body.home-page.enroll-popup-open .hero-slider-col .home-counselling-card {
+    position: fixed !important;
+    inset: auto auto auto auto !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 10100 !important;
+    display: block !important;
+    width: min(430px, calc(100vw - 32px)) !important;
+    max-width: 430px !important;
+    max-height: calc(100vh - 32px) !important;
+    overflow-y: auto !important;
+    transform: translate(-50%, -50%) !important;
+    padding: 28px 20px 20px !important;
+    border: 1px solid rgba(191, 219, 254, .86) !important;
+    border-top: 7px solid #a855f7 !important;
+    border-radius: 18px !important;
+    background: #ffffff !important;
+    box-shadow: 0 28px 80px rgba(2, 8, 23, .34) !important;
+}
+
+html body.home-page.enroll-popup-open .home-enroll-close {
+    top: 14px !important;
+    right: 14px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: linear-gradient(135deg, #527dff, #b927ef) !important;
+    box-shadow: 0 12px 24px rgba(79, 70, 229, .24) !important;
+}
+
+html body.home-page.enroll-popup-open .home-enroll-modal h2 {
+    margin-right: 52px !important;
+    padding-right: 0 !important;
+}
+
+html body.home-page .home-ai-chat {
+    position: fixed !important;
+    right: clamp(18px, 2.4vw, 34px) !important;
+    bottom: 86px !important;
+    z-index: 10020 !important;
+}
+
+html body.home-page .home-ai-panel {
+    position: fixed !important;
+    right: clamp(18px, 2.4vw, 34px) !important;
+    bottom: 148px !important;
+    width: min(370px, calc(100vw - 36px)) !important;
+    max-height: min(540px, calc(100vh - 178px)) !important;
+    display: grid !important;
+    grid-template-rows: auto minmax(150px, 1fr) auto auto !important;
+    overflow: hidden !important;
+    transform-origin: right bottom !important;
+}
+
+html body.home-page .home-ai-head {
+    min-height: 70px !important;
+    grid-template-columns: 40px minmax(0, 1fr) 40px !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+}
+
+html body.home-page .home-ai-head div {
+    min-width: 0 !important;
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+}
+
+html body.home-page .home-ai-head strong,
+html body.home-page .home-ai-head small {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+html body.home-page .home-ai-head .home-ai-back,
+html body.home-page .home-ai-head .home-ai-close {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 12px !important;
+}
+
+html body.home-page .home-ai-messages {
+    height: auto !important;
+    min-height: 190px !important;
+    overflow-y: auto !important;
+}
+
+html body.home-page .home-ai-suggestions {
+    flex-wrap: wrap !important;
+}
+
+html body.home-page .home-ai-suggestions button {
+    flex: 1 1 30% !important;
+    min-width: 92px !important;
+}
+
+html body.home-page .home-ai-form {
+    grid-template-columns: minmax(0, 1fr) 56px !important;
+    align-items: center !important;
+}
+
+html body.home-page .home-ai-form input {
+    min-width: 0 !important;
+}
+
+html body.home-page .hero-slider .slider-prev,
+html body.home-page .hero-slider .slider-next {
+    position: absolute !important;
+    top: 50% !important;
+    z-index: 30 !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border: 1px solid rgba(255, 255, 255, .38) !important;
+    border-radius: 999px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: rgba(7, 20, 45, .64) !important;
+    box-shadow: 0 14px 30px rgba(2, 8, 23, .28) !important;
+    transform: translateY(-50%) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+html body.home-page .hero-slider .slider-prev {
+    left: max(20px, env(safe-area-inset-left)) !important;
+}
+
+html body.home-page .hero-slider .slider-next {
+    right: max(20px, env(safe-area-inset-right)) !important;
+}
+
+html body.home-page .home-social-rail ~ .home-ai-chat,
+html body.home-page .home-social-rail {
+    z-index: 10010 !important;
+}
+
+html body.home-page .hero-slider .slider-next {
+    right: clamp(86px, 7vw, 112px) !important;
+}
+
+html body.home-page .hero-slider .slider-prev:hover,
+html body.home-page .hero-slider .slider-next:hover,
+html body.home-page .hero-slider .slider-prev:focus-visible,
+html body.home-page .hero-slider .slider-next:focus-visible {
+    background: linear-gradient(135deg, #2563eb, #a21caf) !important;
+    outline: 3px solid rgba(255, 255, 255, .38) !important;
+    outline-offset: 2px !important;
+}
+
+@media (max-width: 700px) {
+    html body.home-page .home-ai-chat {
+        right: 14px !important;
+        left: auto !important;
+        bottom: 78px !important;
+    }
+
+    html body.home-page .home-ai-panel {
+        right: 10px !important;
+        left: auto !important;
+        bottom: 138px !important;
+        width: calc(100vw - 20px) !important;
+        max-height: calc(100vh - 154px) !important;
+        border-radius: 16px !important;
+    }
+
+    html body.home-page .home-ai-toggle {
+        min-width: 118px !important;
+        width: auto !important;
+        height: 48px !important;
+        padding: 0 16px !important;
+    }
+
+    html body.home-page .home-ai-toggle span {
+        display: inline !important;
+    }
+
+    html body.home-page .home-ai-suggestions button {
+        flex-basis: calc(50% - 6px) !important;
+    }
+
+    html body.home-page .hero-slider .slider-prev,
+    html body.home-page .hero-slider .slider-next {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    html body.home-page .hero-slider .slider-prev {
+        left: 12px !important;
+    }
+
+    html body.home-page .hero-slider .slider-next {
+        right: 76px !important;
+    }
+}
+
+/* Home mobile section headings: keep labels and titles centered on all small screens. */
+@media (max-width: 900px) {
+    html body.home-page .model-copy,
+    html body.home-page .model-split-head,
+    html body.home-page .model-center-head,
+    html body.home-page .model-dark-head {
+        width: min(100%, 720px) !important;
+        margin-inline: auto !important;
+        text-align: center !important;
+        justify-items: center !important;
+        align-items: center !important;
+    }
+
+    html body.home-page .model-split-head {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    html body.home-page .model-split-head > div,
+    html body.home-page .model-copy > div,
+    html body.home-page .model-dark-head > div {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    html body.home-page .model-label {
+        width: fit-content !important;
+        margin-inline: auto !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    html body.home-page .model-copy h2,
+    html body.home-page .model-split-head h2,
+    html body.home-page .model-center-head h2,
+    html body.home-page .model-dark-head h2 {
+        max-width: 760px !important;
+        margin-inline: auto !important;
+        text-align: center !important;
+        text-wrap: balance !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+        hyphens: manual !important;
+    }
+}
+
+@media (max-width: 560px) {
+    html body.home-page .model-copy,
+    html body.home-page .model-split-head,
+    html body.home-page .model-center-head,
+    html body.home-page .model-dark-head {
+        padding-inline: 14px !important;
+    }
+
+    html body.home-page .model-copy h2,
+    html body.home-page .model-split-head h2,
+    html body.home-page .model-center-head h2,
+    html body.home-page .model-dark-head h2 {
+        font-size: clamp(32px, 9.2vw, 44px) !important;
+        line-height: 1.08 !important;
+    }
+}
+
+/* Home review scroll fix: keep the row inside the page and let vertical page scrolling pass normally. */
+html body.home-page {
+    overflow-x: clip !important;
+}
+
+html body.home-page .model-review-section,
+html body.home-page .model-review-section .site-container {
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+html body.home-page .review-scroll-stage {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    overflow: visible !important;
+    padding: 12px 0 8px !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+}
+
+html body.home-page .review-scroll-stage::before,
+html body.home-page .review-scroll-stage::after,
+html body.home-page .review-scroll-row-two {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    gap: 22px !important;
+    margin: 0 !important;
+    padding: 0 2px 18px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x proximity !important;
+    scroll-padding-inline: 2px !important;
+    scrollbar-width: thin !important;
+    overscroll-behavior: auto !important;
+    touch-action: pan-x pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+    animation: none !important;
+    transform: none !important;
+    translate: none !important;
+    will-change: auto !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one::-webkit-scrollbar {
+    display: block !important;
+    height: 8px !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+    flex: 0 0 calc((100% - 66px) / 4) !important;
+    min-width: 0 !important;
+    height: clamp(290px, 27vw, 350px) !important;
+    border-radius: 16px !important;
+    scroll-snap-align: start !important;
+}
+
+@media (max-width: 1180px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: calc((100% - 44px) / 3) !important;
+    }
+}
+
+@media (max-width: 860px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one {
+        gap: 16px !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: calc((100% - 16px) / 2) !important;
+    }
+}
+
+@media (max-width: 560px) {
+    html body.home-page .review-scroll-row.review-scroll-row-one {
+        gap: 14px !important;
+        padding-inline: 0 !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card {
+        flex-basis: min(86vw, 360px) !important;
+        height: 310px !important;
+    }
+}
+
+/* Home review auto-slide final: smooth marquee inside the viewport. */
+html body.home-page .model-review-section {
+    overflow: hidden !important;
+}
+
+html body.home-page .model-review-section .site-container {
+    overflow: visible !important;
+}
+
+html body.home-page .review-scroll-stage {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    display: grid !important;
+    gap: 22px !important;
+    min-height: 650px !important;
+    overflow: hidden !important;
+    padding: 12px 0 34px !important;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%) !important;
+    mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%) !important;
+}
+
+html body.home-page .review-scroll-stage::before,
+html body.home-page .review-scroll-stage::after {
+    display: none !important;
+    content: none !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one,
+html body.home-page .review-scroll-row.review-scroll-row-two {
+    --review-slide-gap-half: 11px;
+    width: max-content !important;
+    max-width: none !important;
+    display: flex !important;
+    gap: 22px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    scrollbar-width: none !important;
+    overscroll-behavior: auto !important;
+    touch-action: auto !important;
+    position: relative !important;
+    animation: reviewAutoSlide 42s linear infinite !important;
+    will-change: left !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-two {
+    animation-name: reviewAutoSlideReverse !important;
+    animation-duration: 48s !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one::-webkit-scrollbar,
+html body.home-page .review-scroll-row.review-scroll-row-two::-webkit-scrollbar {
+    display: none !important;
+}
+
+html body.home-page .review-scroll-stage:hover .review-scroll-row.review-scroll-row-one,
+html body.home-page .review-scroll-stage:hover .review-scroll-row.review-scroll-row-two,
+html body.home-page .review-scroll-stage:focus-within .review-scroll-row.review-scroll-row-one,
+html body.home-page .review-scroll-stage:focus-within .review-scroll-row.review-scroll-row-two {
+    animation-play-state: paused !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card,
+html body.home-page .review-scroll-row.review-scroll-row-two .review-scroll-card {
+    flex: 0 0 clamp(300px, 30vw, 520px) !important;
+    width: clamp(300px, 30vw, 520px) !important;
+    min-width: clamp(300px, 30vw, 520px) !important;
+    height: clamp(290px, 27vw, 350px) !important;
+    border-radius: 16px !important;
+    scroll-snap-align: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+}
+
+html body.home-page .review-scroll-row .review-scroll-card,
+html body.home-page .review-scroll-row .review-scroll-card.reveal,
+html body.home-page .review-scroll-row .review-scroll-card.scroll-reveal-auto,
+html body.home-page .review-scroll-row .review-scroll-card:not(.is-visible),
+html body.home-page .review-scroll-row .review-scroll-card.reveal:not(.is-visible),
+html body.home-page .review-scroll-row .review-scroll-card.scroll-reveal-auto:not(.is-visible),
+html body.home-page .review-scroll-row .review-scroll-card img,
+html body.home-page .review-scroll-row .review-scroll-card img:not(.is-visible) {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+}
+
+html body.home-page .review-scroll-row.review-scroll-row-two .review-scroll-card {
+    height: clamp(240px, 22vw, 300px) !important;
+}
+
+html body.home-page .review-scroll-row [data-auto-clone] {
+    pointer-events: none !important;
+}
+
+@keyframes reviewAutoSlide {
+    from {
+        left: 0;
+    }
+    to {
+        left: calc(-50% - var(--review-slide-gap-half, 11px));
+    }
+}
+
+@keyframes reviewAutoSlideReverse {
+    from {
+        left: calc(-50% - var(--review-slide-gap-half, 11px));
+    }
+    to {
+        left: 0;
+    }
+}
+
+@media (max-width: 760px) {
+    html body.home-page .review-scroll-stage {
+        gap: 14px !important;
+        min-height: 588px !important;
+        padding-bottom: 22px !important;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%) !important;
+        mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%) !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one,
+    html body.home-page .review-scroll-row.review-scroll-row-two {
+        --review-slide-gap-half: 7px;
+        gap: 14px !important;
+        animation-duration: 34s !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-two {
+        animation-duration: 39s !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-one .review-scroll-card,
+    html body.home-page .review-scroll-row.review-scroll-row-two .review-scroll-card {
+        flex-basis: min(84vw, 330px) !important;
+        width: min(84vw, 330px) !important;
+        min-width: min(84vw, 330px) !important;
+        height: 310px !important;
+    }
+
+    html body.home-page .review-scroll-row.review-scroll-row-two .review-scroll-card {
+        height: 250px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body.home-page .review-scroll-row.review-scroll-row-one,
+    html body.home-page .review-scroll-row.review-scroll-row-two {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        animation: none !important;
     }
 }

@@ -50,35 +50,40 @@ $items = $items ?: [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260722-franchiseform3">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-franchisealign1">
     <style>
-        .franchise-enquiry-overlay{position:fixed;inset:0;z-index:30000;display:none;align-items:flex-start;justify-content:center;padding:118px 22px 28px;background:linear-gradient(135deg,rgba(8,19,43,.82),rgba(20,20,70,.78));backdrop-filter:blur(13px)}
+        .franchise-enquiry-overlay{position:fixed;inset:0;z-index:30000;display:none;align-items:center;justify-content:center;width:100%;height:100vh;height:100dvh;padding:calc(var(--header-height,90px) + 18px) clamp(12px,3vw,28px) clamp(14px,3vh,28px);background:linear-gradient(135deg,rgba(8,19,43,.82),rgba(20,20,70,.78));backdrop-filter:blur(13px);overflow:hidden}
         .franchise-enquiry-overlay.is-open{display:flex}
-        .franchise-enquiry-modal{position:relative;width:min(540px,100%);max-height:calc(100vh - 146px);overflow:auto;border:1px solid rgba(147,197,253,.6);border-radius:18px;background:linear-gradient(180deg,#fff 0%,#f8fbff 100%);box-shadow:0 30px 90px rgba(2,8,23,.36)}
+        .franchise-enquiry-modal{position:relative;width:min(520px,calc(100vw - 24px));max-height:calc(100vh - var(--header-height,90px) - 44px);max-height:calc(100dvh - var(--header-height,90px) - 44px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(147,197,253,.6);border-radius:18px;background:linear-gradient(180deg,#fff 0%,#f8fbff 100%);box-shadow:0 30px 90px rgba(2,8,23,.36)}
         .franchise-enquiry-modal:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#2563eb,#d31ff2);border-radius:18px 18px 0 0}
-        .franchise-enquiry-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 24px 18px;border-bottom:1px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(239,246,255,.98),rgba(255,255,255,.98))}
+        .franchise-enquiry-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;padding:20px 24px 16px;border-bottom:1px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(239,246,255,.98),rgba(255,255,255,.98))}
+        .franchise-enquiry-head>div{min-width:0}
         .franchise-enquiry-kicker{display:inline-flex;align-items:center;gap:8px;margin-bottom:9px;color:#075eea;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em}
-        .franchise-enquiry-head h2{margin:0;color:#101827;font-size:25px;line-height:1.18;font-weight:900}
-        .franchise-enquiry-close{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border:3px solid #fff;border-radius:50%;background:#0f172a;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 14px 32px rgba(15,23,42,.28);transition:transform .18s ease,background .18s ease}
+        .franchise-enquiry-head h2{margin:0;color:#101827;font-size:clamp(22px,2.1vw,25px);line-height:1.18;font-weight:900}
+        .franchise-enquiry-close{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:3px solid #fff;border-radius:50%;background:#0f172a;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 14px 32px rgba(15,23,42,.28);transition:transform .18s ease,background .18s ease}
         .franchise-enquiry-close:hover{transform:translateY(-1px);background:#1d4ed8}
         .franchise-enquiry-close:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:3px}
-        .franchise-modal-form{display:grid;gap:14px;margin:0;padding:22px 24px 24px}
-        .franchise-modal-form .fm-field{position:relative;display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;min-height:50px;border:1px solid #c6d9f5;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 10px 28px rgba(37,99,235,.06)}
+        .franchise-modal-form{display:grid;gap:12px;min-height:0;margin:0;padding:18px 24px 20px;overflow-y:auto;overscroll-behavior:contain}
+        .franchise-modal-form .fm-field{position:relative;display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;min-height:48px;border:1px solid #c6d9f5;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 10px 28px rgba(37,99,235,.06)}
         .franchise-modal-form .fm-field i{display:grid;place-items:center;width:46px;height:100%;border-right:1px solid #dbe7fb;background:#f3f8ff;color:#1d4ed8;font-size:16px}
-        .franchise-modal-form input,.franchise-modal-form textarea{width:100%;min-width:0;border:0;outline:0;background:transparent;padding:13px 14px;font:inherit;font-size:14px;font-weight:800;color:#172033}
+        .franchise-modal-form input,.franchise-modal-form textarea{width:100%;min-width:0;border:0;outline:0;background:transparent;padding:12px 14px;font:inherit;font-size:14px;font-weight:800;color:#172033}
         .franchise-modal-form input::placeholder,.franchise-modal-form textarea::placeholder{color:#7b8790;opacity:1}
-        .franchise-modal-form textarea{min-height:92px;resize:vertical;line-height:1.5}
+        .franchise-modal-form textarea{min-height:82px;resize:vertical;line-height:1.5}
         .franchise-modal-form .fm-field:focus-within{border-color:#2563eb;background:#fff;box-shadow:0 0 0 4px rgba(37,99,235,.10),0 14px 32px rgba(37,99,235,.10)}
         .franchise-modal-form .fm-field:focus-within i{background:#eaf2ff;color:#0f3ea8}
         .franchise-modal-form .fm-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
-        .franchise-modal-form button{min-height:48px;border:0;border-radius:10px;color:#fff;background:linear-gradient(135deg,#2563eb 0%,#d31ff2 100%);font:inherit;font-weight:900;cursor:pointer;box-shadow:0 16px 34px rgba(124,58,237,.24);transition:transform .18s ease,box-shadow .18s ease}
+        .franchise-modal-form button{min-height:46px;border:0;border-radius:10px;color:#fff;background:linear-gradient(135deg,#2563eb 0%,#d31ff2 100%);font:inherit;font-weight:900;cursor:pointer;box-shadow:0 16px 34px rgba(124,58,237,.24);transition:transform .18s ease,box-shadow .18s ease}
         .franchise-modal-form button:hover{transform:translateY(-1px);box-shadow:0 20px 40px rgba(124,58,237,.3)}
         .franchise-modal-form button:disabled{opacity:.65;cursor:not-allowed}
         .franchise-modal-form .fm-status{min-height:18px;margin:0;font-size:13px;font-weight:800}
         .franchise-modal-form .fm-status.ok{color:#16a34a}
         .franchise-modal-form .fm-status.fail{color:#dc2626}
         body.franchise-enquiry-open{overflow:hidden}
-        @media(max-width:560px){.franchise-enquiry-overlay{padding:104px 12px 16px}.franchise-enquiry-modal{max-height:calc(100vh - 120px);border-radius:15px}.franchise-enquiry-head{padding:20px 16px 14px}.franchise-enquiry-kicker{font-size:11px}.franchise-enquiry-head h2{font-size:21px}.franchise-enquiry-close{flex-basis:40px;width:40px;height:40px}.franchise-modal-form{gap:11px;padding:16px}.franchise-modal-form .fm-field{grid-template-columns:42px minmax(0,1fr);min-height:46px}.franchise-modal-form .fm-field i{width:42px}.franchise-modal-form input,.franchise-modal-form textarea{font-size:13px;padding:12px}.franchise-modal-form button{min-height:46px}}
+        body.franchise-enquiry-open .service-modal-overlay{display:none!important}
+        @media(min-width:900px) and (max-height:760px){.franchise-enquiry-overlay{padding-top:calc(var(--header-height,90px) + 10px);padding-bottom:14px}.franchise-enquiry-modal{width:min(500px,calc(100vw - 28px));max-height:calc(100vh - var(--header-height,90px) - 24px);max-height:calc(100dvh - var(--header-height,90px) - 24px)}.franchise-enquiry-head{padding:16px 24px 12px}.franchise-enquiry-kicker{margin-bottom:6px}.franchise-modal-form{gap:9px;padding:14px 24px 16px}.franchise-modal-form .fm-field{min-height:44px}.franchise-modal-form input,.franchise-modal-form textarea{padding-top:10px;padding-bottom:10px}.franchise-modal-form textarea{min-height:66px}.franchise-modal-form button{min-height:42px}}
+        @media(max-width:760px){.franchise-enquiry-overlay{align-items:flex-start;padding:calc(var(--header-height,78px) + 10px) 12px 14px}.franchise-enquiry-modal{width:100%;max-height:calc(100vh - var(--header-height,78px) - 24px);max-height:calc(100dvh - var(--header-height,78px) - 24px);border-radius:16px}.franchise-enquiry-head{padding:18px 16px 14px}.franchise-modal-form{gap:11px;padding:16px}.franchise-modal-form .fm-field{grid-template-columns:42px minmax(0,1fr);min-height:46px}.franchise-modal-form .fm-field i{width:42px}.franchise-modal-form input,.franchise-modal-form textarea{font-size:13px;padding:12px}.franchise-modal-form textarea{min-height:76px}.franchise-modal-form button{min-height:46px}}
+        @media(max-width:420px){.franchise-enquiry-overlay{padding-left:10px;padding-right:10px;padding-bottom:10px}.franchise-enquiry-head{gap:10px;padding:16px 14px 12px}.franchise-enquiry-kicker{font-size:10px;margin-bottom:6px}.franchise-enquiry-head h2{font-size:20px}.franchise-enquiry-close{flex-basis:38px;width:38px;height:38px}.franchise-modal-form{gap:10px;padding:14px}.franchise-modal-form .fm-field{grid-template-columns:40px minmax(0,1fr);min-height:44px}.franchise-modal-form .fm-field i{width:40px}.franchise-modal-form textarea{min-height:70px}}
+        @media(max-height:620px){.franchise-enquiry-overlay{align-items:flex-start;padding-top:calc(var(--header-height,72px) + 8px);padding-bottom:8px}.franchise-enquiry-modal{max-height:calc(100vh - var(--header-height,72px) - 16px);max-height:calc(100dvh - var(--header-height,72px) - 16px)}.franchise-enquiry-head{padding-top:12px;padding-bottom:10px}.franchise-enquiry-kicker{margin-bottom:4px}.franchise-modal-form{gap:8px;padding-top:12px;padding-bottom:12px}.franchise-modal-form .fm-field{min-height:42px}.franchise-modal-form textarea{min-height:58px}.franchise-modal-form button{min-height:40px}}
     </style>
 </head>
 <body class="static-site franchise-page">

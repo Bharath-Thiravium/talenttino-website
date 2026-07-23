@@ -41,6 +41,7 @@ if (nav) {
     }
     const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
     if (courseMenu) {
+        courseMenu.querySelectorAll('a[href="course.php"], a[href$="/course.php"]').forEach(link => link.remove());
         const courseLinks = [
             ['shorttermcourse.php', 'Short Term Course', 'fa-clock'],
             ['popularcourse.php', 'Popular Course', 'fa-fire'],
@@ -55,7 +56,6 @@ if (nav) {
                 link.href = href;
                 courseMenu.appendChild(link);
             }
-            if (link.querySelector('i')) return;
             link.className = 'nav-menu-rich-link';
             link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
         });
@@ -74,9 +74,13 @@ if (nav) {
             ['project.php', 'Project', 'fa-diagram-project'],
         ];
         baseMoreLinks.forEach(([href, label, icon]) => {
-            const link = morePanel.querySelector(`a[href="${href}"]`);
-            if (!link || link.querySelector('i')) return;
-            link.classList.add('nav-menu-rich-link');
+            let link = morePanel.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                morePanel.appendChild(link);
+            }
+            link.className = 'nav-menu-rich-link';
             link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
         });
         const otherLinks = [
@@ -86,12 +90,14 @@ if (nav) {
             ['franchise.php', 'Franchise Enquiry', 'fa-handshake'],
         ];
         otherLinks.forEach(([href, label, icon]) => {
-            if (morePanel.querySelector(`a[href="${href}"]`)) return;
-            const link = document.createElement('a');
-            link.href = href;
+            let link = morePanel.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                morePanel.appendChild(link);
+            }
             link.className = 'nav-menu-rich-link';
             link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
-            morePanel.appendChild(link);
         });
     }
     const currentPage = window.location.pathname.split('/').pop() || 'index.php';
@@ -1109,6 +1115,150 @@ if (aiChat) {
     syncAspectRatio(current);
     updateTrack();
     startAuto();
+}());
+
+// Keep the home review showcase as contained, gap-free auto-sliding rows.
+(function () {
+    const row = document.querySelector('.review-scroll-row-one');
+    const stage = row?.closest('.review-scroll-stage');
+    if (!row || !stage || !document.body.classList.contains('home-page')) return;
+
+    const cards = [...row.querySelectorAll('.review-scroll-card:not([data-auto-clone="true"])')].map(card => card.cloneNode(true));
+    if (!cards.length) return;
+
+    let rowTwo = stage.querySelector('.review-scroll-row-two');
+    if (!rowTwo) {
+        rowTwo = document.createElement('div');
+        rowTwo.className = 'review-scroll-row review-scroll-row-two';
+        row.after(rowTwo);
+    }
+
+    function prepareCard(card) {
+        card.classList.remove('reveal', 'scroll-reveal-auto', 'home-reveal-card', 'scroll-image-reveal');
+        card.classList.add('is-visible');
+        card.style.transitionDelay = '';
+        card.querySelectorAll('.reveal, .scroll-reveal-auto, .home-reveal-card, .scroll-image-reveal').forEach(item => {
+            item.classList.remove('reveal', 'scroll-reveal-auto', 'home-reveal-card', 'scroll-image-reveal');
+            item.classList.add('is-visible');
+            item.style.transitionDelay = '';
+        });
+        return card;
+    }
+
+    function cardClone(card, type) {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('data-auto-clone', type);
+        if (type === 'duplicate') {
+            clone.setAttribute('aria-hidden', 'true');
+        }
+        return prepareCard(clone);
+    }
+
+    function buildRow(target, sourceCards) {
+        target.style.transform = '';
+        target.style.left = '';
+        target.style.willChange = '';
+        target.replaceChildren();
+
+        const minWidth = Math.max(window.innerWidth * 1.6, 2200);
+        let guard = 0;
+        while (target.scrollWidth < minWidth && guard < 8) {
+            sourceCards.forEach(card => target.appendChild(cardClone(card, 'base')));
+            guard += 1;
+        }
+
+        const baseCards = [...target.children];
+        baseCards.forEach(card => {
+            const clone = card.cloneNode(true);
+            clone.setAttribute('data-auto-clone', 'duplicate');
+            clone.setAttribute('aria-hidden', 'true');
+            target.appendChild(clone);
+        });
+    }
+
+    buildRow(row, cards);
+    buildRow(rowTwo, [...cards].reverse());
+
+    window.addEventListener('resize', () => {
+        buildRow(row, cards);
+        buildRow(rowTwo, [...cards].reverse());
+    }, { passive: true });
+}());
+
+// Final home interaction guards for cached/live pages.
+(function () {
+    const enrollPopup = document.querySelector('#home-signup');
+    const isHomePage = document.body.classList.contains('home-page');
+
+    function openHomeEnroll(event) {
+        if (!enrollPopup) return false;
+        event?.preventDefault();
+        event?.stopPropagation();
+        document.body.classList.remove('nav-open');
+        document.documentElement.classList.remove('nav-open');
+        document.querySelector('.site-nav')?.classList.remove('open');
+        enrollPopup.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('enroll-popup-open');
+        document.documentElement.classList.add('enroll-popup-open');
+        window.setTimeout(() => {
+            enrollPopup.querySelector('input:not([type="hidden"]):not([tabindex="-1"]), select, button')?.focus();
+        }, 40);
+        return true;
+    }
+
+    function closeHomeEnroll(event) {
+        if (!enrollPopup) return;
+        event?.preventDefault();
+        event?.stopPropagation();
+        document.body.classList.remove('enroll-popup-open');
+        document.documentElement.classList.remove('enroll-popup-open');
+        enrollPopup.setAttribute('aria-hidden', 'true');
+        if (window.location.hash === '#home-signup' && history.replaceState) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }
+
+    document.addEventListener('click', event => {
+        const enrollLink = event.target.closest('.nav-enroll-cta, a[href$="#home-signup"]');
+        if (enrollLink) {
+            if (openHomeEnroll(event)) return;
+            if (!isHomePage) return;
+        }
+
+        if (event.target.closest('[data-enroll-close]')) {
+            closeHomeEnroll(event);
+        }
+    }, true);
+
+    if (window.location.hash === '#home-signup') {
+        window.addEventListener('load', () => openHomeEnroll(), { once: true });
+    }
+
+    const aiChat = document.querySelector('[data-ai-chat]');
+    if (aiChat) {
+        const aiPanel = aiChat.querySelector('.home-ai-panel');
+        const aiToggle = aiChat.querySelector('[data-ai-toggle]');
+        const closeAi = event => {
+            event?.preventDefault();
+            event?.stopPropagation();
+            aiPanel?.classList.remove('is-open');
+            aiPanel?.setAttribute('aria-hidden', 'true');
+            aiToggle?.setAttribute('aria-expanded', 'false');
+        };
+        aiChat.querySelectorAll('[data-ai-close], [data-ai-back]').forEach(button => {
+            button.addEventListener('click', closeAi, true);
+            button.addEventListener('pointerdown', event => event.stopPropagation(), true);
+        });
+    }
+
+    const heroSlider = document.querySelector('[data-hero-slider]');
+    if (heroSlider) {
+        heroSlider.querySelectorAll('[data-slider-prev], [data-slider-next]').forEach(button => {
+            button.addEventListener('pointerdown', event => {
+                event.stopPropagation();
+            }, true);
+        });
+    }
 }());
 
 
