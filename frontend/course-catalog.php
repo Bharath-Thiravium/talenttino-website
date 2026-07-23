@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260721-navbarfix1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-edgefix4">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -575,6 +575,116 @@ function tt_catalog_fallback_image(array $course): string
                 text-overflow:ellipsis!important;
                 opacity:1!important;
                 visibility:visible!important;
+            }
+        }
+        @media (max-width:700px){
+            html body.catalog-body .catalog-section{
+                padding:22px 0 40px!important;
+            }
+            html body.catalog-body .catalog-grid{
+                width:min(calc(100vw - 30px),386px)!important;
+                gap:16px!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card,
+            html body.catalog-body.compact-catalog .catalog-grid>.catalog-card,
+            html body.catalog-body .catalog-grid>.catalog-card:nth-child(n){
+                display:flex!important;
+                flex-direction:column!important;
+                min-height:0!important;
+                height:auto!important;
+                padding:0!important;
+                border-radius:14px!important;
+                overflow:hidden!important;
+                text-align:center!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-image{
+                width:100%!important;
+                height:146px!important;
+                min-height:146px!important;
+                max-height:146px!important;
+                margin:0!important;
+                border-radius:0!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-image img{
+                object-fit:cover!important;
+                object-position:center!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-icon{
+                width:52px!important;
+                height:52px!important;
+                min-width:52px!important;
+                margin:14px 0 16px 22px!important;
+                display:inline-flex!important;
+                align-items:center!important;
+                justify-content:center!important;
+                border-radius:11px!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-category{
+                top:157px!important;
+                right:20px!important;
+                max-width:120px!important;
+                min-height:28px!important;
+                padding:0 14px!important;
+                font-size:12px!important;
+                line-height:1!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card h2{
+                min-height:0!important;
+                margin:0!important;
+                padding:0 22px!important;
+                display:-webkit-box!important;
+                -webkit-line-clamp:2!important;
+                -webkit-box-orient:vertical!important;
+                overflow:hidden!important;
+                color:#10172a!important;
+                -webkit-text-fill-color:#10172a!important;
+                font-size:25px!important;
+                line-height:1.16!important;
+                text-align:left!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card>p{
+                min-height:0!important;
+                margin:0!important;
+                padding:36px 22px 32px!important;
+                display:-webkit-box!important;
+                -webkit-line-clamp:2!important;
+                -webkit-box-orient:vertical!important;
+                overflow:hidden!important;
+                color:#52627a!important;
+                -webkit-text-fill-color:#52627a!important;
+                font-size:14px!important;
+                font-weight:800!important;
+                line-height:1.5!important;
+                text-align:left!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions{
+                position:relative!important;
+                left:auto!important;
+                right:auto!important;
+                bottom:auto!important;
+                width:100%!important;
+                margin:0!important;
+                padding:0 22px 22px!important;
+                display:grid!important;
+                grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+                justify-content:stretch!important;
+                gap:10px!important;
+                background:#fff!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-detail-btn,
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions .catalog-cta{
+                flex:initial!important;
+                width:100%!important;
+                min-width:0!important;
+                height:46px!important;
+                min-height:46px!important;
+                padding:0 14px!important;
+                border-radius:9px!important;
+                font-size:12px!important;
+                line-height:1!important;
+            }
+            html body.catalog-body .catalog-grid>.catalog-card .catalog-actions i{
+                display:none!important;
             }
         }
     </style>

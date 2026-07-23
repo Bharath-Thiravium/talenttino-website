@@ -37,7 +37,7 @@ if (!$courses) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260722-coursebuttons1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-edgefix4">
     <style>
         body.course-list-page .course-showcase-card{position:relative!important;display:flex!important;flex-direction:column!important;aspect-ratio:auto!important;min-height:460px!important;padding:0 22px 82px!important;overflow:hidden!important;cursor:pointer!important}
         body.course-list-page .course-showcase-card .course-image{width:calc(100% + 44px)!important;height:190px!important;min-height:190px!important;max-height:190px!important;margin:0 -22px 18px!important;border-radius:8px 8px 0 0!important;overflow:hidden!important}
@@ -413,6 +413,112 @@ if (!$courses) {
                 height:44px!important;
                 min-height:44px!important;
                 font-size:12px!important;
+            }
+        }
+        @media (max-width:700px){
+            html body.course-list-page .course-showcase-grid{
+                width:min(calc(100vw - 30px),386px)!important;
+                gap:18px!important;
+            }
+            html body.course-list-page .course-card.course-showcase-card{
+                display:flex!important;
+                flex-direction:column!important;
+                align-items:stretch!important;
+                min-height:0!important;
+                padding:0!important;
+                border-radius:14px!important;
+                overflow:hidden!important;
+            }
+            html body.course-list-page .course-showcase-card .course-image{
+                width:100%!important;
+                height:118px!important;
+                min-height:118px!important;
+                max-height:118px!important;
+                margin:0!important;
+                border-radius:0!important;
+            }
+            html body.course-list-page .course-showcase-card .course-image img{
+                object-fit:cover!important;
+                object-position:center!important;
+            }
+            html body.course-list-page .course-showcase-card .course-card-top{
+                width:100%!important;
+                padding:16px 24px 0!important;
+                margin:0 0 18px!important;
+                display:grid!important;
+                grid-template-columns:1fr!important;
+                justify-items:center!important;
+                gap:12px!important;
+                text-align:center!important;
+            }
+            html body.course-list-page .course-showcase-card .course-card-top i{
+                width:50px!important;
+                height:50px!important;
+                min-width:50px!important;
+                margin:0!important;
+                font-size:22px!important;
+                border-radius:11px!important;
+            }
+            html body.course-list-page .course-showcase-card .course-level{
+                position:absolute!important;
+                top:128px!important;
+                right:20px!important;
+                width:auto!important;
+                max-width:118px!important;
+                min-height:28px!important;
+                padding:0 14px!important;
+                display:inline-flex!important;
+                align-items:center!important;
+                justify-content:center!important;
+                font-size:12px!important;
+                line-height:1!important;
+                white-space:nowrap!important;
+            }
+            html body.course-list-page .course-card.course-showcase-card h3{
+                width:100%!important;
+                min-height:0!important;
+                margin:0!important;
+                padding:0 24px!important;
+                display:block!important;
+                text-align:center!important;
+                font-size:25px!important;
+                line-height:1.2!important;
+            }
+            html body.course-list-page .course-card.course-showcase-card > p{
+                width:100%!important;
+                min-height:0!important;
+                margin:0!important;
+                padding:66px 24px 38px!important;
+                display:block!important;
+                overflow:visible!important;
+                text-align:center!important;
+                font-size:14px!important;
+                line-height:1.55!important;
+            }
+            html body.course-list-page .course-showcase-card .course-footer{
+                width:100%!important;
+                margin:0!important;
+                padding:0 24px 20px!important;
+                border-top:0!important;
+            }
+            html body.course-list-page .course-showcase-card .course-actions{
+                width:100%!important;
+                display:flex!important;
+                justify-content:center!important;
+                gap:10px!important;
+            }
+            html body.course-list-page .course-showcase-card .course-actions .btn{
+                flex:0 0 auto!important;
+                width:auto!important;
+                min-width:82px!important;
+                height:46px!important;
+                min-height:46px!important;
+                padding:0 14px!important;
+                font-size:12px!important;
+                border-radius:9px!important;
+            }
+            html body.course-list-page .course-showcase-card .course-actions .btn i{
+                display:none!important;
             }
         }
     </style>

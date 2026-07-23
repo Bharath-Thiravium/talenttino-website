@@ -10,6 +10,10 @@ $whatsappUrl = 'https://wa.me/' . $whatsappPhone . '?text=' . rawurlencode('Hell
 $mapUrl = function_exists('tt_google_maps_url')
     ? tt_google_maps_url($settings)
     : 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(trim('Talentteno Institute, ' . (string)($settings['address'] ?? '')));
+$facebookUrl = tt_social_url($settings['facebook_url'] ?? '', 'facebook');
+$instagramUrl = tt_social_click_url($settings['instagram_url'] ?? '', 'instagram');
+$linkedinUrl = tt_social_url($settings['linkedin_url'] ?? '', 'linkedin');
+$youtubeUrl = tt_social_url($settings['youtube_url'] ?? '', 'youtube');
 ?>
 <style>
 html body .site-footer .footer-logo,html body.home-page .site-footer .footer-logo,html body.static-site .site-footer .footer-logo{grid-template-columns:112px minmax(0,1fr)!important;gap:20px!important;align-items:center!important}
@@ -47,11 +51,11 @@ html body .site-footer .footer-logo strong,html body.home-page .site-footer .foo
             </ul>
             <p class="footer-social-title">Follow us</p>
             <div class="footer-social">
-                <a class="social-facebook" href="<?= tt_h(!empty($settings['facebook_url']) && $settings['facebook_url'] !== '#' ? $settings['facebook_url'] : 'https://www.facebook.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
-                <a class="social-instagram" href="<?= tt_h(!empty($settings['instagram_url']) && $settings['instagram_url'] !== '#' ? $settings['instagram_url'] : 'https://www.instagram.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a class="social-linkedin" href="<?= tt_h(!empty($settings['linkedin_url']) && $settings['linkedin_url'] !== '#' ? $settings['linkedin_url'] : 'https://www.linkedin.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                <a class="social-facebook" href="<?= tt_h($facebookUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                <a class="social-instagram" href="<?= tt_h($instagramUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                <a class="social-linkedin" href="<?= tt_h($linkedinUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
                 <a class="social-call" href="tel:+<?= tt_h($phone1Link) ?>" aria-label="Call Talentteno at <?= tt_h($settings['phone1']) ?>" title="<?= tt_h($settings['phone1']) ?>"><i class="fa-solid fa-phone" aria-hidden="true"></i></a>
-                <a class="social-youtube" href="<?= tt_h(!empty($settings['youtube_url']) && $settings['youtube_url'] !== '#' ? $settings['youtube_url'] : 'https://www.youtube.com/') ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                <a class="social-youtube" href="<?= tt_h($youtubeUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Follow Talentteno on YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>

@@ -87,8 +87,8 @@ function tt_settings(): array
         'email' => 'talentteno.socials@gmail.com',
         'map_embed_url' => '',
         'facebook_url' => '#',
-        'instagram_url' => '#',
-        'linkedin_url' => '#',
+        'instagram_url' => 'https://www.instagram.com/talentteno__/',
+        'linkedin_url' => 'https://www.linkedin.com/search/results/companies/?keywords=Talentteno%20Institute',
         'youtube_url' => '#',
         'footer_description' => 'Practical IT training in Madurai with free internship, spoken English support, live projects, certification and placement assistance.',
         'footer_copyright' => '© 2026 Talentteno Institute | All Rights Reserved',
@@ -122,6 +122,61 @@ function tt_settings(): array
     }
 
     return $settings;
+}
+
+function tt_social_url(?string $value, string $network): string
+{
+    $fallbacks = [
+        'facebook' => 'https://www.facebook.com/',
+        'instagram' => 'https://www.instagram.com/talentteno__/',
+        'linkedin' => 'https://www.linkedin.com/search/results/companies/?keywords=Talentteno%20Institute',
+        'youtube' => 'https://www.youtube.com/',
+    ];
+
+    $url = trim((string)$value);
+    if ($url === '' || $url === '#') {
+        $url = $fallbacks[$network] ?? '#';
+    }
+
+    if ($network === 'instagram') {
+        $handle = trim($url);
+        if (!preg_match('#^https?://#i', $handle)) {
+            $handle = ltrim($handle, '@/');
+            $handle = preg_replace('/[^a-z0-9._]/i', '', $handle) ?: 'talentteno__';
+            if ($handle === 'talentteno_') {
+                $handle = 'talentteno__';
+            }
+            return 'https://www.instagram.com/' . $handle . '/';
+        }
+
+        $parts = parse_url($handle);
+        $path = trim((string)($parts['path'] ?? ''), '/');
+        $profile = explode('/', $path)[0] ?? '';
+        $profile = preg_replace('/[^a-z0-9._]/i', '', $profile) ?: 'talentteno__';
+        if ($profile === 'talentteno_') {
+            $profile = 'talentteno__';
+        }
+        return 'https://www.instagram.com/' . $profile . '/';
+    }
+
+    if ($network === 'linkedin') {
+        if (preg_match('#^https?://#i', $url) && stripos(parse_url($url, PHP_URL_HOST) ?: '', 'linkedin.com') !== false) {
+            return $url;
+        }
+
+        return $fallbacks['linkedin'];
+    }
+
+    if (!preg_match('#^https?://#i', $url)) {
+        return $fallbacks[$network] ?? '#';
+    }
+
+    return $url;
+}
+
+function tt_social_click_url(?string $value, string $network): string
+{
+    return tt_social_url($value, $network);
 }
 
 function tt_google_maps_url(?array $settings = null): string
@@ -184,10 +239,10 @@ function tt_company_profile(?array $settings = null): array
             'Corporate and campus training',
         ],
         'social' => [
-            'facebook' => $settings['facebook_url'],
-            'instagram' => $settings['instagram_url'],
-            'linkedin' => $settings['linkedin_url'],
-            'youtube' => $settings['youtube_url'],
+            'facebook' => tt_social_url($settings['facebook_url'] ?? '', 'facebook'),
+            'instagram' => tt_social_url($settings['instagram_url'] ?? '', 'instagram'),
+            'linkedin' => tt_social_url($settings['linkedin_url'] ?? '', 'linkedin'),
+            'youtube' => tt_social_url($settings['youtube_url'] ?? '', 'youtube'),
         ],
     ];
 }

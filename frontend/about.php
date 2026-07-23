@@ -46,7 +46,233 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260722-scrollanim1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-edgefix5">
+    <style>
+        body.about-page .about-intro-section .site-container.about-intro {
+            width: min(100% - 96px, 1360px) !important;
+            max-width: 1360px !important;
+            grid-template-columns: minmax(0, 560px) minmax(680px, 1fr) !important;
+            column-gap: clamp(44px, 4vw, 64px) !important;
+            align-items: center !important;
+            margin-inline: auto !important;
+        }
+
+        body.about-page .about-story {
+            max-width: 620px !important;
+            justify-self: start !important;
+        }
+
+        body.about-page .about-story h2,
+        body.about-page .about-story .about-lead {
+            max-width: 100% !important;
+        }
+
+        body.about-page .tt-stat-row {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            display: grid !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: clamp(12px, 1.35vw, 20px) !important;
+            margin: clamp(8px, 1.2vw, 16px) 0 0 !important;
+            align-items: stretch !important;
+        }
+
+        body.about-page .tt-stat-card {
+            min-width: 0 !important;
+            min-height: 166px !important;
+            padding: clamp(22px, 1.7vw, 28px) clamp(14px, 1.6vw, 22px) !important;
+            display: grid !important;
+            place-items: center !important;
+            align-content: center !important;
+            gap: 10px !important;
+            text-align: center !important;
+            border-radius: 18px !important;
+            overflow: hidden !important;
+            isolation: isolate !important;
+            background: radial-gradient(circle at 20% 0%, rgba(37, 99, 235, 0.13), transparent 34%), linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 251, 255, 0.98) 100%) !important;
+            box-shadow: 0 22px 56px rgba(30, 41, 59, 0.10) !important;
+            animation: aboutStatRiseInline 720ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+        }
+
+        body.about-page .tt-stat-card::after {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 !important;
+            z-index: -1 !important;
+            background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.72) 45%, transparent 70%) !important;
+            transform: translateX(-120%) !important;
+            animation: aboutStatSheenInline 4.8s ease-in-out infinite !important;
+        }
+
+        body.about-page .tt-stat-card:nth-child(2) { animation-delay: 90ms !important; }
+        body.about-page .tt-stat-card:nth-child(3) { animation-delay: 180ms !important; }
+        body.about-page .tt-stat-card:nth-child(4) { animation-delay: 270ms !important; }
+
+        body.about-page .tt-stat-card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 30px 72px rgba(30, 41, 59, 0.16) !important;
+        }
+
+        body.about-page .tt-stat-card::before {
+            margin: 0 0 4px !important;
+            animation: aboutStatIconInline 2.8s ease-in-out infinite !important;
+        }
+
+        body.about-page .tt-stat-card:nth-child(3)::before { content: "\f19d" !important; }
+        body.about-page .tt-stat-card:nth-child(4)::before { content: "\f0b1" !important; }
+        body.about-page .tt-stat-num { font-size: clamp(40px, 3vw, 54px) !important; line-height: 0.94 !important; }
+        body.about-page .tt-stat-title { font-size: clamp(15px, 1vw, 18px) !important; line-height: 1.25 !important; }
+
+        body.about-page .about-visual-main,
+        body.about-page .about-visual-mini {
+            background: #ffffff !important;
+            overflow: hidden !important;
+        }
+
+        body.about-page .about-visual-stack {
+            position: relative !important;
+            width: min(100%, 740px) !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            justify-self: end !important;
+            overflow: hidden !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        body.about-page .about-visual-main {
+            position: relative !important;
+            inset: auto !important;
+            z-index: 2 !important;
+            width: 100% !important;
+            aspect-ratio: 3 / 2 !important;
+            border: 7px solid #ffffff !important;
+            border-radius: 22px !important;
+            box-shadow: 0 30px 76px rgba(15, 23, 42, 0.16) !important;
+        }
+
+        body.about-page .about-visual-mini-one {
+            display: none !important;
+        }
+
+        body.about-page .about-visual-mini-two {
+            display: none !important;
+        }
+
+        body.about-page .about-visual-main::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        body.about-page .about-visual-main img,
+        body.about-page .about-visual-mini img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            background: #ffffff !important;
+        }
+
+        body.about-page .about-visual-badge {
+            top: calc(100% + 14px) !important;
+            bottom: auto !important;
+            left: 20px !important;
+            z-index: 8 !important;
+        }
+
+        @media (max-width: 900px) {
+            body.about-page .about-intro-section .site-container.about-intro {
+                width: min(100% - 28px, 640px) !important;
+                grid-template-columns: 1fr !important;
+                row-gap: 28px !important;
+            }
+
+            body.about-page .about-story,
+            body.about-page .about-visual-stack {
+                justify-self: center !important;
+                width: 100% !important;
+            }
+
+            body.about-page .about-visual-stack {
+                min-height: 0 !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 14px !important;
+            }
+
+            body.about-page .about-visual-main,
+            body.about-page .about-visual-mini {
+                position: relative !important;
+                inset: auto !important;
+                width: 100% !important;
+                aspect-ratio: auto !important;
+            }
+
+            body.about-page .about-visual-main {
+                grid-column: 1 / -1 !important;
+                aspect-ratio: 3 / 2 !important;
+            }
+
+            body.about-page .about-visual-mini {
+                aspect-ratio: 16 / 10 !important;
+            }
+
+            body.about-page .about-visual-badge {
+                position: static !important;
+                grid-column: 1 / -1 !important;
+                width: fit-content !important;
+                max-width: 100% !important;
+            }
+        }
+
+        @keyframes aboutStatRiseInline {
+            from { opacity: 0; transform: translate3d(0, 26px, 0) scale(0.96); }
+            to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        }
+
+        @keyframes aboutStatSheenInline {
+            0%, 48% { transform: translateX(-120%); }
+            68%, 100% { transform: translateX(120%); }
+        }
+
+        @keyframes aboutStatIconInline {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.05); }
+        }
+
+        @media (max-width: 980px) {
+            body.about-page .tt-stat-row {
+                display: flex !important;
+                grid-template-columns: none !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                scroll-snap-type: x proximity !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 2px 2px 14px !important;
+            }
+
+            body.about-page .tt-stat-card {
+                flex: 0 0 min(74vw, 320px) !important;
+                scroll-snap-align: start !important;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body.about-page .tt-stat-card {
+                flex-basis: min(82vw, 300px) !important;
+                min-height: 154px !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body.about-page .tt-stat-card,
+            body.about-page .tt-stat-card::after,
+            body.about-page .tt-stat-card::before {
+                animation: none !important;
+            }
+        }
+    </style>
 </head>
 <body class="static-site about-page">
 <div class="site-shell">
@@ -80,31 +306,28 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
                     <span class="section-label">Institute overview</span>
                     <h2>Practical IT training built around student career growth</h2>
                     <p class="about-lead"><?= tt_h($settings['about_content']) ?></p>
-                    <div class="tt-stat-row">
-                        <div class="tt-stat-card">
-                            <span class="tt-stat-num"><?= tt_h($settings['total_students']) ?></span>
-                            <span class="tt-stat-title">Students trained</span>
-                        </div>
-                        <div class="tt-stat-card">
-                            <span class="tt-stat-num"><?= tt_h($settings['total_trainers']) ?></span>
-                            <span class="tt-stat-title">Expert trainers</span>
-                        </div>
-                        <div class="tt-stat-card">
-                            <span class="tt-stat-num"><?= tt_h($settings['success_rate']) ?></span>
-                            <span class="tt-stat-title">Career support</span>
-                        </div>
-                    </div>
                 </div>
                 <div class="identity-image about-visual-stack reveal reveal-right">
                     <div class="about-visual-main">
-                        <img src="uploads/optimized/home-w900.webp" srcset="uploads/optimized/home-w430.webp 430w, uploads/optimized/home-w900.webp 900w, uploads/optimized/home-w1400.webp 1400w" sizes="(max-width: 1100px) 100vw, 520px" alt="Students receiving practical coding training at Talentteno Institute" loading="lazy" decoding="async" width="900" height="506">
-                        <span class="about-visual-badge"><i class="fa-solid fa-code"></i> Live project practice</span>
+                        <img src="assets/images/About .png" alt="Talentteno students learning with mentor" loading="lazy" decoding="async" width="1536" height="1024" style="width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center center!important;background:#fff!important;border-radius:15px!important;">
                     </div>
-                    <div class="about-visual-mini about-visual-mini-one">
-                        <img src="uploads/media/cyber-security-20260703-133329-242125.png" alt="Cyber security course visual" loading="lazy" decoding="async" width="420" height="280">
+                </div>
+                <div class="tt-stat-row reveal" style="grid-column:1/-1!important;width:100%!important;max-width:100%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin:12px 0 0!important;align-items:stretch!important;">
+                    <div class="tt-stat-card" style="min-width:0!important;min-height:156px!important;padding:22px 14px!important;display:grid!important;place-items:center!important;align-content:center!important;text-align:center!important;">
+                        <span class="tt-stat-num"><?= tt_h($settings['total_students']) ?></span>
+                        <span class="tt-stat-title">Students trained</span>
                     </div>
-                    <div class="about-visual-mini about-visual-mini-two">
-                        <img src="uploads/media/data-science-ai-20260703-133112-527863.png" alt="Data science and artificial intelligence course visual" loading="lazy" decoding="async" width="420" height="280">
+                    <div class="tt-stat-card" style="min-width:0!important;min-height:156px!important;padding:22px 14px!important;display:grid!important;place-items:center!important;align-content:center!important;text-align:center!important;">
+                        <span class="tt-stat-num"><?= tt_h($settings['total_trainers']) ?></span>
+                        <span class="tt-stat-title">Expert trainers</span>
+                    </div>
+                    <div class="tt-stat-card" style="min-width:0!important;min-height:156px!important;padding:22px 14px!important;display:grid!important;place-items:center!important;align-content:center!important;text-align:center!important;">
+                        <span class="tt-stat-num">20+</span>
+                        <span class="tt-stat-title">Career courses</span>
+                    </div>
+                    <div class="tt-stat-card" style="min-width:0!important;min-height:156px!important;padding:22px 14px!important;display:grid!important;place-items:center!important;align-content:center!important;text-align:center!important;">
+                        <span class="tt-stat-num"><?= tt_h($settings['success_rate']) ?></span>
+                        <span class="tt-stat-title">Career support</span>
                     </div>
                 </div>
             </div>

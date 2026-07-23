@@ -1117,6 +1117,90 @@ if (aiChat) {
     startAuto();
 }());
 
+// Final AI chat behavior: reliable local answers and visible back/close controls.
+(function () {
+    const chat = document.querySelector('[data-ai-chat]');
+    if (!chat) return;
+
+    const panel = chat.querySelector('.home-ai-panel');
+    const toggle = chat.querySelector('[data-ai-toggle]');
+    const back = chat.querySelector('[data-ai-back]');
+    const close = chat.querySelector('[data-ai-close]');
+    const form = chat.querySelector('[data-ai-form]');
+    const input = form?.querySelector('input[name="question"]');
+    const messages = chat.querySelector('[data-ai-messages]');
+
+    const company = {
+        phone1: '+91 82484 15023',
+        phone2: '+91 63836 43141',
+        email: 'talentteno.socials@gmail.com',
+        address: 'Plot 81, Poriyalar Nagar, Tiruppalai, Madurai, Tamil Nadu - 625014'
+    };
+
+    function openChat() {
+        panel?.classList.add('is-open');
+        panel?.setAttribute('aria-hidden', 'false');
+        toggle?.setAttribute('aria-expanded', 'true');
+        window.setTimeout(() => input?.focus(), 40);
+    }
+
+    function closeChat() {
+        panel?.classList.remove('is-open');
+        panel?.setAttribute('aria-hidden', 'true');
+        toggle?.setAttribute('aria-expanded', 'false');
+    }
+
+    function addMessage(text, type) {
+        if (!messages) return;
+        const bubble = document.createElement('div');
+        bubble.className = 'ai-message ' + type;
+        bubble.textContent = text;
+        messages.appendChild(bubble);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function replyFor(raw) {
+        const q = String(raw || '').toLowerCase().replace(/[^\w\s+.#/-]/g, ' ').replace(/\s+/g, ' ').trim();
+        if (!q) return 'Ask me about courses, fees, internship, placement, demo class, address, contact, timing or admission.';
+        if (/\b(hi|hello|hey|hai|vanakkam)\b/.test(q)) return 'Hi. I can help with Talentteno courses, fees, internship, placement, demo class, address, contact, timings and admission.';
+        if (/\b(phone|mobile|number|call|contact|email|mail|whatsapp)\b/.test(q)) return `Contact Talentteno at ${company.phone1} or ${company.phone2}. Email: ${company.email}.`;
+        if (/\b(address|location|where|map|route|madurai|tiruppalai)\b/.test(q)) return `Talentteno address: ${company.address}.`;
+        if (/\b(fee|fees|cost|price|amount|emi|discount|offer|evlo|rate)\b/.test(q)) return `Fees depend on course, duration and current offer. Call ${company.phone1} / ${company.phone2} for exact fee, discount and EMI details.`;
+        if (/\b(internship|intern|project|projects|practical|portfolio|live)\b/.test(q)) return 'Yes. Talentteno provides practical training, live project practice and free internship guidance for eligible students.';
+        if (/\b(placement|job|career|resume|interview|hiring)\b/.test(q)) return 'Placement support includes resume preparation, mock interviews, job-readiness mentoring and hiring guidance.';
+        if (/\b(demo|trial|counselling|counseling|visit)\b/.test(q)) return `You can book a free demo class or counselling session by calling ${company.phone1}.`;
+        if (/\b(timing|time|batch|duration|morning|evening|weekend|online|offline)\b/.test(q)) return 'Batch timing, duration and online/offline mode depend on the selected course. Contact the admission team for the latest schedule.';
+        if (/\b(admission|join|enroll|enrol|apply|register)\b/.test(q)) return `For admission, call ${company.phone1}, send WhatsApp, or submit the contact form. The team will guide course selection and batch timing.`;
+        if (/\b(course|courses|training|class|syllabus|learn|program)\b/.test(q)) return 'Courses include Full Stack with AI, Data Science and AI, Cyber Security, Digital Marketing, UI/UX Design, Tally, MS Office, programming, short-term and advanced courses.';
+        if (/\b(full stack|web|frontend|backend)\b/.test(q)) return 'Full Stack training covers frontend, backend, database workflow, projects and career preparation.';
+        if (/\b(data|python|ai|machine learning)\b/.test(q)) return 'Data Science and AI training covers Python, analytics basics, machine learning workflow and practical projects.';
+        if (/\b(cyber|security|ethical hacking)\b/.test(q)) return 'Cyber Security training includes security basics, guided labs and practical project workflow.';
+        return `I can help with courses, fees, internship, placement, demo class, address, contact, timing and admission. For direct help call ${company.phone1}.`;
+    }
+
+    toggle?.addEventListener('click', event => {
+        event.preventDefault();
+        panel?.classList.contains('is-open') ? closeChat() : openChat();
+    }, true);
+    back?.addEventListener('click', event => {
+        event.preventDefault();
+        closeChat();
+    }, true);
+    close?.addEventListener('click', event => {
+        event.preventDefault();
+        closeChat();
+    }, true);
+    form?.addEventListener('submit', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const question = input?.value.trim() || '';
+        if (!question) return;
+        addMessage(question, 'user');
+        input.value = '';
+        window.setTimeout(() => addMessage(replyFor(question), 'bot'), 180);
+    }, true);
+}());
+
 // Keep the home review showcase as contained, gap-free auto-sliding rows.
 (function () {
     const row = document.querySelector('.review-scroll-row-one');

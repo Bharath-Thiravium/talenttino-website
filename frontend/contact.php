@@ -2,6 +2,9 @@
 require_once __DIR__ . '/includes/site-data.php';
 
 $settings = tt_settings();
+$phone1Link = preg_replace('/\D+/', '', (string)($settings['phone1'] ?? ''));
+$phone2Link = preg_replace('/\D+/', '', (string)($settings['phone2'] ?? ''));
+$emailLink = trim((string)($settings['email'] ?? ''));
 $mapUrl = tt_google_maps_url($settings);
 $mapEmbedUrl = tt_google_maps_embed_url($settings);
 $contactFormResult = null;
@@ -41,7 +44,7 @@ foreach ($contactCourses as $course) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260721-navbarfix1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-edgefix4">
 </head>
 <body class="static-site contact-page">
 <div class="site-shell">
@@ -78,16 +81,16 @@ foreach ($contactCourses as $course) {
                     <p><?= $isFranchiseTopic ? 'Get details about institute setup guidance, course content, student counselling, branding support, trainer coordination and admission workflow.' : 'Ask about the Rs 14,999 basic-to-advanced course offer, Rs 49,999 cyber security combo pack, free internship, spoken English class and placement assistance.' ?></p>
                 </div>
                 <div class="contact-actions">
-                    <a href="tel:<?= preg_replace('/\s+/', '', $settings['phone1']) ?>"><i class="fa-solid fa-phone"></i>&nbsp; <?= tt_h($settings['phone1']) ?></a>
-                    <a href="tel:<?= preg_replace('/\s+/', '', $settings['phone2']) ?>"><i class="fa-solid fa-phone"></i>&nbsp; <?= tt_h($settings['phone2']) ?></a>
+                    <a href="tel:+<?= tt_h($phone1Link) ?>"><i class="fa-solid fa-phone"></i>&nbsp; <?= tt_h($settings['phone1']) ?></a>
+                    <a href="tel:+<?= tt_h($phone2Link) ?>"><i class="fa-solid fa-phone"></i>&nbsp; <?= tt_h($settings['phone2']) ?></a>
                 </div>
             </div>
         </section>
         <section class="section alt">
             <div class="site-container contact-grid">
                 <a class="contact-card contact-card-link reveal" href="<?= tt_h($mapUrl) ?>" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i><h3>Address</h3><p><?= tt_h($settings['address']) ?></p><span>Open in Google Maps <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
-                <div class="contact-card reveal"><i class="fa-solid fa-phone"></i><h3>Phone</h3><p><a href="tel:<?= preg_replace('/\s+/', '', $settings['phone1']) ?>"><?= tt_h($settings['phone1']) ?></a><br><a href="tel:<?= preg_replace('/\s+/', '', $settings['phone2']) ?>"><?= tt_h($settings['phone2']) ?></a></p></div>
-                <div class="contact-card reveal"><i class="fa-solid fa-envelope"></i><h3>Email</h3><p><a href="mailto:<?= tt_h($settings['email']) ?>"><?= tt_h($settings['email']) ?></a></p></div>
+                <div class="contact-card reveal"><i class="fa-solid fa-phone"></i><h3>Phone</h3><p><a href="tel:+<?= tt_h($phone1Link) ?>"><?= tt_h($settings['phone1']) ?></a><br><a href="tel:+<?= tt_h($phone2Link) ?>"><?= tt_h($settings['phone2']) ?></a></p></div>
+                <div class="contact-card reveal"><i class="fa-solid fa-envelope"></i><h3>Email</h3><p><a href="mailto:<?= tt_h($emailLink) ?>"><?= tt_h($settings['email']) ?></a></p></div>
             </div>
             <div class="site-container contact-workspace">
                 <form class="contact-form reveal" method="POST">

@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    $sessionPath = session_save_path();
+    if ($sessionPath === '' || !is_writable($sessionPath)) {
+        session_save_path(sys_get_temp_dir());
+    }
+    session_start();
+}
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 header('Expires: 0');
@@ -161,7 +167,8 @@ function dl_send_generated(string $title): void
 $errors = [];
 $form   = ['name'=>'','email'=>'','phone'=>'','degree'=>'','college'=>'','study_year'=>''];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'download') {
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($requestMethod === 'POST' && ($_POST['action'] ?? '') === 'download') {
     foreach ($form as $k => $_) $form[$k] = trim((string)($_POST[$k] ?? ''));
 
     if (strlen($form['name']) < 3)  $errors['name']  = 'Enter your full name.';
@@ -222,11 +229,13 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260721-dl2">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260723-edgefix4">
     <style>
         .dl-wrap{min-height:calc(100vh - 86px);display:flex;align-items:center;justify-content:center;padding:32px 16px 96px;background:#f0f6ff}
         .dl-card{width:100%;max-width:480px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(8,69,178,.13);padding:28px 28px 24px;border-top:5px solid #0845b2}
+        .dl-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
         .dl-card h2{margin:0 0 4px;font-size:17px;font-weight:800;color:#07142d}
+        .dl-back{width:38px;height:38px;min-width:38px;display:inline-grid;place-items:center;border:1.5px solid #cfe0ff;border-radius:10px;color:#0845b2;background:#f3f8ff;text-decoration:none}
         .dl-course-name{font-size:13px;color:#0845b2;font-weight:700;margin:0 0 18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .dl-grid{display:grid;gap:10px}
         .dl-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
@@ -255,6 +264,9 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         .otp-msg.ok{color:#16a34a}.otp-msg.fail{color:#dc2626}
         .dl-submit{width:100%;height:42px;border:0;border-radius:10px;background:linear-gradient(135deg,#0845b2,#7c3aed);color:#fff;font:inherit;font-size:14px;font-weight:800;cursor:pointer;margin-top:6px}
         .dl-submit:disabled{opacity:.5;cursor:not-allowed}
+        .dl-form-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:6px}
+        .dl-cancel{height:42px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid #cfe0ff;border-radius:10px;color:#0845b2;background:#fff;font:inherit;font-size:14px;font-weight:800;text-decoration:none}
+        .dl-form-actions .dl-submit{margin-top:0}
         .dl-err-box{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:8px 12px;font-size:12px;color:#dc2626;margin-bottom:10px}
         .verified-badge{font-size:11px;color:#16a34a;font-weight:700}
         @media (max-width:560px){
@@ -267,7 +279,8 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
             .dl-select-menu{position:static;max-height:230px;margin-top:6px;box-shadow:0 12px 28px rgba(15,23,42,.13)}
             .dl-otp-row{grid-template-columns:1fr;gap:8px}
             .btn-otp{width:100%;height:40px}
-            .dl-submit{height:44px}
+            .dl-submit,.dl-cancel{height:44px}
+            .dl-form-actions{grid-template-columns:1fr}
         }
     </style>
 </head>
@@ -288,8 +301,13 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     <main class="page-main">
         <div class="dl-wrap">
             <div class="dl-card">
-                <h2><i class="fa-solid fa-download" style="color:#0845b2"></i> Download Brochure</h2>
-                <p class="dl-course-name"><?= tt_h($courseTitle) ?></p>
+                <div class="dl-card-head">
+                    <div>
+                        <h2><i class="fa-solid fa-download" style="color:#0845b2"></i> Download Brochure</h2>
+                        <p class="dl-course-name"><?= tt_h($courseTitle) ?></p>
+                    </div>
+                    <a class="dl-back" href="course.php" data-dl-back aria-label="Go back"><i class="fa-solid fa-arrow-left"></i></a>
+                </div>
 
                 <?php if (!empty($errors['otp'])): ?>
                 <div class="dl-err-box"><i class="fa-solid fa-circle-exclamation"></i> <?= tt_h($errors['otp']) ?></div>
@@ -349,9 +367,12 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
                         <span class="err" data-error-for="study_year" data-alt-error-for="currentStatus"><?= tt_h($errors['study_year'] ?? '') ?></span>
                     </div>
 
-                    <button type="submit" class="dl-submit" id="dlSubmit" disabled>
-                        <i class="fa-solid fa-download"></i> Download Brochure
-                    </button>
+                    <div class="dl-form-actions">
+                        <a class="dl-cancel" href="course.php"><i class="fa-solid fa-xmark"></i>&nbsp; Cancel</a>
+                        <button type="submit" class="dl-submit" id="dlSubmit" disabled>
+                            <i class="fa-solid fa-download"></i> Download
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -361,6 +382,12 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
 <script src="assets/js/site-pages.min.js?v=20260721-navbarfix1" defer></script>
 <script>
 (function(){
+    document.querySelector('[data-dl-back]')?.addEventListener('click', function(event){
+        if (window.history.length <= 1) return;
+        event.preventDefault();
+        window.history.back();
+    });
+
     const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     const pathParts = window.location.pathname.split('/');
     const frontendIndex = pathParts.findIndex(part => part === 'frontend');
