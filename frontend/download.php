@@ -229,7 +229,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-aligncards1">
     <style>
         .dl-wrap{min-height:calc(100vh - 86px);display:flex;align-items:center;justify-content:center;padding:32px 16px 96px;background:#f0f6ff}
         .dl-card{width:100%;max-width:480px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(8,69,178,.13);padding:28px 28px 24px;border-top:5px solid #0845b2}
@@ -368,7 +368,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-aligncards1" defer></script>
 <script>
 (function(){
     document.querySelector('[data-dl-back]')?.addEventListener('click', function(event){

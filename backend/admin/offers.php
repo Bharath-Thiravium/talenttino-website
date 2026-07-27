@@ -445,7 +445,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css?v=20260722-adminmobile3">
     <style>
-        .offer-admin-layout{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}.offer-form-card{max-width:980px}.offer-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.offer-admin-grid .full{grid-column:1/-1}.offer-current-image{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.offer-current-image img,.offer-admin-thumb{width:86px;height:58px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}.offer-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.offer-checks label{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:13px;font-weight:600;color:#334155}.offer-table-title{display:grid;gap:3px}.offer-table-title small{color:#64748b;font-weight:600}.badge-draft{background:#fef3c7;color:#92400e}.badge-active{background:#dcfce7;color:#166534}.badge-inactive{background:#e2e8f0;color:#475569}@media(max-width:1100px){.offer-admin-grid{grid-template-columns:1fr}}
+        .offer-admin-layout{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}.offer-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.offer-admin-grid .full{grid-column:1/-1}.offer-current-image{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.offer-current-image img,.offer-admin-thumb{width:86px;height:58px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}.offer-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.offer-checks label{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:13px;font-weight:600;color:#334155}.offer-table-title{display:grid;gap:3px}.offer-table-title small{color:#64748b;font-weight:600}.badge-draft{background:#fef3c7;color:#92400e}.badge-active{background:#dcfce7;color:#166534}.badge-inactive{background:#e2e8f0;color:#475569}.offer-modal-open-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:0;border-radius:9px;color:#fff;background:linear-gradient(135deg,#2563eb,#c026d3);font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px rgba(79,70,229,.18)}.offer-form-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.58);backdrop-filter:blur(8px)}.offer-form-modal.is-open{display:flex}.offer-form-panel{width:min(980px,calc(100vw - 28px));max-height:calc(100vh - 48px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(226,232,240,.9);border-radius:16px;background:#fff;box-shadow:0 28px 90px rgba(15,23,42,.34)}.offer-form-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid #e2e8f0;background:#f8fafc}.offer-form-head h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}.offer-form-close{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:10px;background:#eef2ff;color:#1d4ed8;text-decoration:none}.offer-form-scroll{overflow:auto;padding:22px}.offer-form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.offer-cancel-link{color:#64748b;font-size:13px;text-decoration:none;font-weight:700}@media(max-width:1100px){.offer-admin-grid{grid-template-columns:1fr}}@media(max-width:720px){.offer-form-modal{padding:10px}.offer-form-panel{max-height:calc(100vh - 20px)}.offer-form-scroll{padding:16px}.card-header{align-items:flex-start;gap:12px;flex-direction:column}}
     </style>
 </head>
 <body>
@@ -465,7 +465,10 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
 
         <div class="offer-admin-layout">
             <div class="admin-card offer-list-card">
-                <div class="card-header"><h3><i class="fas fa-list"></i> Offers (<?= count($offers) ?>)</h3></div>
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> Offers (<?= count($offers) ?>)</h3>
+                    <button class="offer-modal-open-btn" type="button" data-offer-modal-open><i class="fas fa-plus"></i> Add Offer</button>
+                </div>
                 <div class="table-wrap">
                     <table class="admin-table">
                         <thead><tr><th>Poster</th><th>Offer</th><th>Fee</th><th>Validity</th><th>Status</th><th>Actions</th></tr></thead>
@@ -486,8 +489,13 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                 </div>
             </div>
 
-            <div class="admin-card offer-form-card">
-                <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;"><i class="fas fa-<?= $editOffer ? 'edit' : 'plus' ?>" style="color:var(--blue)"></i> <?= $editOffer ? 'Edit Offer' : 'Add Offer' ?></h3>
+            <div class="offer-form-modal<?= ($editOffer || $error) ? ' is-open' : '' ?>" id="offerFormModal" aria-hidden="<?= ($editOffer || $error) ? 'false' : 'true' ?>">
+                <div class="offer-form-panel" role="dialog" aria-modal="true" aria-labelledby="offerFormTitle">
+                    <div class="offer-form-head">
+                        <h3 id="offerFormTitle"><i class="fas fa-<?= $editOffer ? 'edit' : 'plus' ?>" style="color:var(--blue)"></i> <?= $editOffer ? 'Edit Offer' : 'Add Offer' ?></h3>
+                        <a class="offer-form-close" href="offers.php" data-offer-modal-close aria-label="Close offer form"><i class="fas fa-times"></i></a>
+                    </div>
+                    <div class="offer-form-scroll">
                 <form method="POST" enctype="multipart/form-data">
                     <?php if ($editOffer): ?><input type="hidden" name="id" value="<?= (int)$editOffer['id'] ?>"><?php endif; ?>
                     <input type="hidden" name="poster_existing" value="<?= $value('poster_image') ?>">
@@ -529,14 +537,54 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                         <label><input type="checkbox" name="placement_available" <?= !empty($editOffer['placement_available']) ? 'checked' : '' ?>> Placement</label>
                         <label><input type="checkbox" name="emi_available" <?= !empty($editOffer['emi_available']) ? 'checked' : '' ?>> EMI</label>
                     </div>
-                    <button type="submit" class="btn-save" style="margin-top:18px;"><i class="fas fa-save"></i> Save Offer</button>
-                    <?php if ($editOffer): ?><a href="offers.php" style="margin-left:12px;color:#64748B;font-size:13px;">Cancel</a><?php endif; ?>
+                    <div class="offer-form-actions">
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Offer</button>
+                        <a class="offer-cancel-link" href="offers.php">Cancel</a>
+                    </div>
                 </form>
                 <datalist id="courseTitles"><?php foreach ($courses as $course): ?><option value="<?= htmlspecialchars($course['title']) ?>"></option><?php endforeach; ?></datalist>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
+<script>
+    (() => {
+        const modal = document.getElementById('offerFormModal');
+        const openButton = document.querySelector('[data-offer-modal-open]');
+        const closeLinks = document.querySelectorAll('[data-offer-modal-close]');
+        if (!modal || !openButton) return;
+
+        const setOpen = (open) => {
+            modal.classList.toggle('is-open', open);
+            modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+            document.body.style.overflow = open ? 'hidden' : '';
+        };
+
+        openButton.addEventListener('click', () => setOpen(true));
+        closeLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                if (window.location.search.includes('edit=')) return;
+                event.preventDefault();
+                setOpen(false);
+            });
+        });
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal && !window.location.search.includes('edit=')) {
+                setOpen(false);
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('is-open') && !window.location.search.includes('edit=')) {
+                setOpen(false);
+            }
+        });
+        if (modal.classList.contains('is-open')) {
+            document.body.style.overflow = 'hidden';
+        }
+    })();
+</script>
 </body>
 </html>

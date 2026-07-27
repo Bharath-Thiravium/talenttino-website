@@ -55500,3 +55500,36 @@ html body .site-header#site-header .site-nav>a.active,html body .site-header#sit
 html body .site-header#site-header .nav-enroll-cta{height:46px!important;min-height:46px!important;min-width:138px!important;padding:0 20px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:linear-gradient(135deg,#1f62ff 0%,#b624f2 100%)!important;border:0!important;border-radius:10px!important;box-shadow:0 14px 30px rgba(79,70,229,.22)!important;font-size:16px!important;font-weight:900!important}
 @media(max-width:1280px) and (min-width:981px){html body .site-header#site-header .brand{flex-basis:360px!important;width:360px!important;max-width:360px!important;grid-template-columns:56px minmax(0,1fr)!important}html body .site-header#site-header .brand-mark.logo-mark{width:56px!important;height:56px!important;min-width:56px!important}html body .site-header#site-header .brand-name{font-size:28px!important}}
 @media(max-width:980px){html body .site-header#site-header{--nav-height:72px!important;--header-height:72px!important}html body .site-header#site-header .nav-wrap{height:72px!important;min-height:72px!important;max-height:72px!important;padding:0 64px 0 14px!important}html body .site-header#site-header .brand{flex:1 1 auto!important;width:100%!important;max-width:100%!important;grid-template-columns:46px minmax(0,1fr)!important;column-gap:9px!important}html body .site-header#site-header .brand-mark.logo-mark{width:46px!important;height:46px!important;min-width:46px!important}html body .site-header#site-header .brand-name{font-size:clamp(20px,5.2vw,22px)!important;overflow:hidden!important;text-overflow:ellipsis!important}html body .site-header#site-header .site-nav{display:none!important}html body .site-header#site-header .site-nav.open{display:flex!important}}
+/* Final card alignment lock: repeated cards keep equal height and stable bottom actions. */
+html body .detail-grid,
+html body .course-showcase-grid,
+html body .catalog-grid,
+html body .offers-grid {
+    align-items: stretch !important;
+}
+
+html body .rich-detail-card,
+html body .course-showcase-card,
+html body .catalog-card,
+html body .offer-card {
+    height: 100% !important;
+}
+
+html body .rich-detail-card,
+html body .course-showcase-card,
+html body .catalog-card {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+html body .rich-detail-body,
+html body .course-showcase-card .course-footer,
+html body .catalog-card .catalog-card-actions {
+    margin-top: auto !important;
+}
+
+html body .rich-detail-image,
+html body .course-showcase-card .course-image,
+html body .catalog-card .catalog-image {
+    flex: 0 0 auto !important;
+}
