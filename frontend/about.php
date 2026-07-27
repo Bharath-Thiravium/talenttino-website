@@ -21,6 +21,7 @@ foreach ($steps as $step) {
     $cleanSteps[] = $step;
 }
 $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAboutSteps;
+$aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +47,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
     <style>
         body.about-page .about-intro-section .site-container.about-intro {
             width: min(100% - 96px, 1360px) !important;
@@ -296,7 +297,7 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
                 </div>
                 <div class="identity-image about-visual-stack reveal reveal-right">
                     <div class="about-visual-main">
-                        <img src="assets/images/About .png" alt="Talentteno students learning with mentor" loading="lazy" decoding="async" width="1536" height="1024" style="width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center center!important;background:#fff!important;border-radius:15px!important;">
+                        <img src="<?= tt_h($aboutStoryImage) ?>" alt="Talentteno students learning with mentor" loading="lazy" decoding="async" width="1536" height="1024" style="width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center center!important;background:#fff!important;border-radius:15px!important;">
                     </div>
                 </div>
                 <div class="tt-stat-row reveal" style="grid-column:1/-1!important;width:100%!important;max-width:100%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin:12px 0 0!important;align-items:stretch!important;">
@@ -395,6 +396,6 @@ $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAbou
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 </body>
 </html>

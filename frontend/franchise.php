@@ -39,6 +39,7 @@ $items = $items ?: [
     ['icon' => 'fa-chalkboard-teacher', 'title' => 'Training Model', 'short_desc' => 'Course structure, counselling and student support.', 'description' => 'Understand how practical course content, counselling, trainer coordination and student support are handled.', 'image' => 'assets/images/home.webp'],
     ['icon' => 'fa-bullhorn', 'title' => 'Brand Support', 'short_desc' => 'Guidance for local admissions and promotion.', 'description' => 'Get clarity on brand usage, enquiry handling, admission process and local centre operations.', 'image' => 'assets/images/home1.webp'],
 ];
+$franchiseHeroImage = tt_optimized_image_url('assets/images/franchise enquiry.png', 1536);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +51,7 @@ $items = $items ?: [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
     <style>
         .franchise-enquiry-overlay{position:fixed;inset:0;z-index:30000;display:none;align-items:center;justify-content:center;width:100%;height:100vh;height:100dvh;padding:calc(var(--header-height,90px) + 18px) clamp(12px,3vw,28px) clamp(14px,3vh,28px);background:linear-gradient(135deg,rgba(8,19,43,.82),rgba(20,20,70,.78));backdrop-filter:blur(13px);overflow:hidden}
         .franchise-enquiry-overlay.is-open{display:flex}
@@ -90,7 +91,7 @@ $items = $items ?: [
 <div class="site-shell">
         <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
-        <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="assets/images/franchise enquiry.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-handshake"></i> Franchise Enquiry</span><h1>Partner with Talentteno Institute</h1><p>Start a practical IT training centre conversation with our team and understand the course, brand and counselling model.</p></div></section>
+        <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="<?= tt_h($franchiseHeroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-handshake"></i> Franchise Enquiry</span><h1>Partner with Talentteno Institute</h1><p>Start a practical IT training centre conversation with our team and understand the course, brand and counselling model.</p></div></section>
         <section class="section"><div class="site-container detail-grid rich-detail-grid">
             <?php foreach ($items as $item): ?><?php $image = tt_item_image($item, 'franchise'); ?>
             <article class="detail-tile rich-detail-card reveal"><div class="rich-detail-image"><img src="<?= tt_h($image) ?>" alt="<?= tt_h($item['title']) ?>" loading="lazy" decoding="async"></div><div class="rich-detail-body"><i class="fa-solid <?= tt_h($item['icon']) ?>"></i><h3><?= tt_h($item['title']) ?></h3><p class="rich-detail-short"><?= tt_h($item['short_desc']) ?></p><p class="rich-detail-more"><?= tt_h($item['description']) ?></p><button type="button" class="rich-detail-link" data-smd-trigger data-smd-title="<?= tt_h($item['title']) ?>" data-smd-category="Franchise" data-smd-description="<?= tt_h($item['description']) ?>" data-smd-image="<?= tt_h($image) ?>" data-smd-features="<?= tt_h($item['short_desc'] . "\n" . $item['description']) ?>" data-smd-enquire="contact.php?topic=franchise">Enquire Now <i class="fa-solid fa-arrow-right"></i></button></div></article>
@@ -121,7 +122,7 @@ $items = $items ?: [
             </form>
         </div>
     </div>
-</div><script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script>
+</div><script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 <script>
 (function(){
     var overlay = document.getElementById('franchiseEnquiryModal');

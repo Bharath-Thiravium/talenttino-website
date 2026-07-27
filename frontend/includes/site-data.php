@@ -305,12 +305,14 @@ function tt_render_seo(array $page = []): void
     $description = tt_plain_text((string)($page['description'] ?? $settings['seo_description'] ?? $settings['footer_description']), 170);
     $keywords = trim((string)($page['keywords'] ?? $settings['seo_keywords'] ?? ''));
     $canonical = tt_seo_url((string)($page['canonical'] ?? basename($_SERVER['SCRIPT_NAME'] ?? 'index.php')));
-    $image = tt_seo_url((string)($page['image'] ?? 'assets/images/logot-transparent.png?v=20260722-logo2'));
+    $defaultLogo = 'uploads/optimized/logot-transparent-w128.webp';
+    $pageImage = (string)($page['image'] ?? $defaultLogo);
+    $image = tt_seo_url(tt_optimized_image_url($pageImage, 1200) ?: $pageImage);
     $type = $page['type'] ?? 'website';
     $robots = $page['robots'] ?? 'index, follow, max-image-preview:large';
     $company = tt_company_profile($settings);
     $sameAs = array_values(array_filter($company['social'], static fn($url): bool => is_string($url) && $url !== '' && $url !== '#'));
-    $logo = tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2');
+    $logo = tt_abs_url($defaultLogo);
     $organizationId = tt_site_base_url() . '#organization';
     $websiteId = tt_site_base_url() . '#website';
     $webpageId = $canonical . '#webpage';
@@ -419,8 +421,8 @@ function tt_render_seo(array $page = []): void
     }
     echo '    <meta name="robots" content="' . tt_h($robots) . '">' . PHP_EOL;
     echo '    <meta name="theme-color" content="#11143d">' . PHP_EOL;
-    echo '    <link rel="icon" type="image/png" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2')) . '">' . PHP_EOL;
-    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url('assets/images/logot-transparent.png?v=20260722-logo2')) . '">' . PHP_EOL;
+    echo '    <link rel="icon" type="image/webp" href="' . tt_h(tt_abs_url($defaultLogo)) . '">' . PHP_EOL;
+    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url($defaultLogo)) . '">' . PHP_EOL;
     echo '    <link rel="canonical" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="en-IN" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="x-default" href="' . tt_h($canonical) . '">' . PHP_EOL;
@@ -578,9 +580,132 @@ function tt_content_image_url(?string $image): string
     return '';
 }
 
+function tt_optimized_image_url(?string $image, int $preferredWidth = 800): string
+{
+    $resolved = tt_content_image_url($image);
+    if ($resolved === '' || preg_match('/^https?:\/\//i', $resolved)) {
+        return $resolved;
+    }
+
+    $path = (string)(parse_url($resolved, PHP_URL_PATH) ?: $resolved);
+    $path = ltrim(rawurldecode($path), '/');
+    if ($path === '' || str_contains($path, '..')) {
+        return $resolved;
+    }
+
+    if (str_starts_with($path, 'uploads/optimized/') || str_starts_with($path, 'assets/images/optimized/')) {
+        return $resolved;
+    }
+
+    $base = pathinfo(basename($path), PATHINFO_FILENAME);
+    $base = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $base), '-'));
+    if ($base === '') {
+        return $resolved;
+    }
+
+    $widths = array_values(array_unique([
+        $preferredWidth,
+        800,
+        900,
+        1200,
+        768,
+        430,
+        400,
+        1400,
+        1536,
+    ]));
+
+    $candidates = [];
+    if (str_starts_with($path, 'assets/images/')) {
+        $candidates[] = 'assets/images/optimized/' . $base . '-desktop.webp';
+        $candidates[] = 'assets/images/optimized/' . $base . '-mobile.webp';
+    }
+
+    foreach ($widths as $width) {
+        $candidates[] = 'uploads/optimized/' . $base . '-w' . (int)$width . '.webp';
+        $candidates[] = 'assets/images/optimized/' . $base . '-w' . (int)$width . '.webp';
+    }
+
+    foreach ($candidates as $candidate) {
+        if (is_file(__DIR__ . '/../' . $candidate)) {
+            return $candidate;
+        }
+    }
+
+    $generated = 'uploads/optimized/' . $base . '-w' . max(1, $preferredWidth) . '.webp';
+    if (tt_generate_optimized_image($path, $generated, $preferredWidth)) {
+        return $generated;
+    }
+
+    return $resolved;
+}
+
+function tt_generate_optimized_image(string $sourcePath, string $targetPath, int $width): bool
+{
+    if (!function_exists('imagewebp')) {
+        return false;
+    }
+
+    $sourcePath = ltrim(rawurldecode($sourcePath), '/');
+    if ($sourcePath === '' || str_contains($sourcePath, '..')) {
+        return false;
+    }
+
+    if (!str_starts_with($sourcePath, 'uploads/') && !str_starts_with($sourcePath, 'assets/images/')) {
+        return false;
+    }
+
+    $source = __DIR__ . '/../' . $sourcePath;
+    if (!is_file($source)) {
+        return false;
+    }
+
+    $info = @getimagesize($source);
+    if (!$info || empty($info[0]) || empty($info[1])) {
+        return false;
+    }
+
+    $create = match ((int)$info[2]) {
+        IMAGETYPE_JPEG => 'imagecreatefromjpeg',
+        IMAGETYPE_PNG => 'imagecreatefrompng',
+        IMAGETYPE_WEBP => 'imagecreatefromwebp',
+        default => '',
+    };
+    if ($create === '' || !function_exists($create)) {
+        return false;
+    }
+
+    $src = @$create($source);
+    if (!$src) {
+        return false;
+    }
+
+    $sourceWidth = (int)$info[0];
+    $sourceHeight = (int)$info[1];
+    $scale = min(1, max(1, $width) / max(1, $sourceWidth));
+    $targetWidth = max(1, (int)round($sourceWidth * $scale));
+    $targetHeight = max(1, (int)round($sourceHeight * $scale));
+    $dst = imagecreatetruecolor($targetWidth, $targetHeight);
+    imagealphablending($dst, true);
+    imagesavealpha($dst, true);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
+
+    $target = __DIR__ . '/../' . ltrim($targetPath, '/');
+    $dir = dirname($target);
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0775, true);
+    }
+
+    $ok = imagewebp($dst, $target, 72);
+    imagedestroy($dst);
+    imagedestroy($src);
+
+    return $ok && is_file($target);
+}
+
 function tt_item_image(array $item, string $type = 'general'): string
 {
-    $stored = tt_content_image_url($item['image'] ?? '');
+    $stored = tt_optimized_image_url($item['image'] ?? '', 800);
     if ($stored !== '') {
         return $stored;
     }
@@ -605,12 +730,13 @@ function tt_item_image(array $item, string $type = 'general'): string
     ];
 
     foreach ($map as $needle => $image) {
-        if (str_contains($text, $needle) && tt_content_image_url($image) !== '') {
-            return $image;
+        $optimized = tt_optimized_image_url($image, 800);
+        if (str_contains($text, $needle) && $optimized !== '') {
+            return $optimized;
         }
     }
 
-    return 'assets/images/home2.webp';
+    return tt_optimized_image_url('assets/images/home2.webp', 800) ?: 'assets/images/home2.webp';
 }
 
 function tt_home_slider_images(): array
@@ -715,17 +841,18 @@ function tt_offer_default_image(string $text = ''): string
     ];
 
     foreach ($map as $needle => $image) {
-        if (str_contains($text, $needle) && tt_content_image_url($image) !== '') {
-            return $image;
+        $optimized = tt_optimized_image_url($image, 800);
+        if (str_contains($text, $needle) && $optimized !== '') {
+            return $optimized;
         }
     }
 
-    return 'assets/images/home.webp';
+    return tt_optimized_image_url('assets/images/home.webp', 1400) ?: 'assets/images/home.webp';
 }
 
 function tt_offer_image(array $offer): string
 {
-    $stored = tt_content_image_url($offer['poster_image'] ?? '');
+    $stored = tt_optimized_image_url($offer['poster_image'] ?? '', 800);
     if ($stored !== '') {
         return $stored;
     }
@@ -862,7 +989,12 @@ function tt_course_image_url(?string $image): string
     }
 
     $path = __DIR__ . '/../uploads/course-images/' . $file;
-    return is_file($path) ? 'uploads/course-images/' . rawurlencode($file) : '';
+    if (!is_file($path)) {
+        return '';
+    }
+
+    $original = 'uploads/course-images/' . rawurlencode($file);
+    return tt_optimized_image_url($original, 800) ?: $original;
 }
 
 function tt_course_brochure_exists(?string $brochure): bool

@@ -36,6 +36,7 @@ $items = $items ?: [
 $roleOptions = array_column($items, 'title');
 $stateOptions = ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana', 'Puducherry', 'Other'];
 $districtOptions = ['Madurai', 'Chennai', 'Coimbatore', 'Trichy', 'Tirunelveli', 'Salem', 'Dindigul', 'Virudhunagar', 'Theni', 'Other'];
+$hiringHeroImage = tt_optimized_image_url('assets/images/hairin.png', 1536);
 $selectedRole = trim((string)($_GET['role'] ?? $_POST['role'] ?? ''));
 if (!in_array($selectedRole, $roleOptions, true)) {
     $selectedRole = '';
@@ -154,13 +155,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
 </head>
 <body class="static-site hiring-page">
 <div class="site-shell">
         <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
-        <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="assets/images/hairin.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-user-plus"></i> Hiring</span><h1>Work with Talentteno Institute</h1><p>Data science, UI/UX design, software testing and office staff openings are available. Send your details to our admin team.</p></div></section>
+        <section class="page-hero has-page-hero-image"><img class="page-hero-bg" src="<?= tt_h($hiringHeroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high"><span class="page-hero-overlay" aria-hidden="true"></span><div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-user-plus"></i> Hiring</span><h1>Work with Talentteno Institute</h1><p>Data science, UI/UX design, software testing and office staff openings are available. Send your details to our admin team.</p></div></section>
         <section class="section"><div class="site-container detail-grid rich-detail-grid">
             <?php foreach ($items as $item): ?><?php $image = tt_item_image($item, 'hiring'); ?>
             <article class="detail-tile rich-detail-card reveal"><div class="rich-detail-image"><img src="<?= tt_h($image) ?>" alt="<?= tt_h($item['title']) ?>" loading="lazy" decoding="async"></div><div class="rich-detail-body"><i class="fa-solid <?= tt_h($item['icon']) ?>"></i><h3><?= tt_h($item['title']) ?></h3><p class="rich-detail-short"><?= tt_h($item['short_desc']) ?></p><p class="rich-detail-more"><?= tt_h($item['description']) ?></p><button type="button" class="rich-detail-link" data-smd-trigger data-smd-title="<?= tt_h($item['title']) ?>" data-smd-category="Hiring" data-smd-description="<?= tt_h($item['description']) ?>" data-smd-image="<?= tt_h($image) ?>" data-smd-features="<?= tt_h($item['short_desc'] . "\n" . $item['description']) ?>" data-smd-enquire="hiring.php?role=<?= rawurlencode($item['title']) ?>#hiring-enquiry">Apply / Enquire <i class="fa-solid fa-arrow-right"></i></button></div></article>
@@ -227,4 +228,4 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?
         </section>
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
-</div><script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script></body></html>
+</div><script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script></body></html>

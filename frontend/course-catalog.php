@@ -33,7 +33,7 @@ function tt_catalog_image_url(?string $image): string
     $allowed = ['assets/images/', 'uploads/media/', 'uploads/course-images/'];
     foreach ($allowed as $prefix) {
         if (str_starts_with($cleanPath, $prefix) && is_file(__DIR__ . '/' . $cleanPath)) {
-            return $cleanPath;
+            return tt_optimized_image_url($cleanPath, 800) ?: $cleanPath;
         }
     }
 
@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-coursealign1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -994,7 +994,7 @@ function tt_catalog_fallback_image(array $course): string
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main catalog-page">
         <?php
-            $heroImage = trim((string)($coursePage['hero_image'] ?? ''));
+            $heroImage = tt_optimized_image_url(trim((string)($coursePage['hero_image'] ?? '')), 1536);
             $heroCssImage = $heroImage;
             if (str_starts_with($heroCssImage, 'assets/images/')) {
                 $heroCssImage = '../images/' . substr($heroCssImage, strlen('assets/images/'));
@@ -1080,6 +1080,6 @@ function tt_catalog_fallback_image(array $course): string
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260729-coursealign1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 </body>
 </html>

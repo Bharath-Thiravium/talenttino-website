@@ -13,6 +13,7 @@ $selectedTopic = trim((string)($_GET['topic'] ?? ''));
 $isFranchiseTopic = strtolower($selectedTopic) === 'franchise';
 $topicLabel = $isFranchiseTopic ? 'Talentteno franchise / institute partnership' : $selectedTopic;
 $contactCourses = tt_courses();
+$contactHeroImage = tt_optimized_image_url('assets/images/conect.png', 1536);
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?? '') === 'contact') {
     $contactFormResult = tt_submit_enquiry($_POST, 'enquiry');
@@ -44,14 +45,14 @@ foreach ($contactCourses as $course) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
 </head>
 <body class="static-site contact-page">
 <div class="site-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="page-hero contact-page-hero has-page-hero-image">
-            <img class="page-hero-bg" src="assets/images/conect.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <img class="page-hero-bg" src="<?= tt_h($contactHeroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
             <span class="page-hero-overlay" aria-hidden="true"></span>
             <div class="site-container contact-hero-layout">
                 <div class="contact-hero-copy reveal">
@@ -130,6 +131,6 @@ foreach ($contactCourses as $course) {
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 </body>
 </html>

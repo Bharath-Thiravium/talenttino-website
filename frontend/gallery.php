@@ -24,6 +24,7 @@ foreach (glob($galleryUploadDir . '*') ?: [] as $path) {
     ];
 }
 usort($uploadedGalleryItems, static fn($a, $b) => $b['modified'] <=> $a['modified']);
+$galleryHeroImage = tt_optimized_image_url('assets/images/gallery.png', 1536);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,14 +44,14 @@ usort($uploadedGalleryItems, static fn($a, $b) => $b['modified'] <=> $a['modifie
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
 </head>
 <body class="static-site gallery-page">
 <div class="site-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="page-hero has-page-hero-image">
-            <img class="page-hero-bg" src="assets/images/gallery.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <img class="page-hero-bg" src="<?= tt_h($galleryHeroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
             <span class="page-hero-overlay" aria-hidden="true"></span>
             <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-photo-film"></i> Admin Gallery</span><h1>Gallery</h1><p>Images and videos uploaded from the admin Media Library appear here automatically.</p></div>
         </section>
@@ -90,6 +91,6 @@ usort($uploadedGalleryItems, static fn($a, $b) => $b['modified'] <=> $a['modifie
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 </body>
 </html>

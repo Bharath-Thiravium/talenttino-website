@@ -14,6 +14,7 @@ if (!$courses) {
         ['id' => 0, 'title' => 'Cloud Computing', 'category' => 'Cloud', 'description' => 'Learn AWS, Microsoft Azure, DevOps, Docker and Kubernetes.', 'highlights' => "AWS\nDocker\nKubernetes", 'duration' => '', 'fee' => 0, 'original_fee' => 0, 'brochure_file' => '', 'image' => '', 'is_featured' => 0],
     ];
 }
+$courseHeroImage = tt_optimized_image_url('assets/images/our trending.png', 1536);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +38,7 @@ if (!$courses) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260729-align4">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-speed3">
     <style>
         body.course-list-page .course-showcase-card{position:relative!important;display:flex!important;flex-direction:column!important;aspect-ratio:auto!important;min-height:460px!important;padding:0 22px 82px!important;overflow:hidden!important;cursor:pointer!important}
         body.course-list-page .course-showcase-card .course-image{width:calc(100% + 44px)!important;height:190px!important;min-height:190px!important;max-height:190px!important;margin:0 -22px 18px!important;border-radius:8px 8px 0 0!important;overflow:hidden!important}
@@ -741,7 +742,7 @@ if (!$courses) {
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="page-hero course-page-hero">
-            <img class="course-hero-bg" src="assets/images/our trending.png" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <img class="course-hero-bg" src="<?= tt_h($courseHeroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
             <span class="course-hero-overlay" aria-hidden="true"></span>
             <div class="site-container reveal"><span class="hero-kicker"><i class="fa-solid fa-book-open"></i> Basic to Advanced IT Training</span><h1>Our Trending Courses</h1><p>Build your career with industry-oriented training, live projects, internships, certifications, and placement assistance.</p></div>
         </section>
@@ -812,6 +813,6 @@ if (!$courses) {
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260729-align3" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-speed3" defer></script>
 </body>
 </html>
