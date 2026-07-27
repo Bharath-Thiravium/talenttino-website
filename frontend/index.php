@@ -290,26 +290,13 @@ function tt_home_generate_optimized_image(string $image, int $width, string $rel
 
 function tt_home_optimized_image(string $image, int $width): string
 {
-    $name = tt_home_optimized_base($image) . '-w' . $width . '.webp';
-    $relative = 'uploads/optimized/' . $name;
-    if (is_file(__DIR__ . '/' . $relative)) {
-        return $relative;
-    }
-
-    return tt_home_generate_optimized_image($image, $width, $relative) ? $relative : '';
+    $optimized = tt_optimized_image_url($image, $width);
+    return $optimized !== $image ? $optimized : '';
 }
 
 function tt_home_optimized_srcset(string $image, array $widths): string
 {
-    $items = [];
-    foreach ($widths as $width) {
-        $candidate = tt_home_optimized_image($image, (int)$width);
-        if ($candidate !== '') {
-            $items[] = $candidate . ' ' . (int)$width . 'w';
-        }
-    }
-
-    return implode(', ', $items);
+    return tt_optimized_image_srcset($image, $widths);
 }
 
 function tt_home_image_src(string $image, int $preferredWidth): string

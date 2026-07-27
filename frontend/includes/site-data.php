@@ -1,6 +1,16 @@
 <?php
 declare(strict_types=1);
 
+if (
+    PHP_SAPI !== 'cli'
+    && !headers_sent()
+    && extension_loaded('zlib')
+    && !ini_get('zlib.output_compression')
+    && !ob_get_level()
+) {
+    ob_start('ob_gzhandler');
+}
+
 define('DB_OPTIONAL', true);
 require_once __DIR__ . '/../../backend/includes/db.php';
 
@@ -654,7 +664,10 @@ function tt_content_image_url(?string $image): string
     $candidates = [];
 
     if (str_contains($image, '/')) {
-        $candidates[] = [$image, __DIR__ . '/../' . $image];
+        $decodedImage = ltrim(rawurldecode($image), '/');
+        if ($decodedImage !== '' && !str_contains($decodedImage, '..')) {
+            $candidates[] = [$image, __DIR__ . '/../' . $decodedImage];
+        }
     } else {
         $file = basename($image);
         $candidates[] = ['uploads/offer-posters/' . rawurlencode($file), __DIR__ . '/../uploads/offer-posters/' . $file];
@@ -730,6 +743,25 @@ function tt_optimized_image_url(?string $image, int $preferredWidth = 800): stri
     }
 
     return $resolved;
+}
+
+function tt_optimized_image_srcset(?string $image, array $widths = [400, 800, 1200]): string
+{
+    $items = [];
+    $seen = [];
+
+    foreach ($widths as $width) {
+        $width = max(1, (int)$width);
+        $candidate = tt_optimized_image_url($image, $width);
+        if ($candidate === '' || preg_match('/^https?:\/\//i', $candidate) || isset($seen[$candidate])) {
+            continue;
+        }
+
+        $seen[$candidate] = true;
+        $items[] = $candidate . ' ' . $width . 'w';
+    }
+
+    return implode(', ', $items);
 }
 
 function tt_generate_optimized_image(string $sourcePath, string $targetPath, int $width): bool
