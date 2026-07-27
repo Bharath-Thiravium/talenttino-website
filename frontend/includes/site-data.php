@@ -860,6 +860,21 @@ function tt_offer_image(array $offer): string
     return tt_offer_default_image(($offer['title'] ?? '') . ' ' . ($offer['course_name'] ?? '') . ' ' . ($offer['category'] ?? ''));
 }
 
+function tt_offer_hero_image(array $offer): string
+{
+    $stored = tt_optimized_image_url($offer['hero_image'] ?? '', 1400);
+    if ($stored !== '') {
+        return $stored;
+    }
+
+    $poster = tt_optimized_image_url($offer['poster_image'] ?? '', 1400);
+    if ($poster !== '') {
+        return $poster;
+    }
+
+    return tt_offer_default_image(($offer['title'] ?? '') . ' ' . ($offer['course_name'] ?? '') . ' ' . ($offer['category'] ?? ''));
+}
+
 function tt_offer_lines(?string $text, int $limit = 5): array
 {
     $lines = preg_split('/\r\n|\r|\n/', trim((string)$text)) ?: [];

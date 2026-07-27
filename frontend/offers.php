@@ -6,7 +6,8 @@ $offers = tt_offers();
 $featuredOffer = $offers[0] ?? [];
 $whatsappUrl = tt_whatsapp_url($settings);
 $phone1Href = tt_phone_href($settings['phone1'] ?? '');
-$featuredImage = $featuredOffer ? tt_offer_image($featuredOffer) : 'assets/images/home.webp';
+$featuredImage = $featuredOffer ? tt_offer_hero_image($featuredOffer) : 'assets/images/home.webp';
+$featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)($featuredOffer['poster_alt'] ?? ''));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +29,7 @@ $featuredImage = $featuredOffer ? tt_offer_image($featuredOffer) : 'assets/image
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-headermedia1">
+    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-unifiednav1">
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
     </noscript>
@@ -54,7 +55,7 @@ $featuredImage = $featuredOffer ? tt_offer_image($featuredOffer) : 'assets/image
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="offers-hero">
-            <img src="<?= tt_h($featuredImage) ?>" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
+            <img src="<?= tt_h($featuredImage) ?>" alt="<?= tt_h($featuredAlt) ?>" fetchpriority="high" decoding="async">
             <div class="site-container reveal">
                 <span class="offers-kicker"><i class="fa-solid fa-tags"></i> Current Course Offers</span>
                 <h1>Best training offers with practical learning support.</h1>
@@ -177,6 +178,6 @@ $featuredImage = $featuredOffer ? tt_offer_image($featuredOffer) : 'assets/image
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260727-headermedia1" defer></script>
+<script src="assets/js/site-pages.min.js?v=20260727-offersadmin1" defer></script>
 </body>
 </html>

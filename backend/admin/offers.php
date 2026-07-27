@@ -16,6 +16,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS offers (
     full_description TEXT,
     poster_image VARCHAR(255) NOT NULL DEFAULT '',
     poster_alt VARCHAR(255) NOT NULL DEFAULT '',
+    hero_image VARCHAR(255) NOT NULL DEFAULT '',
+    hero_alt VARCHAR(255) NOT NULL DEFAULT '',
     original_fee DECIMAL(10,2) DEFAULT 0,
     offer_fee DECIMAL(10,2) DEFAULT 0,
     discount_percentage DECIMAL(5,2) DEFAULT 0,
@@ -54,6 +56,16 @@ $conn->query("CREATE TABLE IF NOT EXISTS offers (
     INDEX idx_display_order (display_order),
     UNIQUE KEY uq_slug (slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+foreach ([
+    'hero_image' => "ALTER TABLE offers ADD COLUMN hero_image VARCHAR(255) NOT NULL DEFAULT '' AFTER poster_alt",
+    'hero_alt' => "ALTER TABLE offers ADD COLUMN hero_alt VARCHAR(255) NOT NULL DEFAULT '' AFTER hero_image",
+] as $column => $sql) {
+    $exists = $conn->query("SHOW COLUMNS FROM offers LIKE '" . $conn->real_escape_string($column) . "'");
+    if ($exists && $exists->num_rows === 0) {
+        $conn->query($sql);
+    }
+}
 
 if (isset($_GET['saved'])) {
     $success = match ($_GET['saved']) {
@@ -138,15 +150,15 @@ function tt_admin_offer_make_webp(string $source, string $target, string $mime, 
     return $ok && is_file($target);
 }
 
-function tt_admin_offer_save_image(string &$error): string
+function tt_admin_offer_save_image(string &$error, string $mediaKey = 'media_image', string $fileKey = 'poster_file', string $prefix = 'offer-poster'): string
 {
     $uploadDir = tt_admin_offer_upload_dir();
     if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true)) {
-        $error = 'Unable to create offer poster folder.';
+        $error = 'Unable to create offer image folder.';
         return '';
     }
 
-    $selected = basename(trim((string)($_POST['media_image'] ?? '')));
+    $selected = basename(trim((string)($_POST[$mediaKey] ?? '')));
     if ($selected !== '') {
         $source = __DIR__ . '/../../frontend/uploads/media/' . $selected;
         if (!is_file($source)) {
@@ -158,15 +170,15 @@ function tt_admin_offer_save_image(string &$error): string
             $error = 'Selected media must be JPG, PNG, or WebP.';
             return '';
         }
-        $name = tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.webp';
+        $name = $prefix . '-' . tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.webp';
         if (tt_admin_offer_make_webp($source, $uploadDir . $name, $mime)) {
             return 'uploads/offer-posters/' . $name;
         }
-        $copyName = tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.' . pathinfo($selected, PATHINFO_EXTENSION);
+        $copyName = $prefix . '-' . tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.' . pathinfo($selected, PATHINFO_EXTENSION);
         return copy($source, $uploadDir . $copyName) ? 'uploads/offer-posters/' . $copyName : '';
     }
 
-    $file = $_FILES['poster_file'] ?? null;
+    $file = $_FILES[$fileKey] ?? null;
     if (!$file || (int)($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return '';
     }
@@ -187,7 +199,7 @@ function tt_admin_offer_save_image(string &$error): string
         return '';
     }
 
-    $base = tt_admin_offer_safe_name((string)$file['name']) . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6);
+    $base = $prefix . '-' . tt_admin_offer_safe_name((string)$file['name']) . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6);
     if ($mime !== 'image/gif' && tt_admin_offer_make_webp($tmp, $uploadDir . $base . '.webp', $mime)) {
         return 'uploads/offer-posters/' . $base . '.webp';
     }
@@ -312,9 +324,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
     $title = trim((string)($_POST['title'] ?? ''));
     $posterImage = (int)($_POST['remove_poster'] ?? 0) === 1 ? '' : trim((string)($_POST['poster_existing'] ?? ''));
-    $uploaded = tt_admin_offer_save_image($error);
+    $heroImage = (int)($_POST['remove_hero'] ?? 0) === 1 ? '' : trim((string)($_POST['hero_existing'] ?? ''));
+    $uploaded = tt_admin_offer_save_image($error, 'media_image', 'poster_file', 'poster');
     if ($uploaded !== '') {
         $posterImage = $uploaded;
+    }
+    if ($error === '') {
+        $uploadedHero = tt_admin_offer_save_image($error, 'hero_media_image', 'hero_file', 'hero');
+        if ($uploadedHero !== '') {
+            $heroImage = $uploadedHero;
+        }
     }
 
     if ($title === '') {
@@ -333,6 +352,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'full_description' => trim((string)($_POST['full_description'] ?? '')),
             'poster_image' => $posterImage,
             'poster_alt' => trim((string)($_POST['poster_alt'] ?? '')),
+            'hero_image' => $heroImage,
+            'hero_alt' => trim((string)($_POST['hero_alt'] ?? '')),
             'currency' => trim((string)($_POST['currency'] ?? 'INR')) ?: 'INR',
             'emi_description' => trim((string)($_POST['emi_description'] ?? '')),
             'course_duration' => trim((string)($_POST['course_duration'] ?? '')),
@@ -502,6 +523,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                 <form method="POST" enctype="multipart/form-data">
                     <?php if ($editOffer): ?><input type="hidden" name="id" value="<?= (int)$editOffer['id'] ?>"><?php endif; ?>
                     <input type="hidden" name="poster_existing" value="<?= $value('poster_image') ?>">
+                    <input type="hidden" name="hero_existing" value="<?= $value('hero_image') ?>">
                     <div class="form-group"><label>Offer Title *</label><input type="text" name="title" required value="<?= $value('title') ?>"></div>
                     <div class="offer-admin-grid">
                         <div class="form-group"><label>Course Name</label><input type="text" name="course_name" list="courseTitles" value="<?= $value('course_name') ?>"></div>
@@ -517,7 +539,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                         <div class="form-group"><label>Seats Available</label><input type="number" name="available_seats" value="<?= $value('available_seats') ?>"></div>
                         <div class="form-group"><label>Seats Filled</label><input type="number" name="seats_filled" value="<?= $value('seats_filled', '0') ?>"></div>
                     </div>
-                    <div class="form-group"><label>Poster Image</label><input type="file" name="poster_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Upload poster image. JPG/PNG/WebP will be compressed to WebP for speed.</small></div>
+                    <div class="form-group"><label>Poster Image</label><input type="file" name="poster_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Used in offer cards. JPG/PNG/WebP will be compressed to WebP for speed.</small></div>
                     <div class="form-group">
                         <label>Or Select Media Image</label>
                         <input type="hidden" name="media_image" id="offerMediaImage" value="">
@@ -533,6 +555,22 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                     </div>
                     <?php if (!empty($editOffer['poster_image'])): ?><div class="offer-current-image"><img src="<?= htmlspecialchars(tt_admin_offer_image_url($editOffer['poster_image'])) ?>" alt=""><span>Current poster</span><label><input type="checkbox" name="remove_poster" value="1"> Remove</label></div><?php endif; ?>
                     <div class="form-group"><label>Poster Alt Text</label><input type="text" name="poster_alt" value="<?= $value('poster_alt') ?>"></div>
+                    <div class="form-group"><label>Offers Page Header Image</label><input type="file" name="hero_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Used as the large top image on offers.php. If empty, the poster image is used.</small></div>
+                    <div class="form-group">
+                        <label>Or Select Header Media Image</label>
+                        <input type="hidden" name="hero_media_image" id="offerHeroMediaImage" value="">
+                        <div class="offer-image-picker-row">
+                            <button type="button" class="offer-image-pick-btn" data-offer-image-open data-offer-image-target="hero"><i class="fas fa-images"></i> Choose From Media</button>
+                            <button type="button" class="offer-image-pick-btn" data-offer-image-clear data-offer-image-target="hero"><i class="fas fa-eraser"></i> Clear</button>
+                            <div class="offer-selected-media" id="offerHeroSelectedMedia" aria-live="polite">
+                                <img src="" alt="">
+                                <span></span>
+                            </div>
+                        </div>
+                        <small class="field-help">Pick an existing admin media image for the Offers page header.</small>
+                    </div>
+                    <?php if (!empty($editOffer['hero_image'])): ?><div class="offer-current-image"><img src="<?= htmlspecialchars(tt_admin_offer_image_url($editOffer['hero_image'])) ?>" alt=""><span>Current offers page header image</span><label><input type="checkbox" name="remove_hero" value="1"> Remove</label></div><?php endif; ?>
+                    <div class="form-group"><label>Header Image Alt Text</label><input type="text" name="hero_alt" value="<?= $value('hero_alt') ?>"></div>
                     <div class="form-group"><label>Short Description</label><textarea name="short_description" rows="3" maxlength="500"><?= $value('short_description') ?></textarea></div>
                     <div class="form-group"><label>Full Description</label><textarea name="full_description" rows="4"><?= $value('full_description') ?></textarea></div>
                     <div class="form-group"><label>Highlights (one per line)</label><textarea name="highlights" rows="5"><?= $value('highlights') ?></textarea></div>
@@ -592,11 +630,14 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
         const openButton = document.querySelector('[data-offer-modal-open]');
         const closeLinks = document.querySelectorAll('[data-offer-modal-close]');
         const imageModal = document.getElementById('offerImageModal');
-        const imageOpenButton = document.querySelector('[data-offer-image-open]');
-        const imageClearButton = document.querySelector('[data-offer-image-clear]');
+        const imageOpenButtons = document.querySelectorAll('[data-offer-image-open]');
+        const imageClearButtons = document.querySelectorAll('[data-offer-image-clear]');
         const imageCloseButtons = document.querySelectorAll('[data-offer-image-close]');
         const mediaInput = document.getElementById('offerMediaImage');
         const selectedMedia = document.getElementById('offerSelectedMedia');
+        const heroMediaInput = document.getElementById('offerHeroMediaImage');
+        const heroSelectedMedia = document.getElementById('offerHeroSelectedMedia');
+        let activeImageTarget = 'poster';
         if (!modal || !openButton) return;
 
         const syncBodyLock = () => {
@@ -618,16 +659,19 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
             syncBodyLock();
         };
 
-        const setSelectedMedia = (name, src) => {
-            if (!mediaInput || !selectedMedia) return;
-            const img = selectedMedia.querySelector('img');
-            const label = selectedMedia.querySelector('span');
-            mediaInput.value = name || '';
-            selectedMedia.classList.toggle('has-image', Boolean(name));
+        const setSelectedMedia = (name, src, target = activeImageTarget) => {
+            const isHero = target === 'hero';
+            const input = isHero ? heroMediaInput : mediaInput;
+            const preview = isHero ? heroSelectedMedia : selectedMedia;
+            if (!input || !preview) return;
+            const img = preview.querySelector('img');
+            const label = preview.querySelector('span');
+            input.value = name || '';
+            preview.classList.toggle('has-image', Boolean(name));
             if (img) img.src = src || '';
             if (label) label.textContent = name || '';
             document.querySelectorAll('[data-media-image]').forEach((button) => {
-                button.classList.toggle('is-selected', button.dataset.mediaImage === name);
+                button.classList.toggle('is-selected', button.dataset.mediaImage === name && target === activeImageTarget);
             });
         };
 
@@ -644,8 +688,15 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                 setOpen(false);
             }
         });
-        imageOpenButton?.addEventListener('click', () => setImageOpen(true));
-        imageClearButton?.addEventListener('click', () => setSelectedMedia('', ''));
+        imageOpenButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                activeImageTarget = button.dataset.offerImageTarget || 'poster';
+                setImageOpen(true);
+            });
+        });
+        imageClearButtons.forEach((button) => {
+            button.addEventListener('click', () => setSelectedMedia('', '', button.dataset.offerImageTarget || 'poster'));
+        });
         imageCloseButtons.forEach((button) => button.addEventListener('click', () => setImageOpen(false)));
         imageModal?.addEventListener('click', (event) => {
             if (event.target === imageModal) {
@@ -654,7 +705,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
         });
         document.querySelectorAll('[data-media-image]').forEach((button) => {
             button.addEventListener('click', () => {
-                setSelectedMedia(button.dataset.mediaImage || '', button.dataset.mediaSrc || '');
+                setSelectedMedia(button.dataset.mediaImage || '', button.dataset.mediaSrc || '', activeImageTarget);
                 setImageOpen(false);
             });
         });
