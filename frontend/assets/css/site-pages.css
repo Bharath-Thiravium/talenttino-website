@@ -55533,3 +55533,30 @@ html body .course-showcase-card .course-image,
 html body .catalog-card .catalog-image {
     flex: 0 0 auto !important;
 }
+
+/* Final full-width header lock: first screenshot model, no centered floating header box. */
+html body .site-header#site-header,
+html body.home-page .site-header#site-header,
+html body.static-site .site-header#site-header,
+html body.catalog-body .site-header#site-header,
+html body.course-list-page .site-header#site-header {
+    width: 100% !important;
+    max-width: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+html body .site-header#site-header .nav-wrap,
+html body.home-page .site-header#site-header .nav-wrap,
+html body.static-site .site-header#site-header .nav-wrap,
+html body.catalog-body .site-header#site-header .nav-wrap,
+html body.course-list-page .site-header#site-header .nav-wrap {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: clamp(48px, 3.2vw, 64px) !important;
+    padding-right: clamp(34px, 2.8vw, 48px) !important;
+    border-radius: 0 !important;
+}

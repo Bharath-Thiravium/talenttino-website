@@ -447,6 +447,9 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
     <style>
         .offer-admin-layout{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}.offer-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.offer-admin-grid .full{grid-column:1/-1}.offer-current-image{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.offer-current-image img,.offer-admin-thumb{width:86px;height:58px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}.offer-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.offer-checks label{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:13px;font-weight:600;color:#334155}.offer-table-title{display:grid;gap:3px}.offer-table-title small{color:#64748b;font-weight:600}.badge-draft{background:#fef3c7;color:#92400e}.badge-active{background:#dcfce7;color:#166534}.badge-inactive{background:#e2e8f0;color:#475569}.offer-modal-open-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:0;border-radius:9px;color:#fff;background:linear-gradient(135deg,#2563eb,#c026d3);font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px rgba(79,70,229,.18)}.offer-form-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.58);backdrop-filter:blur(8px)}.offer-form-modal.is-open{display:flex}.offer-form-panel{width:min(980px,calc(100vw - 28px));max-height:calc(100vh - 48px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(226,232,240,.9);border-radius:16px;background:#fff;box-shadow:0 28px 90px rgba(15,23,42,.34)}.offer-form-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid #e2e8f0;background:#f8fafc}.offer-form-head h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}.offer-form-close{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:10px;background:#eef2ff;color:#1d4ed8;text-decoration:none}.offer-form-scroll{overflow:auto;padding:22px}.offer-form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.offer-cancel-link{color:#64748b;font-size:13px;text-decoration:none;font-weight:700}@media(max-width:1100px){.offer-admin-grid{grid-template-columns:1fr}}@media(max-width:720px){.offer-form-modal{padding:10px}.offer-form-panel{max-height:calc(100vh - 20px)}.offer-form-scroll{padding:16px}.card-header{align-items:flex-start;gap:12px;flex-direction:column}}
     </style>
+    <style>
+        .offer-image-picker-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.offer-image-pick-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 13px;border:1px solid #bfdbfe;border-radius:9px;background:#eff6ff;color:#1d4ed8;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.offer-selected-media{display:none;align-items:center;gap:10px;min-width:0;padding:8px 10px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.offer-selected-media.has-image{display:flex}.offer-selected-media img{width:70px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}.offer-selected-media span{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569;font-size:12px;font-weight:700}.offer-image-modal{position:fixed;inset:0;z-index:2300;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.62);backdrop-filter:blur(8px)}.offer-image-modal.is-open{display:flex}.offer-image-panel{width:min(1040px,calc(100vw - 28px));max-height:calc(100vh - 48px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(226,232,240,.9);border-radius:16px;background:#fff;box-shadow:0 28px 90px rgba(15,23,42,.36)}.offer-image-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid #e2e8f0;background:#f8fafc}.offer-image-head h3{margin:0;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}.offer-image-close{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:10px;background:#eef2ff;color:#1d4ed8;cursor:pointer}.offer-image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;overflow:auto;padding:18px}.offer-image-choice{min-width:0;display:grid;gap:8px;padding:8px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;text-align:left;cursor:pointer}.offer-image-choice:hover,.offer-image-choice.is-selected{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.offer-image-choice img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:8px;background:#e2e8f0}.offer-image-choice span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569;font-size:12px;font-weight:700}.offer-image-empty{padding:26px;color:#64748b;text-align:center;font-size:13px;font-weight:700}
+    </style>
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
@@ -515,7 +518,19 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                         <div class="form-group"><label>Seats Filled</label><input type="number" name="seats_filled" value="<?= $value('seats_filled', '0') ?>"></div>
                     </div>
                     <div class="form-group"><label>Poster Image</label><input type="file" name="poster_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Upload poster image. JPG/PNG/WebP will be compressed to WebP for speed.</small></div>
-                    <div class="form-group"><label>Or Select Media Image</label><select name="media_image"><option value="">Keep current / no media selected</option><?php foreach ($mediaImages as $image): ?><option value="<?= htmlspecialchars($image) ?>"><?= htmlspecialchars($image) ?></option><?php endforeach; ?></select></div>
+                    <div class="form-group">
+                        <label>Or Select Media Image</label>
+                        <input type="hidden" name="media_image" id="offerMediaImage" value="">
+                        <div class="offer-image-picker-row">
+                            <button type="button" class="offer-image-pick-btn" data-offer-image-open><i class="fas fa-images"></i> Choose From Media</button>
+                            <button type="button" class="offer-image-pick-btn" data-offer-image-clear><i class="fas fa-eraser"></i> Clear</button>
+                            <div class="offer-selected-media" id="offerSelectedMedia" aria-live="polite">
+                                <img src="" alt="">
+                                <span></span>
+                            </div>
+                        </div>
+                        <small class="field-help">Pick an existing admin media image. It will be copied and compressed as the offer poster.</small>
+                    </div>
                     <?php if (!empty($editOffer['poster_image'])): ?><div class="offer-current-image"><img src="<?= htmlspecialchars(tt_admin_offer_image_url($editOffer['poster_image'])) ?>" alt=""><span>Current poster</span><label><input type="checkbox" name="remove_poster" value="1"> Remove</label></div><?php endif; ?>
                     <div class="form-group"><label>Poster Alt Text</label><input type="text" name="poster_alt" value="<?= $value('poster_alt') ?>"></div>
                     <div class="form-group"><label>Short Description</label><textarea name="short_description" rows="3" maxlength="500"><?= $value('short_description') ?></textarea></div>
@@ -548,6 +563,27 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
             </div>
 
         </div>
+        <div class="offer-image-modal" id="offerImageModal" aria-hidden="true">
+            <div class="offer-image-panel" role="dialog" aria-modal="true" aria-labelledby="offerImageTitle">
+                <div class="offer-image-head">
+                    <h3 id="offerImageTitle"><i class="fas fa-images"></i> Select Media Image</h3>
+                    <button class="offer-image-close" type="button" data-offer-image-close aria-label="Close image picker"><i class="fas fa-times"></i></button>
+                </div>
+                <?php if ($mediaImages): ?>
+                    <div class="offer-image-grid">
+                        <?php foreach ($mediaImages as $image): ?>
+                            <?php $mediaSrc = '../../frontend/uploads/media/' . rawurlencode($image); ?>
+                            <button type="button" class="offer-image-choice" data-media-image="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>" data-media-src="<?= htmlspecialchars($mediaSrc, ENT_QUOTES, 'UTF-8') ?>">
+                                <img src="<?= htmlspecialchars($mediaSrc, ENT_QUOTES, 'UTF-8') ?>" alt="">
+                                <span><?= htmlspecialchars($image) ?></span>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="offer-image-empty">No media images available. Upload an image in Media Library first.</div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -555,12 +591,44 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
         const modal = document.getElementById('offerFormModal');
         const openButton = document.querySelector('[data-offer-modal-open]');
         const closeLinks = document.querySelectorAll('[data-offer-modal-close]');
+        const imageModal = document.getElementById('offerImageModal');
+        const imageOpenButton = document.querySelector('[data-offer-image-open]');
+        const imageClearButton = document.querySelector('[data-offer-image-clear]');
+        const imageCloseButtons = document.querySelectorAll('[data-offer-image-close]');
+        const mediaInput = document.getElementById('offerMediaImage');
+        const selectedMedia = document.getElementById('offerSelectedMedia');
         if (!modal || !openButton) return;
+
+        const syncBodyLock = () => {
+            const formOpen = modal.classList.contains('is-open');
+            const pickerOpen = imageModal && imageModal.classList.contains('is-open');
+            document.body.style.overflow = formOpen || pickerOpen ? 'hidden' : '';
+        };
 
         const setOpen = (open) => {
             modal.classList.toggle('is-open', open);
             modal.setAttribute('aria-hidden', open ? 'false' : 'true');
-            document.body.style.overflow = open ? 'hidden' : '';
+            syncBodyLock();
+        };
+
+        const setImageOpen = (open) => {
+            if (!imageModal) return;
+            imageModal.classList.toggle('is-open', open);
+            imageModal.setAttribute('aria-hidden', open ? 'false' : 'true');
+            syncBodyLock();
+        };
+
+        const setSelectedMedia = (name, src) => {
+            if (!mediaInput || !selectedMedia) return;
+            const img = selectedMedia.querySelector('img');
+            const label = selectedMedia.querySelector('span');
+            mediaInput.value = name || '';
+            selectedMedia.classList.toggle('has-image', Boolean(name));
+            if (img) img.src = src || '';
+            if (label) label.textContent = name || '';
+            document.querySelectorAll('[data-media-image]').forEach((button) => {
+                button.classList.toggle('is-selected', button.dataset.mediaImage === name);
+            });
         };
 
         openButton.addEventListener('click', () => setOpen(true));
@@ -576,13 +644,32 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                 setOpen(false);
             }
         });
+        imageOpenButton?.addEventListener('click', () => setImageOpen(true));
+        imageClearButton?.addEventListener('click', () => setSelectedMedia('', ''));
+        imageCloseButtons.forEach((button) => button.addEventListener('click', () => setImageOpen(false)));
+        imageModal?.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                setImageOpen(false);
+            }
+        });
+        document.querySelectorAll('[data-media-image]').forEach((button) => {
+            button.addEventListener('click', () => {
+                setSelectedMedia(button.dataset.mediaImage || '', button.dataset.mediaSrc || '');
+                setImageOpen(false);
+            });
+        });
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.classList.contains('is-open') && !window.location.search.includes('edit=')) {
+            if (event.key !== 'Escape') return;
+            if (imageModal?.classList.contains('is-open')) {
+                setImageOpen(false);
+                return;
+            }
+            if (modal.classList.contains('is-open') && !window.location.search.includes('edit=')) {
                 setOpen(false);
             }
         });
         if (modal.classList.contains('is-open')) {
-            document.body.style.overflow = 'hidden';
+            syncBodyLock();
         }
     })();
 </script>

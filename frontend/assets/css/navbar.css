@@ -475,3 +475,23 @@ html body .site-header#site-header .site-nav .nav-enroll-cta:focus-visible {
     background: linear-gradient(135deg, #1d4ed8 0%, #a21caf 100%) !important;
     box-shadow: 0 18px 38px rgba(79, 70, 229, 0.3) !important;
 }
+
+html body .site-header#site-header,
+html body.home-page .site-header#site-header,
+html body.static-site .site-header#site-header {
+    width: 100% !important;
+    max-width: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+}
+
+html body .site-header#site-header .nav-wrap,
+html body.home-page .site-header#site-header .nav-wrap,
+html body.static-site .site-header#site-header .nav-wrap {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: clamp(48px, 3.2vw, 64px) !important;
+    padding-right: clamp(34px, 2.8vw, 48px) !important;
+}

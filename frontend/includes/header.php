@@ -17,7 +17,7 @@ function tt_nav_parent_active(array $pages): string {
 }
 ?>
 <link rel="preload" as="image" href="uploads/optimized/logot-transparent-w128.webp" imagesrcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w" imagesizes="54px" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/navbar.css?v=20260727-global-nav2">
+<link rel="stylesheet" href="assets/css/navbar.css?v=20260727-global-nav3">
 <header class="site-header" id="site-header">
     <div class="nav-wrap">
         <a class="brand" href="index.php" aria-label="Talentteno Institute home">
