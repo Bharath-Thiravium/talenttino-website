@@ -47,7 +47,7 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-unifiednav1">
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
     <style>
         body.about-page .about-intro-section .site-container.about-intro {
             width: min(100% - 96px, 1360px) !important;
@@ -396,6 +396,6 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260727-headermedia1" defer></script>
+<script src="<?= tt_h(tt_asset_url('assets/js/site-pages.min.js')) ?>" defer></script>
 </body>
 </html>

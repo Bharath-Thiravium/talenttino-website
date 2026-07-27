@@ -240,7 +240,7 @@ dropdownItems.forEach(item => {
     trigger?.setAttribute('aria-expanded', 'false');
     const handleDropdownTrigger = event => {
         const triggerHref = trigger.getAttribute('href') || '';
-        const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
+        const isMobileNav = window.innerWidth <= 1100 || nav?.classList.contains('open');
         const wasOpen = item.classList.contains('open');
         if (isMobileNav && wasOpen && triggerHref !== '#') {
             window.location.href = trigger.href;
@@ -265,7 +265,7 @@ dropdownItems.forEach(item => {
 
 nav?.querySelectorAll('a[href]').forEach(link => {
     link.addEventListener('click', event => {
-        if (window.innerWidth > 980) return;
+        if (window.innerWidth > 1100) return;
         const isMenuTrigger = link.closest('.nav-item.has-menu')?.querySelector(':scope > a') === link;
         if (isMenuTrigger) return;
         closeMobileNav();
@@ -278,7 +278,7 @@ nav?.querySelectorAll('a[href]').forEach(link => {
 });
 
 window.addEventListener('resize', () => {
-    if (window.innerWidth <= 980) return;
+    if (window.innerWidth <= 1100) return;
     closeMobileNav();
 }, { passive: true });
 

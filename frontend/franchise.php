@@ -51,7 +51,7 @@ $franchiseHeroImage = tt_optimized_image_url('assets/images/franchise enquiry.pn
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-unifiednav1">
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
     <style>
         .franchise-enquiry-overlay{position:fixed;inset:0;z-index:30000;display:none;align-items:center;justify-content:center;width:100%;height:100vh;height:100dvh;padding:calc(var(--header-height,90px) + 18px) clamp(12px,3vw,28px) clamp(14px,3vh,28px);background:linear-gradient(135deg,rgba(8,19,43,.82),rgba(20,20,70,.78));backdrop-filter:blur(13px);overflow:hidden}
         .franchise-enquiry-overlay.is-open{display:flex}
@@ -122,7 +122,7 @@ $franchiseHeroImage = tt_optimized_image_url('assets/images/franchise enquiry.pn
             </form>
         </div>
     </div>
-</div><script src="assets/js/site-pages.min.js?v=20260727-headermedia1" defer></script>
+</div><script src="<?= tt_h(tt_asset_url('assets/js/site-pages.min.js')) ?>" defer></script>
 <script>
 (function(){
     var overlay = document.getElementById('franchiseEnquiryModal');

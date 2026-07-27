@@ -152,6 +152,8 @@ function tt_admin_offer_make_webp(string $source, string $target, string $mime, 
 
 function tt_admin_offer_save_image(string &$error, string $mediaKey = 'media_image', string $fileKey = 'poster_file', string $prefix = 'offer-poster'): string
 {
+    $allowedMimes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+    $maxBytes = 8 * 1024 * 1024;
     $uploadDir = tt_admin_offer_upload_dir();
     if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true)) {
         $error = 'Unable to create offer image folder.';
@@ -165,8 +167,12 @@ function tt_admin_offer_save_image(string &$error, string $mediaKey = 'media_ima
             $error = 'Selected media image was not found.';
             return '';
         }
+        if (filesize($source) > $maxBytes) {
+            $error = 'Selected media image must be 8 MB or smaller.';
+            return '';
+        }
         $mime = mime_content_type($source) ?: '';
-        if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+        if (!isset($allowedMimes[$mime]) || !@getimagesize($source)) {
             $error = 'Selected media must be JPG, PNG, or WebP.';
             return '';
         }
@@ -174,7 +180,7 @@ function tt_admin_offer_save_image(string &$error, string $mediaKey = 'media_ima
         if (tt_admin_offer_make_webp($source, $uploadDir . $name, $mime)) {
             return 'uploads/offer-posters/' . $name;
         }
-        $copyName = $prefix . '-' . tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.' . pathinfo($selected, PATHINFO_EXTENSION);
+        $copyName = $prefix . '-' . tt_admin_offer_safe_name($selected) . '-' . date('Ymd-His') . '.' . $allowedMimes[$mime];
         return copy($source, $uploadDir . $copyName) ? 'uploads/offer-posters/' . $copyName : '';
     }
 
@@ -186,26 +192,30 @@ function tt_admin_offer_save_image(string &$error, string $mediaKey = 'media_ima
         $error = 'Poster upload failed. Please choose another image.';
         return '';
     }
-    if ((int)$file['size'] > 8 * 1024 * 1024) {
+    if ((int)$file['size'] > $maxBytes) {
         $error = 'Poster image must be 8 MB or smaller.';
         return '';
     }
 
     $tmp = (string)$file['tmp_name'];
     $mime = is_file($tmp) ? (mime_content_type($tmp) ?: '') : '';
-    $extensions = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
-    if (!isset($extensions[$mime])) {
-        $error = 'Please upload a JPG, PNG, WebP, or GIF poster.';
+    if (!isset($allowedMimes[$mime]) || !@getimagesize($tmp)) {
+        $error = 'Please upload a valid JPG, PNG, or WebP image.';
         return '';
     }
 
     $base = $prefix . '-' . tt_admin_offer_safe_name((string)$file['name']) . '-' . date('Ymd-His') . '-' . substr(uniqid('', true), -6);
-    if ($mime !== 'image/gif' && tt_admin_offer_make_webp($tmp, $uploadDir . $base . '.webp', $mime)) {
+    if (tt_admin_offer_make_webp($tmp, $uploadDir . $base . '.webp', $mime)) {
         return 'uploads/offer-posters/' . $base . '.webp';
     }
 
-    $name = $base . '.' . $extensions[$mime];
-    return move_uploaded_file($tmp, $uploadDir . $name) ? 'uploads/offer-posters/' . $name : '';
+    $name = $base . '.' . $allowedMimes[$mime];
+    if (move_uploaded_file($tmp, $uploadDir . $name)) {
+        return 'uploads/offer-posters/' . $name;
+    }
+
+    $error = 'Unable to save the uploaded image.';
+    return '';
 }
 
 function tt_admin_offer_date_sql(string $key): string
@@ -320,6 +330,19 @@ function tt_admin_offer_seed_defaults(mysqli $conn): void
 
 tt_admin_offer_seed_defaults($conn);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['offer_action'] ?? 'save') === 'delete') {
+    $id = (int)($_POST['id'] ?? 0);
+    if ($id > 0) {
+        $stmt = $conn->prepare('DELETE FROM offers WHERE id = ? LIMIT 1');
+        if ($stmt) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+        }
+    }
+    header('Location: offers.php?saved=deleted');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
     $title = trim((string)($_POST['title'] ?? ''));
@@ -417,15 +440,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    if ($id > 0) {
-        $conn->query("DELETE FROM offers WHERE id = $id");
-    }
-    header('Location: offers.php?saved=deleted');
-    exit;
-}
-
 if (isset($_GET['toggle'])) {
     $id = (int)$_GET['toggle'];
     if ($id > 0) {
@@ -460,11 +474,11 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Offers - Talentteno Admin</title>
-    <link rel="icon" type="image/png" href="../../frontend/assets/images/logot-transparent.png?v=20260722-logo2">
-    <link rel="apple-touch-icon" href="../../frontend/assets/images/logot-transparent.png?v=20260722-logo2">
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
+    <link rel="apple-touch-icon" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=20260722-adminmobile3">
+    <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
     <style>
         .offer-admin-layout{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}.offer-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.offer-admin-grid .full{grid-column:1/-1}.offer-current-image{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}.offer-current-image img,.offer-admin-thumb{width:86px;height:58px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}.offer-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.offer-checks label{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:13px;font-weight:600;color:#334155}.offer-table-title{display:grid;gap:3px}.offer-table-title small{color:#64748b;font-weight:600}.badge-draft{background:#fef3c7;color:#92400e}.badge-active{background:#dcfce7;color:#166534}.badge-inactive{background:#e2e8f0;color:#475569}.offer-modal-open-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:0;border-radius:9px;color:#fff;background:linear-gradient(135deg,#2563eb,#c026d3);font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px rgba(79,70,229,.18)}.offer-form-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.58);backdrop-filter:blur(8px)}.offer-form-modal.is-open{display:flex}.offer-form-panel{width:min(980px,calc(100vw - 28px));max-height:calc(100vh - 48px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(226,232,240,.9);border-radius:16px;background:#fff;box-shadow:0 28px 90px rgba(15,23,42,.34)}.offer-form-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid #e2e8f0;background:#f8fafc}.offer-form-head h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}.offer-form-close{width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:10px;background:#eef2ff;color:#1d4ed8;text-decoration:none}.offer-form-scroll{overflow:auto;padding:22px}.offer-form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.offer-cancel-link{color:#64748b;font-size:13px;text-decoration:none;font-weight:700}@media(max-width:1100px){.offer-admin-grid{grid-template-columns:1fr}}@media(max-width:720px){.offer-form-modal{padding:10px}.offer-form-panel{max-height:calc(100vh - 20px)}.offer-form-scroll{padding:16px}.card-header{align-items:flex-start;gap:12px;flex-direction:column}}
     </style>
@@ -504,7 +518,15 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                                 <td><strong>Rs <?= number_format((float)$offer['offer_fee'], 0) ?></strong><br><small style="color:#94A3B8;">Old: Rs <?= number_format((float)$offer['original_fee'], 0) ?></small></td>
                                 <td><small><?= htmlspecialchars($offer['start_date'] ?: 'Anytime') ?> to <?= htmlspecialchars($offer['end_date'] ?: 'Open') ?></small></td>
                                 <td><span class="badge badge-<?= htmlspecialchars($offer['status']) ?>"><?= htmlspecialchars(ucfirst($offer['status'])) ?></span></td>
-                                <td style="white-space:nowrap;"><a href="?edit=<?= (int)$offer['id'] ?>" class="btn-xs btn-blue"><i class="fas fa-edit"></i></a> <a href="?toggle=<?= (int)$offer['id'] ?>" class="btn-xs btn-<?= $offer['status'] === 'active' ? 'orange' : 'green' ?>"><i class="fas fa-<?= $offer['status'] === 'active' ? 'eye-slash' : 'eye' ?>"></i></a> <a href="?delete=<?= (int)$offer['id'] ?>" class="btn-xs btn-red" onclick="return confirm('Delete this offer?')"><i class="fas fa-trash"></i></a></td>
+                                <td style="white-space:nowrap;">
+                                    <a href="?edit=<?= (int)$offer['id'] ?>" class="btn-xs btn-blue" aria-label="Edit <?= htmlspecialchars($offer['title']) ?>"><i class="fas fa-edit"></i></a>
+                                    <a href="?toggle=<?= (int)$offer['id'] ?>" class="btn-xs btn-<?= $offer['status'] === 'active' ? 'orange' : 'green' ?>" aria-label="Toggle <?= htmlspecialchars($offer['title']) ?>"><i class="fas fa-<?= $offer['status'] === 'active' ? 'eye-slash' : 'eye' ?>"></i></a>
+                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this offer? Existing image files will be preserved.');">
+                                        <input type="hidden" name="offer_action" value="delete">
+                                        <input type="hidden" name="id" value="<?= (int)$offer['id'] ?>">
+                                        <button type="submit" class="btn-xs btn-red" aria-label="Delete <?= htmlspecialchars($offer['title']) ?>"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         <?php if (!$offers): ?><tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:24px;">No offers added yet. Add your first offer poster and details.</td></tr><?php endif; ?>
@@ -539,7 +561,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                         <div class="form-group"><label>Seats Available</label><input type="number" name="available_seats" value="<?= $value('available_seats') ?>"></div>
                         <div class="form-group"><label>Seats Filled</label><input type="number" name="seats_filled" value="<?= $value('seats_filled', '0') ?>"></div>
                     </div>
-                    <div class="form-group"><label>Poster Image</label><input type="file" name="poster_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Used in offer cards. JPG/PNG/WebP will be compressed to WebP for speed.</small></div>
+                    <div class="form-group"><label>Poster Image</label><input type="file" name="poster_file" accept="image/jpeg,image/png,image/webp"><small class="field-help">Used in offer cards. JPG/PNG/WebP only, up to 8 MB. Files are saved with generated names.</small></div>
                     <div class="form-group">
                         <label>Or Select Media Image</label>
                         <input type="hidden" name="media_image" id="offerMediaImage" value="">
@@ -555,7 +577,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                     </div>
                     <?php if (!empty($editOffer['poster_image'])): ?><div class="offer-current-image"><img src="<?= htmlspecialchars(tt_admin_offer_image_url($editOffer['poster_image'])) ?>" alt=""><span>Current poster</span><label><input type="checkbox" name="remove_poster" value="1"> Remove</label></div><?php endif; ?>
                     <div class="form-group"><label>Poster Alt Text</label><input type="text" name="poster_alt" value="<?= $value('poster_alt') ?>"></div>
-                    <div class="form-group"><label>Offers Page Header Image</label><input type="file" name="hero_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Used as the large top image on offers.php. If empty, the poster image is used.</small></div>
+                    <div class="form-group"><label>Offers Page Header Image</label><input type="file" name="hero_file" accept="image/jpeg,image/png,image/webp"><small class="field-help">Used as the large top image on offers.php. JPG/PNG/WebP only, up to 8 MB. If empty, the poster image is used.</small></div>
                     <div class="form-group">
                         <label>Or Select Header Media Image</label>
                         <input type="hidden" name="hero_media_image" id="offerHeroMediaImage" value="">

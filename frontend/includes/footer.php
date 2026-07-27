@@ -50,7 +50,7 @@ html body .site-footer .footer-social .social-call-number{display:none!important
     <div class="site-container footer-grid">
         <div class="footer-brand-block">
             <a class="footer-logo" href="index.php">
-                <span class="brand-mark footer-logo-mark"><img src="uploads/optimized/logot-transparent-w128.webp?v=20260724-pagespeed1" alt="<?= tt_h($settings['site_name']) ?> logo" loading="lazy" decoding="async" width="104" height="104"></span>
+                <span class="brand-mark footer-logo-mark"><img src="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?>" alt="<?= tt_h($settings['site_name']) ?> logo" loading="lazy" decoding="async" width="104" height="104"></span>
                 <span><strong><?= tt_h($settings['site_name']) ?></strong><span>IT TRAINING INSTITUTE</span></span>
             </a>
             <p><?= tt_h($settings['footer_description']) ?></p>

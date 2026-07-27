@@ -15,6 +15,98 @@ function tt_h(?string $value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+function tt_asset_url(string $relativePath, string $fallbackVersion = '20260727'): string
+{
+    $relativePath = trim($relativePath);
+    if ($relativePath === '') {
+        return '';
+    }
+
+    if (preg_match('#^(?:https?:)?//#i', $relativePath) || str_starts_with($relativePath, 'data:')) {
+        return $relativePath;
+    }
+
+    $parts = parse_url($relativePath);
+    $path = isset($parts['path']) ? str_replace('\\', '/', (string)$parts['path']) : '';
+    $path = ltrim($path, '/');
+    if ($path === '' || str_contains($path, '..')) {
+        return $relativePath;
+    }
+
+    $fullPath = realpath(__DIR__ . '/../' . $path);
+    $frontendRoot = realpath(__DIR__ . '/..');
+    $version = $fallbackVersion;
+    if ($fullPath && $frontendRoot && str_starts_with($fullPath, $frontendRoot . DIRECTORY_SEPARATOR) && is_file($fullPath)) {
+        $mtime = @filemtime($fullPath);
+        if ($mtime) {
+            $version = (string)$mtime;
+        }
+    }
+
+    $query = [];
+    if (!empty($parts['query'])) {
+        parse_str((string)$parts['query'], $query);
+    }
+    $query['v'] = $version;
+    $url = $path . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+    if (!empty($parts['fragment'])) {
+        $url .= '#' . rawurlencode((string)$parts['fragment']);
+    }
+
+    return $url;
+}
+
+function tt_safe_public_href(?string $href, string $fallback = 'contact.php'): string
+{
+    $href = trim((string)$href);
+    if ($href === '') {
+        return $fallback;
+    }
+
+    if (preg_match('#^https?://#i', $href)) {
+        return $href;
+    }
+
+    if (str_starts_with($href, '#')) {
+        return preg_match('/^#[A-Za-z0-9_-]+$/', $href) ? $href : $fallback;
+    }
+
+    $path = str_replace('\\', '/', (string)(parse_url($href, PHP_URL_PATH) ?? ''));
+    $scheme = parse_url($href, PHP_URL_SCHEME);
+    if ($scheme || $path === '' || str_starts_with($path, '/') || str_contains($path, '..')) {
+        return $fallback;
+    }
+
+    return $href;
+}
+
+function tt_deploy_version(): string
+{
+    static $version = null;
+    if ($version !== null) {
+        return $version;
+    }
+
+    $headFile = __DIR__ . '/../../.git/HEAD';
+    $version = 'unknown-production';
+    if (is_file($headFile)) {
+        $head = trim((string)@file_get_contents($headFile));
+        if (preg_match('/^ref:\s*(.+)$/', $head, $match)) {
+            $refPath = __DIR__ . '/../../.git/' . trim($match[1]);
+            if (is_file($refPath)) {
+                $hash = trim((string)@file_get_contents($refPath));
+                if (preg_match('/^[a-f0-9]{7,40}$/i', $hash)) {
+                    $version = substr($hash, 0, 12);
+                }
+            }
+        } elseif (preg_match('/^[a-f0-9]{7,40}$/i', $head)) {
+            $version = substr($head, 0, 12);
+        }
+    }
+
+    return $version;
+}
+
 function tt_phone_digits(?string $phone): string
 {
     return preg_replace('/\D+/', '', (string)$phone) ?? '';
@@ -312,7 +404,7 @@ function tt_render_seo(array $page = []): void
     $robots = $page['robots'] ?? 'index, follow, max-image-preview:large';
     $company = tt_company_profile($settings);
     $sameAs = array_values(array_filter($company['social'], static fn($url): bool => is_string($url) && $url !== '' && $url !== '#'));
-    $logo = tt_abs_url($defaultLogo);
+    $logo = tt_abs_url(tt_asset_url($defaultLogo));
     $organizationId = tt_site_base_url() . '#organization';
     $websiteId = tt_site_base_url() . '#website';
     $webpageId = $canonical . '#webpage';
@@ -421,8 +513,8 @@ function tt_render_seo(array $page = []): void
     }
     echo '    <meta name="robots" content="' . tt_h($robots) . '">' . PHP_EOL;
     echo '    <meta name="theme-color" content="#11143d">' . PHP_EOL;
-    echo '    <link rel="icon" type="image/webp" href="' . tt_h(tt_abs_url($defaultLogo)) . '">' . PHP_EOL;
-    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url($defaultLogo)) . '">' . PHP_EOL;
+    echo '    <link rel="icon" type="image/webp" href="' . tt_h(tt_abs_url(tt_asset_url($defaultLogo))) . '">' . PHP_EOL;
+    echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url(tt_asset_url($defaultLogo))) . '">' . PHP_EOL;
     echo '    <link rel="canonical" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="en-IN" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="x-default" href="' . tt_h($canonical) . '">' . PHP_EOL;

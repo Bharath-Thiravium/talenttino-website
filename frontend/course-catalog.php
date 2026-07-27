@@ -97,7 +97,7 @@ function tt_catalog_fallback_image(array $course): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-unifiednav1">
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
     <style>
         body.catalog-body .catalog-section{background:#eef6ff!important;padding:56px 0!important}
         body.catalog-body .catalog-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:22px!important}
@@ -995,7 +995,8 @@ function tt_catalog_fallback_image(array $course): string
     <main class="page-main catalog-page">
         <?php
             $heroImage = tt_optimized_image_url(trim((string)($coursePage['hero_image'] ?? '')), 1536);
-            $heroCssImage = $heroImage;
+            $heroImageUrl = $heroImage !== '' ? tt_asset_url($heroImage) : '';
+            $heroCssImage = $heroImageUrl;
             if (str_starts_with($heroCssImage, 'assets/images/')) {
                 $heroCssImage = '../images/' . substr($heroCssImage, strlen('assets/images/'));
             }
@@ -1005,7 +1006,7 @@ function tt_catalog_fallback_image(array $course): string
         ?>
         <section class="catalog-hero"<?= $heroStyle !== '' ? ' style="' . $heroStyle . '"' : '' ?>>
             <?php if ($heroImage !== ''): ?>
-            <img class="catalog-hero-bg" src="<?= htmlspecialchars($heroImage) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
+            <img class="catalog-hero-bg" src="<?= htmlspecialchars($heroImageUrl) ?>" alt="" aria-hidden="true" decoding="async" fetchpriority="high">
             <span class="catalog-hero-overlay" aria-hidden="true"></span>
             <?php endif; ?>
             <div class="site-container reveal">
@@ -1022,6 +1023,7 @@ function tt_catalog_fallback_image(array $course): string
                     if ($courseImage === '') {
                         $courseImage = tt_catalog_fallback_image($course);
                     }
+                    $courseImageUrl = $courseImage !== '' ? tt_asset_url($courseImage) : '';
                     $hasBrochure = !empty($course['id']) && tt_course_brochure_exists($course['brochure_file'] ?? '');
                     $enquiryHref = 'contact.php?course=' . rawurlencode($course['name']);
                     $downloadHref = $hasBrochure
@@ -1039,12 +1041,12 @@ function tt_catalog_fallback_image(array $course): string
                     data-description="<?= htmlspecialchars($course['desc'] ?? '', ENT_QUOTES) ?>"
                     data-duration="<?= htmlspecialchars($course['duration'] ?? '', ENT_QUOTES) ?>"
                     data-fee="<?= htmlspecialchars($courseFeeLabel, ENT_QUOTES) ?>"
-                    data-image="<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>"
+                    data-image="<?= htmlspecialchars($courseImageUrl, ENT_QUOTES) ?>"
                     data-highlights="<?= htmlspecialchars(implode("\n", $courseHighlights), ENT_QUOTES) ?>"
                     data-enquire="<?= htmlspecialchars($enquiryHref, ENT_QUOTES) ?>"
                     data-download="<?= htmlspecialchars($downloadHref, ENT_QUOTES) ?>">
                     <?php if ($courseImage !== ''): ?>
-                    <div class="catalog-image" style="--catalog-image-bg:url('<?= htmlspecialchars($courseImage, ENT_QUOTES) ?>')"><img src="<?= htmlspecialchars($courseImage) ?>" alt="<?= htmlspecialchars($course['name']) ?>" loading="lazy" decoding="async"></div>
+                    <div class="catalog-image" style="--catalog-image-bg:url('<?= htmlspecialchars($courseImageUrl, ENT_QUOTES) ?>')"><img src="<?= htmlspecialchars($courseImageUrl) ?>" alt="<?= htmlspecialchars($course['name']) ?>" loading="lazy" decoding="async" width="480" height="300"></div>
                     <?php endif; ?>
                     <div class="catalog-icon"><i class="<?= htmlspecialchars(tt_icon_class($course['icon'])) ?>"></i></div>
                     <?php if (!empty($course['category'])): ?><span class="catalog-category"><?= htmlspecialchars($course['category']) ?></span><?php endif; ?>
@@ -1080,6 +1082,6 @@ function tt_catalog_fallback_image(array $course): string
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260727-headermedia1" defer></script>
+<script src="<?= tt_h(tt_asset_url('assets/js/site-pages.min.js')) ?>" defer></script>
 </body>
 </html>

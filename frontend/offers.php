@@ -7,6 +7,7 @@ $featuredOffer = $offers[0] ?? [];
 $whatsappUrl = tt_whatsapp_url($settings);
 $phone1Href = tt_phone_href($settings['phone1'] ?? '');
 $featuredImage = $featuredOffer ? tt_offer_hero_image($featuredOffer) : 'assets/images/home.webp';
+$featuredImageUrl = tt_asset_url($featuredImage);
 $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)($featuredOffer['poster_alt'] ?? ''));
 ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/site-pages.min.css?v=20260727-unifiednav1">
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
     </noscript>
@@ -55,7 +56,7 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="offers-hero">
-            <img src="<?= tt_h($featuredImage) ?>" alt="<?= tt_h($featuredAlt) ?>" fetchpriority="high" decoding="async">
+            <img src="<?= tt_h($featuredImageUrl) ?>" alt="<?= tt_h($featuredAlt) ?>" fetchpriority="high" decoding="async" width="1600" height="900">
             <div class="site-container reveal">
                 <span class="offers-kicker"><i class="fa-solid fa-tags"></i> Current Course Offers</span>
                 <h1>Best training offers with practical learning support.</h1>
@@ -93,6 +94,7 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
                     <?php foreach ($offers as $index => $offer): ?>
                     <?php
                         $image = tt_offer_image($offer);
+                        $imageUrl = tt_asset_url($image);
                         $title = trim((string)($offer['title'] ?? 'Course Offer'));
                         $courseName = trim((string)($offer['course_name'] ?? ''));
                         $category = trim((string)($offer['category'] ?? ''));
@@ -106,11 +108,11 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
                             $highlights = ['Practical training', 'Mentor support', 'Career guidance', 'Certificate support'];
                         }
                         $ctaLabel = trim((string)($offer['cta_label'] ?? 'Claim Offer')) ?: 'Claim Offer';
-                        $ctaUrl = trim((string)($offer['cta_url'] ?? 'contact.php')) ?: 'contact.php';
+                        $ctaUrl = tt_safe_public_href($offer['cta_url'] ?? 'contact.php', 'contact.php');
                     ?>
                     <article class="offer-card reveal">
                         <div class="offer-media">
-                            <img src="<?= tt_h($image) ?>" alt="<?= tt_h(($offer['poster_alt'] ?? '') ?: $title) ?>" loading="<?= $index === 0 ? 'eager' : 'lazy' ?>" decoding="async" width="480" height="300">
+                            <img src="<?= tt_h($imageUrl) ?>" alt="<?= tt_h(($offer['poster_alt'] ?? '') ?: $title) ?>" loading="<?= $index === 0 ? 'eager' : 'lazy' ?>" decoding="async" width="480" height="300">
                             <span class="offer-badge"><i class="fa-solid fa-bolt"></i> <?= tt_h($badge) ?></span>
                             <?php if ($discount > 0): ?><span class="offer-discount"><?= (int)round($discount) ?>%<small> OFF</small></span><?php endif; ?>
                         </div>
@@ -178,6 +180,6 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
     </main>
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </div>
-<script src="assets/js/site-pages.min.js?v=20260727-offersadmin1" defer></script>
+<script src="<?= tt_h(tt_asset_url('assets/js/site-pages.min.js')) ?>" defer></script>
 </body>
 </html>

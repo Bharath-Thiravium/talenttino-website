@@ -1,0 +1,64 @@
+Talenttino Live Deployment Manifest
+
+Repository:
+https://github.com/Bharath-Thiravium/talenttino-website.git
+
+Local repository:
+/home/athenas/Downloads/talentteno.
+
+Branch:
+main
+
+Commit hash:
+Use `git rev-parse --short HEAD` after committing. The deployed page source must show the same value in `TT_DEPLOY_VERSION`.
+
+Live URL:
+https://talenttino.athenas.co.in/ergon/
+
+Live popular courses URL:
+https://talenttino.athenas.co.in/ergon/frontend/popularcourse.php
+
+Changed files:
+- frontend/includes/site-data.php
+- frontend/includes/header.php
+- frontend/includes/footer.php
+- frontend/assets/css/navbar.css
+- frontend/assets/css/site-pages.css
+- frontend/assets/css/site-pages.min.css
+- frontend/assets/js/site-pages.js
+- frontend/assets/js/site-pages.min.js
+- frontend/course-catalog.php
+- frontend/offers.php
+- frontend PHP pages that load shared CSS/JS via `tt_asset_url()`
+- backend/admin/admin-helpers.php
+- backend/admin/auth_check.php
+- backend/admin/offers.php
+- backend/admin/login.php
+- backend/admin PHP pages that load admin assets via `tt_admin_asset_url()`
+- deploy-live.sh
+- deployment-manifest.txt
+- README.md
+
+Deployment timestamp:
+Fill during deployment: YYYY-MM-DD HH:MM:SS timezone
+
+Verification marker:
+TT_DEPLOY_VERSION: COMMIT_HASH
+
+Manual deployment checklist:
+1. Confirm the local repository is `/home/athenas/Downloads/talentteno.`.
+2. Confirm branch is `main`.
+3. Confirm `git status` is clean.
+4. Confirm `git rev-parse --short HEAD` matches GitHub `origin/main`.
+5. Deploy to the verified hosting document root only.
+6. Preserve `.env`, `backend/includes/db.php`, and `frontend/uploads/`.
+7. Open `https://talenttino.athenas.co.in/ergon/`.
+8. Hard refresh with Ctrl + Shift + R.
+9. Open View Source.
+10. Search for `TT_DEPLOY_VERSION`.
+11. Confirm the marker commit matches GitHub.
+12. Open `/ergon/frontend/popularcourse.php`, `/ergon/frontend/offers.php`, and `/ergon/admin/`.
+13. Test desktop, tablet, and mobile widths.
+
+Important:
+Git push updates GitHub only. The live hosting server is verified only after the deployed page source contains the expected `TT_DEPLOY_VERSION` marker.
