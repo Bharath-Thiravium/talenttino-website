@@ -1,0 +1,1498 @@
+const header = document.querySelector('.site-header');
+const nav = document.querySelector('.site-nav');
+const menuButton = document.querySelector('.menu-button');
+const dropdownItems = document.querySelectorAll('.nav-item.has-menu');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+if (!window.location.hash) {
+    window.addEventListener('load', () => {
+        requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+    }, { once: true });
+}
+
+// Soft ambient lighting follows the pointer on desktop without affecting layout.
+if (canHover && !reduceMotion) {
+    let pointerFrame = 0;
+    window.addEventListener('pointermove', event => {
+        if (pointerFrame) return;
+        pointerFrame = requestAnimationFrame(() => {
+            document.body.style.setProperty('--pointer-x', `${event.clientX}px`);
+            document.body.style.setProperty('--pointer-y', `${event.clientY}px`);
+            pointerFrame = 0;
+        });
+    }, { passive: true });
+}
+
+// Add shared navigation semantics and active state without duplicating page logic.
+if (nav) {
+    nav.setAttribute('aria-label', 'Primary navigation');
+    if (!nav.querySelector('.nav-enroll-cta')) {
+        const enrollCta = document.createElement('a');
+        enrollCta.className = 'nav-enroll-cta';
+        enrollCta.href = '#home-signup';
+        enrollCta.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span>Enroll Now</span>';
+        nav.appendChild(enrollCta);
+    }
+    const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
+    if (courseMenu) {
+        courseMenu.querySelectorAll('a[href="course.php"], a[href$="/course.php"]').forEach(link => link.remove());
+        const courseLinks = [
+            ['shorttermcourse.php', 'Short Term Course', 'fa-clock'],
+            ['popularcourse.php', 'Popular Course', 'fa-fire'],
+            ['advancecourse.php', 'Advance Course', 'fa-layer-group'],
+            ['designingcourse.php', 'Designing Course', 'fa-pen-nib'],
+            ['cybersecuritycourse.php', 'Cyber Security', 'fa-shield-halved'],
+        ];
+        courseLinks.forEach(([href, label, icon]) => {
+            let link = courseMenu.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                courseMenu.appendChild(link);
+            }
+            link.className = 'nav-menu-rich-link';
+            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
+        });
+    }
+    const moreMenu = nav.querySelector('.nav-item.has-menu.more-menu');
+    const moreTrigger = moreMenu?.querySelector(':scope > a');
+    const morePanel = moreMenu?.querySelector(':scope > .nav-menu');
+    if (moreTrigger) {
+        moreTrigger.innerHTML = 'Others <i class="fa-solid fa-chevron-down"></i>';
+    }
+    if (morePanel) {
+        const baseMoreLinks = [
+            ['services.php', 'Services', 'fa-concierge-bell'],
+            ['career.php', 'Career', 'fa-briefcase'],
+            ['blog.php', 'Blog', 'fa-newspaper'],
+            ['project.php', 'Project', 'fa-diagram-project'],
+        ];
+        baseMoreLinks.forEach(([href, label, icon]) => {
+            let link = morePanel.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                morePanel.appendChild(link);
+            }
+            link.className = 'nav-menu-rich-link';
+            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
+        });
+        const otherLinks = [
+            ['review.php', 'Student Reviews', 'fa-star'],
+            ['why-talentteno.php', 'Why Talentteno', 'fa-graduation-cap'],
+            ['hiring.php', 'Hiring', 'fa-user-plus'],
+            ['franchise.php', 'Franchise Enquiry', 'fa-handshake'],
+        ];
+        otherLinks.forEach(([href, label, icon]) => {
+            let link = morePanel.querySelector(`a[href="${href}"]`);
+            if (!link) {
+                link = document.createElement('a');
+                link.href = href;
+                morePanel.appendChild(link);
+            }
+            link.className = 'nav-menu-rich-link';
+            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
+        });
+    }
+    const currentPage = window.location.pathname.split('/').pop() || 'index.php';
+    const morePages = ['services.php', 'career.php', 'blog.php', 'project.php', 'review.php', 'why-talentteno.php', 'hiring.php', 'franchise.php'];
+    nav.querySelectorAll('a[href]').forEach(link => {
+        if (link.classList.contains('nav-enroll-cta')) return;
+        const targetHref = link.getAttribute('href');
+        const targetPage = targetHref.split('?')[0].split('#')[0] || currentPage;
+        const targetHash = targetHref.includes('#') ? targetHref.slice(targetHref.indexOf('#')) : '';
+        const isSameHash = targetHash && targetPage === currentPage && window.location.hash === targetHash;
+        const hasSectionHash = Boolean(window.location.hash);
+        const isCoursePage = ['course.php', 'course-catalog.php', 'shorttermcourse.php', 'popularcourse.php', 'advancecourse.php', 'designingcourse.php', 'cybersecuritycourse.php', 'download.php'].includes(currentPage);
+        const isMoreTrigger = link.closest('.more-menu') && link.getAttribute('href') === '#';
+        const isCurrent = (!targetHash && targetPage === currentPage && !hasSectionHash) || isSameHash || (targetPage === 'course.php' && isCoursePage) || (isMoreTrigger && morePages.includes(currentPage));
+        link.classList.toggle('active', isCurrent);
+        if (isCurrent) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+        if (isCurrent) link.closest('.nav-item')?.classList.add('active');
+    });
+}
+
+document.querySelectorAll('a[href^="tel:"][data-copy-phone]').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.matchMedia('(pointer: coarse)').matches) return;
+        const phone = link.dataset.copyPhone || link.textContent.trim();
+        if (!phone || !navigator.clipboard?.writeText) return;
+        navigator.clipboard.writeText(phone).then(() => {
+            link.dataset.copied = 'true';
+            link.setAttribute('title', `${phone} copied`);
+            window.setTimeout(() => {
+                delete link.dataset.copied;
+                link.setAttribute('title', phone);
+            }, 1800);
+        }).catch(() => {});
+    });
+});
+
+function closeMobileNav() {
+    nav?.classList.remove('open');
+    dropdownItems.forEach(item => {
+        item.classList.remove('open');
+        item.querySelector(':scope > a')?.setAttribute('aria-expanded', 'false');
+    });
+    menuButton?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
+    document.documentElement.classList.remove('nav-open');
+    if (menuButton) menuButton.innerHTML = '<span class="menu-button-symbol" aria-hidden="true">&#9776;</span>';
+}
+
+const enrollPopup = document.querySelector('#home-signup');
+let enrollPopupLastFocus = null;
+
+function openEnrollPopup(event) {
+    if (!enrollPopup) return false;
+    event?.preventDefault();
+    event?.stopPropagation();
+    closeMobileNav();
+    enrollPopupLastFocus = document.activeElement;
+    enrollPopup.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('enroll-popup-open');
+    document.documentElement.classList.add('enroll-popup-open');
+    window.setTimeout(() => {
+        enrollPopup.querySelector('.home-counselling-form input:not([type="hidden"]):not([tabindex="-1"]), .home-counselling-form select, .home-counselling-form button, [data-enroll-close]')?.focus();
+    }, 50);
+    return true;
+}
+
+function closeEnrollPopup() {
+    if (!enrollPopup) return;
+    document.body.classList.remove('enroll-popup-open');
+    document.documentElement.classList.remove('enroll-popup-open');
+    enrollPopup.setAttribute('aria-hidden', 'true');
+    if (enrollPopupLastFocus && typeof enrollPopupLastFocus.focus === 'function') {
+        enrollPopupLastFocus.focus();
+    }
+}
+
+document.querySelectorAll('.nav-enroll-cta, a[href="#home-signup"], a[href$="#home-signup"], button[data-enroll-open]').forEach(link => {
+    link.addEventListener('click', event => {
+        if (!openEnrollPopup(event)) {
+            closeMobileNav();
+        }
+    });
+});
+
+document.querySelectorAll('[data-enroll-close]').forEach(button => {
+    button.addEventListener('click', closeEnrollPopup);
+});
+
+if (window.location.hash === '#home-signup') {
+    window.addEventListener('load', () => openEnrollPopup(), { once: true });
+}
+
+window.addEventListener('pageshow', closeMobileNav);
+
+let menuPointerHandled = false;
+function toggleMobileNav(event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    const isOpen = nav?.classList.toggle('open') || false;
+    menuButton?.setAttribute('aria-expanded', String(isOpen));
+    if (menuButton) menuButton.innerHTML = isOpen
+        ? '<span class="menu-button-symbol" aria-hidden="true">&times;</span>'
+        : '<span class="menu-button-symbol" aria-hidden="true">&#9776;</span>';
+    document.body.classList.toggle('nav-open', isOpen);
+    document.documentElement.classList.toggle('nav-open', isOpen);
+}
+
+menuButton?.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse') return;
+    menuPointerHandled = true;
+    toggleMobileNav(event);
+}, { capture: true });
+
+menuButton?.addEventListener('click', event => {
+    if (menuPointerHandled) {
+        menuPointerHandled = false;
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+    }
+    toggleMobileNav(event);
+});
+
+document.addEventListener('click', event => {
+    if (document.body.classList.contains('enroll-popup-open') && enrollPopup && !event.target.closest('#home-signup')) {
+        closeEnrollPopup();
+        return;
+    }
+    if (event.target.closest('.site-nav') || event.target.closest('.menu-button')) return;
+    dropdownItems.forEach(item => item.classList.remove('open'));
+    dropdownItems.forEach(item => item.querySelector(':scope > a')?.setAttribute('aria-expanded', 'false'));
+    if (nav?.classList.contains('open')) {
+        closeMobileNav();
+    }
+});
+
+dropdownItems.forEach(item => {
+    const trigger = item.querySelector(':scope > a');
+    trigger?.setAttribute('aria-haspopup', 'true');
+    trigger?.setAttribute('aria-expanded', 'false');
+    const handleDropdownTrigger = event => {
+        const triggerHref = trigger.getAttribute('href') || '';
+        const isMobileNav = window.innerWidth <= 980 || nav?.classList.contains('open');
+        const wasOpen = item.classList.contains('open');
+        if (isMobileNav && wasOpen && triggerHref !== '#') {
+            window.location.href = trigger.href;
+            return;
+        }
+        if (triggerHref === '#' || isMobileNav) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        // Desktop uses hover for the submenu; a click follows course.php normally.
+        if (!isMobileNav && triggerHref !== '#') return;
+        dropdownItems.forEach(other => {
+            if (other === item) return;
+            other.classList.remove('open');
+            other.querySelector(':scope > a')?.setAttribute('aria-expanded', 'false');
+        });
+        item.classList.toggle('open', !wasOpen);
+        trigger.setAttribute('aria-expanded', String(!wasOpen));
+    };
+    trigger?.addEventListener('click', handleDropdownTrigger);
+});
+
+nav?.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', event => {
+        if (window.innerWidth > 980) return;
+        const isMenuTrigger = link.closest('.nav-item.has-menu')?.querySelector(':scope > a') === link;
+        if (isMenuTrigger) return;
+        closeMobileNav();
+        const linkUrl = new URL(link.href, window.location.href);
+        const currentUrl = new URL(window.location.href);
+        if (linkUrl.pathname === currentUrl.pathname && linkUrl.hash === currentUrl.hash) {
+            event.preventDefault();
+        }
+    });
+});
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth <= 980) return;
+    closeMobileNav();
+}, { passive: true });
+
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    closeEnrollPopup();
+    closeMobileNav();
+});
+
+const scrollTopButton = document.querySelector('.scroll-top');
+function updateScrollTop() {
+    scrollTopButton?.classList.toggle('is-visible', window.scrollY > 500);
+}
+updateScrollTop();
+window.addEventListener('scroll', updateScrollTop, { passive: true });
+scrollTopButton?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+});
+
+// Home course path tabs update the visual card without leaving the page.
+document.querySelectorAll('[data-path-tabs]').forEach(pathTabs => {
+    const section = pathTabs.closest('.model-path-section');
+    const visual = section?.querySelector('.model-path-visual');
+    const image = visual?.querySelector('img');
+    const step = visual?.querySelector('div > span');
+    const title = visual?.querySelector('h3');
+    const desc = visual?.querySelector('p');
+    const buttons = [...pathTabs.querySelectorAll('button')];
+
+    const setActivePath = button => {
+        if (!button) return;
+        buttons.forEach(item => {
+            const isActive = item === button;
+            item.classList.toggle('active', isActive);
+            item.setAttribute('aria-pressed', String(isActive));
+        });
+        if (step && button.dataset.step) step.textContent = button.dataset.step;
+        if (title && button.dataset.title) title.textContent = button.dataset.title;
+        if (desc && button.dataset.desc) desc.textContent = button.dataset.desc;
+        if (image && button.dataset.image && image.getAttribute('src') !== button.dataset.image) {
+            image.classList.add('is-changing');
+            window.setTimeout(() => {
+                if (button.dataset.srcset) {
+                    image.setAttribute('srcset', button.dataset.srcset);
+                } else {
+                    image.removeAttribute('srcset');
+                }
+                image.src = button.dataset.image;
+                image.alt = `${button.textContent.trim()} training path`;
+                image.classList.remove('is-changing');
+            }, reduceMotion ? 0 : 120);
+        }
+    };
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => setActivePath(button));
+        if (canHover) button.addEventListener('mouseenter', () => setActivePath(button));
+    });
+});
+
+document.querySelectorAll('form:not(.whatsapp-enquiry-form):not([data-download-form]):not([data-ai-form])').forEach(form => {
+    form.addEventListener('submit', () => {
+        if (!form.checkValidity()) return;
+        const button = form.querySelector('button[type="submit"]');
+        if (!button) return;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        button.dataset.originalText = button.innerHTML;
+        button.textContent = 'Submitting…';
+    });
+});
+
+const scrollRevealSelectors = [
+    '.feature-card',
+    '.about-value',
+    '.purpose-card',
+    '.timeline-card',
+    '.detail-tile',
+    '.rich-detail-card',
+    '.course-card',
+    '.catalog-card',
+    '.price-card',
+    '.contact-card',
+    '.tt-stat-card',
+    '.home-course-card',
+    '.home-process-card',
+    '.home-highlight-item',
+    '.testimonial-card',
+    '.model-copy',
+    '.model-split-head',
+    '.model-center-head',
+    '.model-dark-head',
+    '.model-service-card',
+    '.model-service-center',
+    '.model-project-card',
+    '.model-course-showcase-card',
+    '.model-team-card',
+    '.model-about-visual',
+    '.model-path-visual',
+    '.model-path-list',
+    '.model-hire-hero',
+    '.model-hire-points > div',
+    '.review-scroll-stage',
+    '.review-scroll-card',
+    '.model-blog-card',
+    '.admin-gallery-card',
+    '.gallery-card',
+    '.about-visual-main',
+    '.about-visual-mini',
+    '.identity-image',
+    '.rich-detail-image',
+    '.course-image',
+    '.catalog-image',
+    '.about-image-strip img',
+    '.gallery-card img',
+    '.admin-gallery-card img'
+];
+
+document.querySelectorAll(scrollRevealSelectors.join(',')).forEach(item => {
+    if (item.closest('.page-hero, .site-header, .site-footer, .course-detail-modal, .service-modal-overlay, .training-video-modal')) return;
+    item.classList.add('reveal', 'scroll-reveal-auto');
+    if (document.body.classList.contains('home-page')) {
+        if (item.matches('.model-split-head, .model-center-head, .model-dark-head, .model-copy')) {
+            item.classList.add('home-reveal-head');
+        }
+        if (item.matches('.model-service-card, .model-project-card, .model-course-showcase-card, .model-team-card, .model-blog-card, .review-scroll-card, .model-hire-points > div')) {
+            item.classList.add('home-reveal-card');
+        }
+        if (item.matches('.model-about-visual, .model-service-center, .model-path-visual, .model-hire-hero, .review-scroll-stage')) {
+            item.classList.add('home-reveal-media');
+        }
+    }
+    if (item.matches('img, .rich-detail-image, .course-image, .catalog-image, .about-visual-main, .about-visual-mini, .identity-image, .model-about-visual, .model-service-center, .model-project-card, .model-team-card, .model-path-visual, .model-hire-hero, .review-scroll-stage, .model-blog-card')) {
+        item.classList.add('scroll-image-reveal');
+    }
+});
+
+const revealItems = document.querySelectorAll('.reveal');
+if (reduceMotion) {
+    revealItems.forEach(item => item.classList.add('is-visible'));
+} else if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px 14% 0px' });
+
+    revealItems.forEach(item => {
+        const siblings = item.parentElement
+            ? [...item.parentElement.children].filter(child => child.classList.contains('reveal'))
+            : [];
+        const siblingIndex = Math.max(0, siblings.indexOf(item));
+        const isMobile = window.innerWidth <= 760;
+        const delayStep = isMobile ? 42 : 70;
+        const delayCap = isMobile ? 150 : 280;
+        item.style.transitionDelay = `${Math.min(siblingIndex * delayStep, delayCap)}ms`;
+        observer.observe(item);
+    });
+} else {
+    revealItems.forEach(item => item.classList.add('is-visible'));
+}
+
+const counterItems = document.querySelectorAll('.stat-card strong, .about-highlights strong, .home-stats strong, .tt-stat-num');
+
+const homeStatsBar = document.querySelector('.home-stats');
+if (homeStatsBar) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        homeStatsBar.classList.add('is-visible');
+    } else {
+        const statsBarObserver = new IntersectionObserver(entries => {
+            if (!entries[0]?.isIntersecting) return;
+            homeStatsBar.classList.add('is-visible');
+            statsBarObserver.disconnect();
+        }, { threshold: 0.45 });
+        statsBarObserver.observe(homeStatsBar);
+    }
+}
+
+function animateCounter(item) {
+    const raw = item.textContent.trim();
+    const number = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+    if (!number || item.dataset.counted === 'true') return;
+
+    item.dataset.counted = 'true';
+    const suffix = raw.replace(/[0-9]/g, '');
+    const start = performance.now();
+    const duration = 1200;
+
+    function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        item.textContent = `${Math.round(number * eased)}${suffix}`;
+        if (progress < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+}
+
+if (reduceMotion) {
+    counterItems.forEach(item => { item.dataset.counted = 'true'; });
+} else if (counterItems.length) {
+    const counterObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.65 });
+
+    counterItems.forEach(item => counterObserver.observe(item));
+}
+
+document.querySelectorAll('.course-card, .catalog-card, .feature-card, .detail-tile, .price-card, .home-course-card, .home-process-card, .testimonial-card').forEach(card => {
+    card.classList.add('tilt-ready');
+    let frame = 0;
+    card.addEventListener('pointermove', event => {
+        if (reduceMotion || !canHover || window.innerWidth < 760 || frame) return;
+        frame = requestAnimationFrame(() => {
+            const rect = card.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width - 0.5) * 4;
+            const y = ((event.clientY - rect.top) / rect.height - 0.5) * -4;
+            card.style.setProperty('--card-x', `${event.clientX - rect.left}px`);
+            card.style.setProperty('--card-y', `${event.clientY - rect.top}px`);
+            card.style.transform = `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)`;
+            frame = 0;
+        });
+    });
+    card.addEventListener('pointerleave', () => {
+        if (frame) {
+            cancelAnimationFrame(frame);
+            frame = 0;
+        }
+        card.style.transform = '';
+    });
+});
+
+const courseDetailModal = document.getElementById('courseDetailModal');
+let courseDetailTrigger = null;
+const closeCourseDetail = () => {
+    if (!courseDetailModal) return;
+    if (courseDetailModal.contains(document.activeElement)) {
+        document.activeElement.blur();
+    }
+    courseDetailModal.classList.remove('is-open');
+    courseDetailModal.setAttribute('aria-hidden', 'true');
+    courseDetailModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    document.documentElement.classList.remove('modal-open');
+    if (courseDetailTrigger && document.contains(courseDetailTrigger)) {
+        courseDetailTrigger.focus({ preventScroll: true });
+    }
+};
+
+function openCourseDetails(button) {
+        if (!courseDetailModal) return;
+        courseDetailTrigger = button;
+        courseDetailModal.querySelector('#courseDetailTitle').textContent = button.dataset.title || '';
+        courseDetailModal.querySelector('.course-detail-category').textContent = button.dataset.category || 'Course';
+        courseDetailModal.querySelector('.course-detail-description').textContent = button.dataset.description || 'Contact us for complete course details.';
+        const highlights = courseDetailModal.querySelector('.course-detail-highlights');
+        const highlightItems = (button.dataset.highlights || '')
+            .split(/\r?\n/)
+            .map(item => item.trim())
+            .filter(Boolean);
+        highlights.innerHTML = '';
+        highlights.hidden = highlightItems.length === 0;
+        highlightItems.forEach(item => {
+            const li = document.createElement('li');
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-check';
+            li.append(icon, document.createTextNode(` ${item}`));
+            highlights.appendChild(li);
+        });
+        const duration = courseDetailModal.querySelector('.course-detail-duration');
+        const fee = courseDetailModal.querySelector('.course-detail-fee');
+        const meta = courseDetailModal.querySelector('.course-detail-meta');
+        duration.textContent = button.dataset.duration ? `Duration: ${button.dataset.duration}` : '';
+        fee.textContent = button.dataset.fee || '';
+        if (meta) meta.hidden = !duration.textContent && !fee.textContent;
+        const enquire = courseDetailModal.querySelector('.course-detail-enquire');
+        if (enquire) enquire.href = button.dataset.enquire || 'contact.php';
+        const download = courseDetailModal.querySelector('.course-detail-download');
+        if (download) download.hidden = !button.dataset.download;
+        if (button.dataset.download) download.href = button.dataset.download;
+        const imageWrap = courseDetailModal.querySelector('.course-detail-image');
+        const image = imageWrap?.querySelector('img');
+        if (imageWrap && image) {
+            if (button.dataset.image) {
+                image.src = button.dataset.image;
+                image.alt = `${button.dataset.title || 'Course'} preview`;
+                imageWrap.style.setProperty('--course-detail-image-bg', `url("${button.dataset.image.replace(/"/g, '\\"')}")`);
+                imageWrap.hidden = false;
+            } else {
+                image.removeAttribute('src');
+                image.alt = '';
+                imageWrap.style.removeProperty('--course-detail-image-bg');
+                imageWrap.hidden = true;
+            }
+        }
+        courseDetailModal.hidden = false;
+        courseDetailModal.classList.add('is-open');
+        courseDetailModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        document.documentElement.classList.add('modal-open');
+        courseDetailModal.querySelector('.course-detail-close').focus();
+}
+
+document.querySelectorAll('[data-course-modal]').forEach(button => {
+    button.addEventListener('click', event => {
+        if (button.matches('.course-card, .catalog-card, .home-course-card') && event.target.closest('a, button, input, select, textarea')) return;
+        event.preventDefault();
+        openCourseDetails(button);
+    });
+    button.addEventListener('keydown', event => {
+        if (!button.matches('.course-card, .catalog-card, .home-course-card')) return;
+        if (event.target.closest('a, button, input, select, textarea')) return;
+        if (!['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        openCourseDetails(button);
+    });
+});
+
+document.querySelectorAll('.catalog-card').forEach(card => {
+    card.addEventListener('click', event => {
+        if (card.matches('[data-course-modal]')) return;
+        if (event.target.closest('a, button, input, select, textarea')) return;
+        card.querySelector('[data-course-modal]')?.click();
+    });
+});
+
+document.querySelectorAll('.home-course-card').forEach(card => {
+    const openDetails = event => {
+        if (card.matches('[data-course-modal]')) return;
+        if (event.target.closest('a, button, input, select, textarea')) return;
+        card.querySelector('[data-course-modal]')?.click();
+    };
+    card.addEventListener('click', openDetails);
+    card.addEventListener('keydown', event => {
+        if (event.target.closest('a, button, input, select, textarea')) return;
+        if (!['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        card.querySelector('[data-course-modal]')?.click();
+    });
+});
+
+document.querySelectorAll('[data-close-course-detail]').forEach(button => {
+    const closeFromControl = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        closeCourseDetail();
+    };
+    button.addEventListener('click', closeFromControl);
+    button.addEventListener('pointerdown', event => {
+        if (!button.classList.contains('course-detail-close') && !button.classList.contains('course-detail-backdrop')) return;
+        closeFromControl(event);
+    });
+});
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeCourseDetail();
+});
+
+const trainingVideoModal = document.getElementById('trainingVideoModal');
+const trainingVideo = trainingVideoModal?.querySelector('video');
+const trainingVideoSource = trainingVideo?.querySelector('source');
+const trainingVideoDefaultSrc = trainingVideoSource?.getAttribute('src') || trainingVideo?.currentSrc || '';
+const trainingVideoDefaultType = trainingVideoSource?.getAttribute('type') || 'video/mp4';
+const closeTrainingVideo = () => {
+    if (!trainingVideoModal) return;
+    trainingVideoModal.classList.remove('is-open');
+    trainingVideoModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    if (trainingVideo) {
+        trainingVideo.pause();
+        trainingVideo.currentTime = 0;
+    }
+};
+
+document.querySelectorAll('[data-video-open]').forEach(button => {
+    button.addEventListener('click', () => {
+        if (!trainingVideoModal) return;
+        const videoSrc = button.dataset.videoSrc || trainingVideoDefaultSrc;
+        const videoType = button.dataset.videoType || trainingVideoDefaultType;
+        if (trainingVideoSource && videoSrc && trainingVideoSource.getAttribute('src') !== videoSrc) {
+            trainingVideoSource.setAttribute('src', videoSrc);
+            trainingVideoSource.setAttribute('type', videoType);
+            trainingVideo?.load();
+        }
+        trainingVideoModal.classList.add('is-open');
+        trainingVideoModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        trainingVideoModal.querySelector('.training-video-close')?.focus();
+        trainingVideo?.play().catch(() => {});
+    });
+});
+
+document.querySelectorAll('[data-video-close]').forEach(button => button.addEventListener('click', closeTrainingVideo));
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeTrainingVideo();
+});
+
+// Home page local AI-style assistant. No external API required.
+const aiChat = document.querySelector('[data-ai-chat]');
+if (aiChat) {
+    const aiToggle = aiChat.querySelector('[data-ai-toggle]');
+    const aiBack = aiChat.querySelector('[data-ai-back]');
+    const aiClose = aiChat.querySelector('[data-ai-close]');
+    const aiPanel = aiChat.querySelector('.home-ai-panel');
+    const aiMessages = aiChat.querySelector('[data-ai-messages]');
+    const aiForm = aiChat.querySelector('[data-ai-form]');
+    const aiInput = aiForm?.querySelector('input[name="question"]');
+
+    const contactConfig = window.TalenttenoContact || {};
+    const companyDetails = {
+        name: contactConfig.name || 'Talentteno Institute',
+        address: contactConfig.address || 'Plot 81, Poriyalar Nagar, Tiruppalai, Madurai, Tamil Nadu - 625014',
+        phone1: contactConfig.phone1 || '+91 82484 15023',
+        phone2: contactConfig.phone2 || '+91 63836 43141',
+        email: contactConfig.email || 'talentteno.socials@gmail.com',
+        businessHours: contactConfig.businessHours || 'Monday to Saturday, 9:00 AM to 7:00 PM'
+    };
+    let aiPending = false;
+
+    const replies = [
+        {
+            keys: ['company', 'institute', 'about', 'talentteno', 'details', 'detail', 'more', 'who are you', 'what is talentteno', 'institute details', 'about institute'],
+            text: `About: ${companyDetails.name} is an IT training institute in Madurai offering practical classroom training, free internship guidance, live project practice, certification support and placement preparation.`
+        },
+        {
+            keys: ['course', 'courses', 'class', 'classes', 'training', 'learn', 'program', 'programs', 'syllabus', 'available', 'teach', 'study', 'enna course', 'course list', 'all course', 'enna courses', 'what course', 'which course', 'course enna', 'course iruka', 'padika', 'learn panna', 'which is best'],
+            text: 'Courses available: Full Stack with AI, Data Science and AI, Cyber Security, Digital Marketing, UI/UX Design, Tally, basic computer, MS Office, programming, short-term courses and advanced professional courses. Tell me your interest, education level or goal and I can suggest a suitable course.'
+        },
+        {
+            keys: ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'offer', 'discount', 'emi', 'payment', 'pay', 'how much', 'fees evlo', 'fee evlo', 'evlo', 'rate', 'fees details', 'selavu', 'amount enna', 'fees sollunga'],
+            text: `Fees: Fees change based on course, duration, batch and current offer. For the correct fee, discount or EMI details, call ${companyDetails.phone1} / ${companyDetails.phone2} or send a WhatsApp enquiry.`
+        },
+        {
+            keys: ['internship', 'intern', 'project', 'projects', 'live project', 'portfolio', 'practical', 'hands on', 'experience', 'internship iruka', 'project iruka', 'iruka', 'practical class', 'real time project', 'internship unda', 'project kudupingala', 'project venum'],
+            text: 'Internship & projects: Yes. Talentteno provides free internship guidance and live project practice. Students work on practical tasks to build portfolio-ready confidence.'
+        },
+        {
+            keys: ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work', 'job support', 'job assistance', 'velai', 'job iruka', 'placement iruka', 'velai kidaikuma'],
+            text: 'Placement: Support includes resume preparation, mock interview practice, job-readiness mentoring and hiring guidance for eligible students.'
+        },
+        {
+            keys: ['demo', 'trial', 'counselling', 'counseling', 'free class', 'free demo', 'sample class', 'visit', 'demo class', 'free demo class', 'demo venum', 'demo iruka', 'free counselling'],
+            text: 'Demo class: You can book a free demo class or counselling session by calling the institute or sending a WhatsApp enquiry. Our counsellor will guide you.'
+        },
+        {
+            keys: ['location', 'address', 'where', 'madurai', 'tiruppalai', 'poriyalar', 'map', 'near', 'place', 'route', 'enga', 'where is', 'office', 'branch', 'address enga', 'location enga'],
+            text: `Address: ${companyDetails.address}.`
+        },
+        {
+            keys: ['phone', 'contact', 'call', 'whatsapp', 'mobile', 'number', 'email', 'mail', 'talk', 'reach', 'phone number', 'contact number', 'mobile number', 'call panna'],
+            text: `Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}. You can also use the WhatsApp button for quick enquiry.`
+        },
+        {
+            keys: ['online', 'offline', 'batch', 'batches', 'timing', 'timings', 'time', 'schedule', 'mode', 'morning', 'evening', 'weekend', 'hours', 'open', 'class time', 'duration', 'how many days', 'month', 'months', 'timing enna', 'duration evlo', 'evlo naal', 'ethana naal'],
+            text: `Timing & duration: Institute hours are ${companyDetails.businessHours}. Course duration and batch timing depend on the selected course. Morning, evening or weekend availability can be confirmed by the admission team.`
+        },
+        {
+            keys: ['certificate', 'certification', 'certified', 'certificate iruka', 'certificate kudupingala', 'certificate venum'],
+            text: 'Certificate: Certification support is available after course completion. Students also get guidance to complete practical tasks and project work.'
+        },
+        {
+            keys: ['admission', 'join', 'enroll', 'enrol', 'apply', 'register', 'joining', 'epdi join', 'eppadi join', 'how to join', 'join panna', 'admission eppadi', 'admission epdi'],
+            text: 'Admission: To join Talentteno, call the institute, send a WhatsApp enquiry, or use the contact page. The team will guide course selection, fee details and batch timing.'
+        },
+        {
+            keys: ['full stack', 'fullstack', 'web development', 'frontend', 'backend'],
+            text: 'Full Stack with AI covers practical web development skills, frontend/backend workflow, projects and career preparation. Ask for fees or demo class to continue.'
+        },
+        {
+            keys: ['data science', 'python', 'analytics', 'ai', 'artificial intelligence'],
+            text: 'Data Science and AI training focuses on practical tools, analytics basics, project practice and career guidance for IT roles.'
+        },
+        {
+            keys: ['digital marketing', 'marketing', 'seo', 'social media'],
+            text: 'Digital Marketing training covers practical marketing skills, campaign basics, social media/SEO guidance and project-based learning.'
+        },
+        {
+            keys: ['cyber', 'cyber security', 'security'],
+            text: 'Cyber Security training includes guided practical labs, security workflow basics and project practice for beginners.'
+        },
+        {
+            keys: ['ui', 'ux', 'design', 'designing'],
+            text: 'UI/UX Design training covers design fundamentals, practical tools, portfolio practice and career guidance.'
+        },
+        {
+            keys: ['tally', 'accounts', 'accounting', 'gst'],
+            text: 'Tally and accounting training helps students learn practical business entries, GST basics and office-ready accounting workflow.'
+        },
+        {
+            keys: ['short term', 'short-term', 'basic computer', 'computer course', 'ms office', 'excel'],
+            text: 'Short-term courses include computer basics, MS Office, programming foundations and other practical skill courses for students and working professionals.'
+        }
+    ];
+
+    const normalizeAiText = value => String(value || '')
+        .toLowerCase()
+        .replace(/full\s*stack/g, 'full stack')
+        .replace(/cyber\s*security/g, 'cyber security')
+        .replace(/ui\s*\/\s*ux/g, 'ui ux')
+        .replace(/u\s*i\s*u\s*x/g, 'ui ux')
+        .replace(/datascience/g, 'data science')
+        .replace(/fullstack/g, 'full stack')
+        .replace(/fees?/g, 'fees')
+        .replace(/evvalavu/g, 'evlo')
+        .replace(/eppadi/g, 'how')
+        .replace(/enna/g, 'what')
+        .replace(/enga/g, 'where')
+        .replace(/irukka|iruka|unda/g, 'available')
+        .replace(/epdi|eppdi/g, 'how')
+        .replace(/pannanum|panna/g, 'do')
+        .replace(/venum/g, 'want')
+        .replace(/kudupingala|kudupinga/g, 'provide')
+        .replace(/ethana/g, 'how many')
+        .replace(/[^\w\s/+.-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const getAiTokens = text => text.split(' ').filter(Boolean);
+    const hasAny = (text, keys) => {
+        const tokens = new Set(getAiTokens(text));
+        return keys.some(key => key.includes(' ') ? text.includes(key) : tokens.has(key));
+    };
+    const scoreKeys = (text, keys) => keys.reduce((total, key) => {
+        if (!hasAny(text, [key])) return total;
+        return total + (key.includes(' ') ? key.split(' ').length + 1 : 1);
+    }, 0);
+
+    const getAiReply = question => {
+        const clean = normalizeAiText(question);
+        const tokens = new Set(getAiTokens(clean));
+        if (['hi', 'hello', 'hey', 'hai', 'vanakkam'].includes(clean)) {
+            return `Hi! Welcome to ${companyDetails.name}. I can help with courses, fees, internship, placement, demo class, address, contact number, timings and admission.`;
+        }
+        if (['thanks', 'thank you', 'ok', 'okay'].includes(clean)) {
+            return 'You are welcome. For admission help, use the WhatsApp button or contact the institute.';
+        }
+
+        const asksFee = hasAny(clean, ['fee', 'fees', 'cost', 'price', 'amount', 'charges', 'how much', 'emi', 'payment', 'pay', 'evlo', 'rate', 'discount', 'offer', 'budget']);
+        const asksCourse = hasAny(clean, ['course', 'courses', 'class', 'classes', 'training', 'syllabus', 'learn', 'teach', 'available', 'list', 'program', 'programs', 'study', 'padika']);
+        const asksContact = hasAny(clean, ['contact', 'phone', 'call', 'whatsapp', 'number', 'mobile', 'email', 'mail', 'reach', 'talk']);
+        const asksLocation = hasAny(clean, ['address', 'location', 'where', 'map', 'route', 'near', 'place', 'branch', 'office']);
+        const asksInternship = hasAny(clean, ['internship', 'intern', 'project', 'projects', 'portfolio', 'practical', 'experience', 'realtime', 'live']);
+        const asksPlacement = hasAny(clean, ['placement', 'placements', 'job', 'jobs', 'career', 'interview', 'resume', 'hiring', 'work']);
+        const asksTiming = hasAny(clean, ['timing', 'timings', 'time', 'batch', 'batches', 'duration', 'morning', 'evening', 'weekend', 'online', 'offline', 'schedule', 'hours', 'days', 'months', 'naal']);
+        const asksAdmission = hasAny(clean, ['admission', 'join', 'enroll', 'enrol', 'apply', 'register', 'joining']);
+        const asksDemo = hasAny(clean, ['demo', 'trial', 'counselling', 'counseling', 'visit', 'sample', 'want']);
+        const asksCertificate = hasAny(clean, ['certificate', 'certification', 'certified', 'provide']);
+        const asksRecommendation = hasAny(clean, ['best', 'suggest', 'recommend', 'after', 'college', '12th', 'fresher', 'student', 'career switch', 'which']);
+        const courseNames = [
+            ['full stack', 'Full Stack with AI'],
+            ['web development', 'Full Stack with AI'],
+            ['frontend', 'Full Stack with AI'],
+            ['backend', 'Full Stack with AI'],
+            ['data science', 'Data Science and AI'],
+            ['python', 'Data Science and AI'],
+            ['machine learning', 'Data Science and AI'],
+            ['artificial intelligence', 'Data Science and AI'],
+            ['cyber', 'Cyber Security'],
+            ['cyber security', 'Cyber Security'],
+            ['ethical hacking', 'Cyber Security'],
+            ['digital marketing', 'Digital Marketing'],
+            ['seo', 'Digital Marketing'],
+            ['ui ux', 'UI/UX Design'],
+            ['design', 'UI/UX Design'],
+            ['designing', 'UI/UX Design'],
+            ['tally', 'Tally'],
+            ['gst', 'Tally'],
+            ['basic computer', 'Basic Computer'],
+            ['ms office', 'MS Office'],
+            ['excel', 'MS Office and Excel'],
+            ['programming', 'Programming Languages'],
+            ['java', 'Programming Languages'],
+            ['php', 'Programming Languages'],
+            ['sql', 'Programming Languages'],
+            ['cloud', 'Cloud Computing'],
+            ['aws', 'Cloud Computing'],
+            ['devops', 'Cloud Computing'],
+        ];
+        const mentionedCourse = courseNames.find(([key]) => key.includes(' ') ? clean.includes(key) : tokens.has(key))?.[1];
+
+        if (mentionedCourse && asksFee) {
+            return `${mentionedCourse} fee depends on batch, duration and current offer. For the correct fee, EMI and discount, call ${companyDetails.phone1} / ${companyDetails.phone2} or send a WhatsApp enquiry.`;
+        }
+        if (mentionedCourse && asksInternship) {
+            return `Yes, ${mentionedCourse} students get guided practical tasks, live project or internship support, and portfolio preparation.`;
+        }
+        if (mentionedCourse && asksPlacement) {
+            return `${mentionedCourse} includes career support such as resume guidance, mock interview preparation and placement assistance for eligible students.`;
+        }
+        if (mentionedCourse && asksTiming) {
+            return `${mentionedCourse} batch timing and duration depend on the current schedule. Call ${companyDetails.phone1} or send a WhatsApp enquiry to confirm the next available batch.`;
+        }
+        if (mentionedCourse && asksCourse) {
+            return `${mentionedCourse} is available at ${companyDetails.name}. It includes practical training, mentor guidance, project work and career support.`;
+        }
+        if (mentionedCourse) {
+            return `${mentionedCourse} is available at ${companyDetails.name}. You can ask about its fees, duration, demo class, internship, placement support or admission process.`;
+        }
+        if (asksContact && asksLocation) {
+            return `${companyDetails.name} is at ${companyDetails.address}. Contact: ${companyDetails.phone1}, ${companyDetails.phone2}. Email: ${companyDetails.email}.`;
+        }
+        if (asksAdmission && asksFee) {
+            return `Admission and fees: Call ${companyDetails.phone1} or send a WhatsApp enquiry. Our team will explain the right course, current fee, offer, EMI option and batch timing.`;
+        }
+        if (asksRecommendation) {
+            return 'Course suggestion: For web/app jobs choose Full Stack with AI. For analytics choose Data Science and AI. For security choose Cyber Security. For business promotion choose Digital Marketing. For creative design choose UI/UX. Share your education or career goal for a more exact suggestion.';
+        }
+        if (asksFee) return replies.find(item => item.keys.includes('fee')).text;
+        if (asksCourse) return replies.find(item => item.keys.includes('course')).text;
+        if (asksInternship) return replies.find(item => item.keys.includes('internship')).text;
+        if (asksPlacement) return replies.find(item => item.keys.includes('placement')).text;
+        if (asksDemo) return replies.find(item => item.keys.includes('demo')).text;
+        if (asksLocation) return replies.find(item => item.keys.includes('location')).text;
+        if (asksContact) return replies.find(item => item.keys.includes('contact')).text;
+        if (asksTiming) return replies.find(item => item.keys.includes('timing')).text;
+        if (asksCertificate) return replies.find(item => item.keys.includes('certificate')).text;
+        if (asksAdmission) return replies.find(item => item.keys.includes('admission')).text;
+
+        const scoredMatches = replies
+            .map(item => ({
+                item,
+                score: scoreKeys(clean, item.keys)
+            }))
+            .filter(match => match.score > 0)
+            .sort((a, b) => b.score - a.score);
+
+        const matchedAnswers = [];
+        scoredMatches.forEach(match => {
+            if (matchedAnswers.includes(match.item.text)) return;
+            matchedAnswers.push(match.item.text);
+        });
+
+        if (matchedAnswers.length > 1) {
+            const answerLimit = clean.length > 90 || /\b(and|also|with|plus|,)\b/.test(clean) ? 5 : 3;
+            return matchedAnswers
+                .slice(0, answerLimit)
+                .map((answer, index) => `${index + 1}. ${answer}`)
+                .join('\n\n');
+        }
+
+        return matchedAnswers[0]
+            || `Please ask about course names, fees, internship, placement, demo class, admission, certificate, timing, address or contact details. For direct help call ${companyDetails.phone1} or ${companyDetails.phone2}.`;
+    };
+
+    const appendAiMessage = (message, type = 'bot') => {
+        if (!aiMessages) return;
+        const bubble = document.createElement('div');
+        bubble.className = `ai-message ${type}`;
+        bubble.textContent = message;
+        aiMessages.appendChild(bubble);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+    };
+
+    const openAiChat = () => {
+        aiPanel?.classList.add('is-open');
+        aiPanel?.setAttribute('aria-hidden', 'false');
+        aiToggle?.setAttribute('aria-expanded', 'true');
+        window.setTimeout(() => aiInput?.focus(), 80);
+    };
+
+    const closeAiChat = () => {
+        aiPanel?.classList.remove('is-open');
+        aiPanel?.setAttribute('aria-hidden', 'true');
+        aiToggle?.setAttribute('aria-expanded', 'false');
+    };
+
+    const submitAiQuestion = question => {
+        const clean = String(question || '').trim();
+        if (!clean) {
+            appendAiMessage('Please type a question first.', 'bot error');
+            return;
+        }
+        if (aiPending) return;
+        aiPending = true;
+        const submitButton = aiForm?.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.setAttribute('aria-busy', 'true');
+        }
+        appendAiMessage(clean, 'user');
+        if (aiInput) aiInput.value = '';
+        const typing = document.createElement('div');
+        typing.className = 'ai-message bot typing';
+        typing.textContent = 'Typing...';
+        aiMessages?.appendChild(typing);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+        window.setTimeout(() => {
+            typing.remove();
+            try {
+                appendAiMessage(getAiReply(clean), 'bot');
+            } catch (error) {
+                appendAiMessage('Talentteno AI is temporarily unavailable. Please call the institute or use WhatsApp for immediate help.', 'bot error');
+            } finally {
+                aiPending = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.removeAttribute('aria-busy');
+                }
+            }
+        }, 180);
+    };
+
+    aiToggle?.addEventListener('click', () => {
+        const isOpen = aiPanel?.classList.contains('is-open');
+        if (isOpen) closeAiChat();
+        else openAiChat();
+    });
+    aiBack?.addEventListener('click', closeAiChat);
+    aiClose?.addEventListener('click', closeAiChat);
+    document.addEventListener('click', event => {
+        if (!aiPanel?.classList.contains('is-open')) return;
+        if (aiChat.contains(event.target)) return;
+        closeAiChat();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeAiChat();
+    });
+    aiChat.querySelectorAll('[data-ai-question]').forEach(button => {
+        button.addEventListener('click', () => submitAiQuestion(button.dataset.aiQuestion));
+    });
+    aiForm?.addEventListener('submit', event => {
+        event.preventDefault();
+        submitAiQuestion(aiInput?.value);
+    });
+}
+
+
+// Hero slider — auto-play, arrows, dots, pause on hover
+(function () {
+    const slider = document.querySelector('[data-hero-slider]');
+    if (!slider || slider.dataset.sliderInit === 'true') return;
+    slider.dataset.sliderInit = 'true';
+
+    const slides = [...slider.querySelectorAll('[data-slide]')];
+    const dots = [...slider.querySelectorAll('[data-slider-dots] .slider-dot')];
+    const prevBtn = slider.querySelector('[data-slider-prev]');
+    const nextBtn = slider.querySelector('[data-slider-next]');
+
+    let current = 0;
+    let timer = null;
+    const INTERVAL = 4000;
+    const track = slider.querySelector('[data-slider-track]');
+
+    function hydrateSlide(index) {
+        const slide = slides[index];
+        if (!slide || slide.dataset.loaded === 'true') return;
+        slide.querySelectorAll('source').forEach(source => {
+            if (source.dataset.srcset && !source.getAttribute('srcset')) {
+                source.setAttribute('srcset', source.dataset.srcset);
+            }
+        });
+        const img = slide.querySelector('img');
+        if (img) {
+            if (img.dataset.srcset && !img.getAttribute('srcset')) {
+                img.setAttribute('srcset', img.dataset.srcset);
+            }
+            if (img.dataset.src && !img.getAttribute('src')) {
+                img.setAttribute('src', img.dataset.src);
+            }
+        }
+        if (slide.dataset.bg) {
+            slide.style.setProperty('--hero-slide-image', `url('${slide.dataset.bg}')`);
+            slide.style.setProperty('background-image', `url('${slide.dataset.bg}')`, 'important');
+        }
+        if (slide.dataset.mobileBg) {
+            slide.style.setProperty('--hero-slide-mobile-image', `url('${slide.dataset.mobileBg}')`);
+        }
+        slide.dataset.loaded = 'true';
+    }
+
+    function updateTrack() {
+        if (!track) return;
+        track.style.transform = 'translate3d(-' + (current * 100) + '%, 0, 0)';
+    }
+
+    function syncAspectRatio(index) {
+        // On home page the slider fills 100vh — never override with image aspect ratio
+        if (document.body.classList.contains('home-page')) return;
+        const img = slides[index]?.querySelector('img');
+        if (!img) return;
+
+        function applyRatio() {
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                slider.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+            }
+        }
+
+        if (img.complete) {
+            applyRatio();
+        } else {
+            img.addEventListener('load', applyRatio, { once: true });
+        }
+    }
+
+    if (slides.length <= 1) {
+        hydrateSlide(current);
+        syncAspectRatio(current);
+        return;
+    }
+
+    function goTo(index) {
+        slides[current].classList.remove('is-active');
+        slides[current].setAttribute('aria-hidden', 'true');
+        if (dots[current]) {
+            dots[current].classList.remove('is-active');
+            dots[current].setAttribute('aria-pressed', 'false');
+        }
+
+        current = (index + slides.length) % slides.length;
+        hydrateSlide(current);
+        hydrateSlide((current + 1) % slides.length);
+        updateTrack();
+
+        slides[current].classList.add('is-active');
+        slides[current].setAttribute('aria-hidden', 'false');
+        syncAspectRatio(current);
+        if (dots[current]) {
+            dots[current].classList.add('is-active');
+            dots[current].setAttribute('aria-pressed', 'true');
+        }
+    }
+
+    function startAuto() {
+        stopAuto();
+        window.setTimeout(() => hydrateSlide((current + 1) % slides.length), Math.max(1000, INTERVAL - 1200));
+        timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
+    }
+
+    function stopAuto() {
+        if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); startAuto(); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); startAuto(); });
+
+    dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () { goTo(i); startAuto(); });
+    });
+
+    slider.addEventListener('mouseenter', stopAuto);
+    slider.addEventListener('mouseleave', startAuto);
+    slider.addEventListener('focusin', stopAuto);
+    slider.addEventListener('focusout', startAuto);
+
+    // Touch swipe support
+    var touchStartX = 0;
+    slider.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    slider.addEventListener('touchend', function (e) {
+        var diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+            goTo(diff > 0 ? current + 1 : current - 1);
+            startAuto();
+        }
+    }, { passive: true });
+
+    hydrateSlide(current);
+    syncAspectRatio(current);
+    updateTrack();
+    startAuto();
+}());
+
+// Keep the home review showcase as contained, gap-free auto-sliding rows.
+(function () {
+    const row = document.querySelector('.review-scroll-row-one');
+    const stage = row?.closest('.review-scroll-stage');
+    if (!row || !stage || !document.body.classList.contains('home-page')) return;
+
+    let initialized = false;
+
+    function prepareCard(card) {
+        card.classList.remove('reveal', 'scroll-reveal-auto', 'home-reveal-card', 'scroll-image-reveal');
+        card.classList.add('is-visible');
+        card.style.transitionDelay = '';
+        card.querySelectorAll('.reveal, .scroll-reveal-auto, .home-reveal-card, .scroll-image-reveal').forEach(item => {
+            item.classList.remove('reveal', 'scroll-reveal-auto', 'home-reveal-card', 'scroll-image-reveal');
+            item.classList.add('is-visible');
+            item.style.transitionDelay = '';
+        });
+        return card;
+    }
+
+    function cardClone(card, type) {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('data-auto-clone', type);
+        if (type === 'duplicate') {
+            clone.setAttribute('aria-hidden', 'true');
+        }
+        return prepareCard(clone);
+    }
+
+    function buildRow(target, sourceCards) {
+        target.style.transform = '';
+        target.style.left = '';
+        target.style.willChange = '';
+        target.replaceChildren();
+
+        const minWidth = Math.max(window.innerWidth * 1.6, 2200);
+        let guard = 0;
+        while (target.scrollWidth < minWidth && guard < 8) {
+            sourceCards.forEach(card => target.appendChild(cardClone(card, 'base')));
+            guard += 1;
+        }
+
+        const baseCards = [...target.children];
+        baseCards.forEach(card => {
+            const clone = card.cloneNode(true);
+            clone.setAttribute('data-auto-clone', 'duplicate');
+            clone.setAttribute('aria-hidden', 'true');
+            target.appendChild(clone);
+        });
+    }
+
+    function initReviewRows() {
+        if (initialized) return;
+        initialized = true;
+        const cards = [...row.querySelectorAll('.review-scroll-card:not([data-auto-clone="true"])')].map(card => card.cloneNode(true));
+        if (!cards.length) return;
+        let rowTwo = stage.querySelector('.review-scroll-row-two');
+        if (!rowTwo) {
+            rowTwo = document.createElement('div');
+            rowTwo.className = 'review-scroll-row review-scroll-row-two';
+            row.after(rowTwo);
+        }
+        buildRow(row, cards);
+        buildRow(rowTwo, [...cards].reverse());
+        window.addEventListener('resize', () => {
+            buildRow(row, cards);
+            buildRow(rowTwo, [...cards].reverse());
+        }, { passive: true });
+    }
+
+    if ('IntersectionObserver' in window) {
+        const reviewObserver = new IntersectionObserver(entries => {
+            if (!entries.some(entry => entry.isIntersecting)) return;
+            reviewObserver.disconnect();
+            initReviewRows();
+        }, { rootMargin: '600px 0px' });
+        reviewObserver.observe(stage);
+    } else {
+        window.setTimeout(initReviewRows, 1200);
+    }
+}());
+
+// Final home interaction guards for cached/live pages.
+(function () {
+    const enrollPopup = document.querySelector('#home-signup');
+    const isHomePage = document.body.classList.contains('home-page');
+
+    function openHomeEnroll(event) {
+        if (!enrollPopup) return false;
+        event?.preventDefault();
+        event?.stopPropagation();
+        document.body.classList.remove('nav-open');
+        document.documentElement.classList.remove('nav-open');
+        document.querySelector('.site-nav')?.classList.remove('open');
+        enrollPopup.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('enroll-popup-open');
+        document.documentElement.classList.add('enroll-popup-open');
+        window.setTimeout(() => {
+            enrollPopup.querySelector('.home-counselling-form input:not([type="hidden"]):not([tabindex="-1"]), .home-counselling-form select, .home-counselling-form button, [data-enroll-close]')?.focus();
+        }, 40);
+        return true;
+    }
+
+    function closeHomeEnroll(event) {
+        if (!enrollPopup) return;
+        event?.preventDefault();
+        event?.stopPropagation();
+        document.body.classList.remove('enroll-popup-open');
+        document.documentElement.classList.remove('enroll-popup-open');
+        enrollPopup.setAttribute('aria-hidden', 'true');
+        if (window.location.hash === '#home-signup' && history.replaceState) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }
+
+    document.addEventListener('click', event => {
+        const enrollLink = event.target.closest('.nav-enroll-cta, a[href="#home-signup"], a[href$="#home-signup"], button[data-enroll-open]');
+        if (enrollLink) {
+            if (openHomeEnroll(event)) return;
+            if (!isHomePage) return;
+        }
+
+        if (event.target.closest('[data-enroll-close]')) {
+            closeHomeEnroll(event);
+        }
+    }, true);
+
+    if (window.location.hash === '#home-signup') {
+        window.addEventListener('load', () => openHomeEnroll(), { once: true });
+    }
+
+    const aiChat = document.querySelector('[data-ai-chat]');
+    if (aiChat) {
+        const aiPanel = aiChat.querySelector('.home-ai-panel');
+        const aiToggle = aiChat.querySelector('[data-ai-toggle]');
+        const closeAi = event => {
+            event?.preventDefault();
+            event?.stopPropagation();
+            aiPanel?.classList.remove('is-open');
+            aiPanel?.setAttribute('aria-hidden', 'true');
+            aiToggle?.setAttribute('aria-expanded', 'false');
+        };
+        aiChat.querySelectorAll('[data-ai-close], [data-ai-back]').forEach(button => {
+            button.addEventListener('click', closeAi, true);
+            button.addEventListener('pointerdown', event => event.stopPropagation(), true);
+        });
+    }
+
+    const heroSlider = document.querySelector('[data-hero-slider]');
+    if (heroSlider) {
+        heroSlider.querySelectorAll('[data-slider-prev], [data-slider-next]').forEach(button => {
+            button.addEventListener('pointerdown', event => {
+                event.stopPropagation();
+            }, true);
+        });
+    }
+}());
+
+
+// ==========================================================================
+// Service Detail Modal — shared across all service/career/hiring pages
+// ==========================================================================
+(function () {
+    'use strict';
+
+    var overlay = null;
+    var modal = null;
+    var closeBtn = null;
+    var lastFocused = null;
+    var scrollY = 0;
+
+    function buildModal() {
+        if (document.getElementById('serviceDetailModal')) return;
+
+        overlay = document.createElement('div');
+        overlay.className = 'service-modal-overlay';
+        overlay.id = 'serviceDetailModal';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-labelledby', 'smdTitle');
+
+        overlay.innerHTML = [
+            '<div class="service-modal">',
+            '  <button class="service-modal-close service-modal-floating-close" type="button" aria-label="Close" id="smdCloseBtn">',
+            '    <i class="fa-solid fa-xmark" aria-hidden="true"></i>',
+            '  </button>',
+            '  <div class="service-modal-header">',
+            '    <a class="service-modal-brand" href="index.php">',
+            '      <span class="smo-logo">',
+            '        <img src="uploads/optimized/logot-transparent-w64.webp"',
+            '             srcset="uploads/optimized/logot-transparent-w64.webp 64w, uploads/optimized/logot-transparent-w128.webp 128w"',
+            '             sizes="44px" alt="Talentteno Institute logo" width="44" height="44" decoding="async">',
+            '      </span>',
+            '      <span>',
+            '        <span class="smo-name">Talentteno Institute</span>',
+            '        <span class="smo-sub">IT Training Institute</span>',
+            '      </span>',
+            '    </a>',
+            '  </div>',
+            '  <div class="service-modal-body">',
+            '    <div class="service-modal-image-wrap">',
+            '      <img class="service-modal-image" src="" alt="" loading="lazy" decoding="async">',
+            '    </div>',
+            '    <div class="service-modal-content">',
+            '      <span class="service-modal-badge" id="smdBadge"></span>',
+            '      <h2 class="service-modal-title" id="smdTitle"></h2>',
+            '      <p class="service-modal-description" id="smdDesc"></p>',
+            '      <ul class="service-modal-features" id="smdFeatures"></ul>',
+            '      <div class="service-modal-cta">',
+            '        <a href="contact.php" id="smdCta"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Enquire Now</a>',
+            '      </div>',
+            '    </div>',
+            '  </div>',
+            '</div>'
+        ].join('');
+
+        document.body.appendChild(overlay);
+        modal = overlay.querySelector('.service-modal');
+        closeBtn = overlay.querySelector('.service-modal-close');
+
+        closeBtn.addEventListener('click', closeServiceModal);
+        closeBtn.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+
+        overlay.addEventListener('pointerdown', function (e) {
+            if (e.target === overlay) closeServiceModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!overlay || !overlay.classList.contains('is-open')) return;
+            if (e.key === 'Escape') { e.preventDefault(); closeServiceModal(); return; }
+            if (e.key === 'Tab') trapFocus(e);
+        });
+    }
+
+    function trapFocus(e) {
+        var focusable = modal.querySelectorAll(
+            'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    }
+
+    function openServiceModal(trigger) {
+        buildModal();
+
+        var title = trigger.dataset.smdTitle || '';
+        var category = trigger.dataset.smdCategory || 'Service';
+        var description = trigger.dataset.smdDescription || '';
+        var image = trigger.dataset.smdImage || '';
+        var features = (trigger.dataset.smdFeatures || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var enquireUrl = trigger.dataset.smdEnquire || 'contact.php';
+        var categoryKey = category.toLowerCase();
+        var extraFeatures = categoryKey.includes('career')
+            ? ['Guided resume and portfolio preparation.', 'Mock interview and placement support.', 'Internship guidance for eligible students.']
+            : categoryKey.includes('service')
+                ? ['Free counselling before joining.', 'Practical guidance from experienced trainers.', 'Contact us for timing and fee details.']
+                : categoryKey.includes('hiring')
+                    ? ['Admin team reviews every submitted profile.', 'Shortlisted candidates will be contacted for next steps.', 'Attach an updated resume for faster processing.']
+                    : ['Mentor-led practical guidance.', 'Clear next-step support from our team.', 'Enquire for current availability and details.'];
+        extraFeatures.forEach(function (text) {
+            if (features.length >= 5) return;
+            if (!features.some(function (item) { return item.toLowerCase() === text.toLowerCase(); })) {
+                features.push(text);
+            }
+        });
+
+        overlay.querySelector('#smdBadge').textContent = category;
+        overlay.querySelector('#smdTitle').textContent = title;
+        overlay.querySelector('#smdDesc').textContent = description;
+        overlay.querySelector('#smdCta').href = enquireUrl;
+
+        var imgEl = overlay.querySelector('.service-modal-image');
+        if (image) {
+            imgEl.src = image;
+            imgEl.alt = title + ' image';
+            overlay.querySelector('.service-modal-image-wrap').style.display = '';
+        } else {
+            overlay.querySelector('.service-modal-image-wrap').style.display = 'none';
+        }
+
+        var featuresList = overlay.querySelector('#smdFeatures');
+        featuresList.innerHTML = '';
+        features.forEach(function (text) {
+            var li = document.createElement('li');
+            li.className = 'service-modal-feature-item';
+            li.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>' + escapeHtml(text);
+            featuresList.appendChild(li);
+        });
+        featuresList.hidden = features.length === 0;
+
+        lastFocused = document.activeElement;
+        scrollY = window.scrollY;
+
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.add('is-open');
+        document.body.classList.add('service-modal-open');
+        document.body.style.top = '-' + scrollY + 'px';
+
+        // Scroll modal body to top
+        var body = overlay.querySelector('.service-modal-body');
+        if (body) body.scrollTop = 0;
+
+        window.setTimeout(function () { closeBtn.focus(); }, 60);
+    }
+
+    function closeServiceModal() {
+        if (!overlay) return;
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('service-modal-open');
+        document.body.style.top = '';
+        window.scrollTo({ top: scrollY, behavior: 'instant' });
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+            lastFocused.focus();
+        }
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Wire up all trigger buttons/links
+    function wireServiceModalTriggers() {
+        document.querySelectorAll('[data-smd-trigger]').forEach(function (trigger) {
+            trigger.addEventListener('click', function (e) {
+                e.preventDefault();
+                openServiceModal(trigger);
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wireServiceModalTriggers);
+    } else {
+        wireServiceModalTriggers();
+    }
+}());

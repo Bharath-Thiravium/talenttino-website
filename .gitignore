@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+backend/node/node_modules/
+
+# Environment files
+.env
+backend/node/.env
+
+# Runtime/generated database files
+database/runtime/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Uploaded brochure files
+frontend/uploads/brochures/*
+!frontend/uploads/brochures/.gitkeep
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
