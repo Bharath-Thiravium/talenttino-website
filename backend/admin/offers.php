@@ -607,6 +607,7 @@ $value = static fn(string $key, $default = ''): string => htmlspecialchars((stri
                     <div class="offer-checks">
                         <label><input type="checkbox" name="is_featured" <?= !empty($editOffer['is_featured']) ? 'checked' : '' ?>> Featured</label>
                         <label><input type="checkbox" name="show_on_offers_page" <?= ($editOffer['show_on_offers_page'] ?? 1) ? 'checked' : '' ?>> Offers Page</label>
+                        <label><input type="checkbox" name="show_on_home_page" <?= !empty($editOffer['show_on_home_page']) ? 'checked' : '' ?>> Top Slider</label>
                         <label><input type="checkbox" name="certificate_available" <?= ($editOffer['certificate_available'] ?? 1) ? 'checked' : '' ?>> Certificate</label>
                         <label><input type="checkbox" name="internship_available" <?= !empty($editOffer['internship_available']) ? 'checked' : '' ?>> Internship</label>
                         <label><input type="checkbox" name="placement_available" <?= !empty($editOffer['placement_available']) ? 'checked' : '' ?>> Placement</label>

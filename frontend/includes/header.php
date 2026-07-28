@@ -48,6 +48,32 @@ function tt_nav_parent_active(array $pages): string {
             top: calc(var(--nav-height) + 8px) !important;
             height: calc(100dvh - var(--nav-height) - 8px) !important;
             max-height: calc(100dvh - var(--nav-height) - 8px) !important;
+            gap: 10px !important;
+        }
+
+        html body .site-header#site-header .site-nav > a,
+        html body .site-header#site-header .site-nav .nav-item > a {
+            min-height: 54px !important;
+            border: 1px solid rgba(37, 99, 235, .14) !important;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+        }
+
+        html body .site-header#site-header .site-nav > a.active,
+        html body .site-header#site-header .site-nav > a[aria-current="page"],
+        html body .site-header#site-header .site-nav .nav-item.active > a,
+        html body .site-header#site-header .site-nav .nav-item.open > a {
+            color: #0845b2 !important;
+            background: #eef7ff !important;
+            border-color: rgba(37, 99, 235, .22) !important;
+        }
+
+        html body .site-header#site-header .site-nav .nav-enroll-cta {
+            min-height: 54px !important;
+            justify-content: center !important;
+            border: 0 !important;
+            border-radius: 12px !important;
+            background: linear-gradient(135deg, #2563eb 0, #c026d3 100%) !important;
         }
     }
 </style>
@@ -99,3 +125,25 @@ function tt_nav_parent_active(array $pages): string {
         </button>
     </div>
 </header>
+<script>
+    (function () {
+        var nav = document.getElementById('site-nav');
+        if (!nav) return;
+        var offersLink = nav.querySelector('a[href="offers.php"]');
+        if (!offersLink) {
+            offersLink = document.createElement('a');
+            offersLink.href = 'offers.php';
+            offersLink.textContent = 'Offers';
+            if ((window.location.pathname.split('/').pop() || 'index.php') === 'offers.php') {
+                offersLink.className = 'active';
+                offersLink.setAttribute('aria-current', 'page');
+            }
+            nav.insertBefore(offersLink, nav.querySelector('a[href="gallery.php"]') || nav.querySelector('a[href="contact.php"]') || nav.querySelector('.more-menu') || nav.querySelector('.nav-enroll-cta'));
+        }
+        var courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu)');
+        var galleryLink = nav.querySelector('a[href="gallery.php"]');
+        if (courseMenu && offersLink && courseMenu.nextElementSibling !== offersLink) {
+            nav.insertBefore(offersLink, galleryLink || courseMenu.nextSibling);
+        }
+    })();
+</script>

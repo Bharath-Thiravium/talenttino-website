@@ -13,7 +13,7 @@ header('Expires: 0');
 require_once __DIR__ . '/includes/site-data.php';
 
 $courseId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-$fallbackTitle = trim((string)($_GET['title'] ?? $_POST['course_title'] ?? 'Talentteno Course Brochure'));
+$fallbackTitle = trim((string)($_GET['title'] ?? $_POST['course_title'] ?? 'Talentteno Course Syllabus'));
 $db = tt_db();
 $course = null;
 
@@ -24,7 +24,7 @@ if ($courseId && $db) {
     $course = $stmt->get_result()->fetch_assoc() ?: null;
 }
 
-$courseTitle = trim((string)($course['title'] ?? $fallbackTitle)) ?: 'Talentteno Course Brochure';
+$courseTitle = trim((string)($course['title'] ?? $fallbackTitle)) ?: 'Talentteno Course Syllabus';
 $degreeOptions = [
     'B.E / B.Tech',
     'M.E / M.Tech',
@@ -133,16 +133,138 @@ function dl_pdf_escape(string $t): string
 function dl_send_file(string $path, string $name): void
 {
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+    header('Content-Disposition: inline; filename="' . $name . '-syllabus.pdf"');
     header('Content-Length: ' . filesize($path));
     readfile($path);
     exit;
 }
 
+function dl_syllabus_lines(string $title): array
+{
+    $text = strtolower($title);
+    $common = [
+        'Training Mode: Mentor-led classroom practice with lab tasks',
+        'Includes: Live projects, internship guidance, certification support',
+        'Career Support: Resume review, mock interview, placement assistance',
+    ];
+
+    if (str_contains($text, 'cyber')) {
+        return array_merge([
+            'Course Syllabus: Cyber Security',
+            'Module 1: Networking basics, OSI model, TCP/IP, ports and protocols',
+            'Module 2: Linux fundamentals, command line, file permissions',
+            'Module 3: Information security concepts, CIA triad, risk and threats',
+            'Module 4: Ethical hacking workflow and safe lab setup',
+            'Module 5: Reconnaissance, scanning, enumeration and reporting',
+            'Module 6: Web application security basics and OWASP concepts',
+            'Module 7: Firewall, endpoint security and defensive monitoring',
+            'Module 8: Practical security project and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'data') || str_contains($text, 'ai') || str_contains($text, 'machine learning')) {
+        return array_merge([
+            'Course Syllabus: Data Science and AI',
+            'Module 1: Python programming fundamentals for data work',
+            'Module 2: NumPy, Pandas, data cleaning and preprocessing',
+            'Module 3: Statistics, probability and business analytics basics',
+            'Module 4: Data visualization with charts and dashboards',
+            'Module 5: SQL, data extraction and reporting workflow',
+            'Module 6: Machine learning concepts and model building',
+            'Module 7: AI workflow, prompt basics and project implementation',
+            'Module 8: Capstone project, portfolio and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'digital') || str_contains($text, 'marketing')) {
+        return array_merge([
+            'Course Syllabus: Digital Marketing',
+            'Module 1: Digital marketing foundations and campaign planning',
+            'Module 2: SEO, keyword research and on-page optimization',
+            'Module 3: Google Ads, Meta Ads and paid campaign basics',
+            'Module 4: Social media strategy, content planning and creatives',
+            'Module 5: Email marketing, lead funnels and landing pages',
+            'Module 6: Analytics, conversion tracking and campaign reports',
+            'Module 7: Practical campaign project and portfolio preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'cloud') || str_contains($text, 'devops') || str_contains($text, 'aws')) {
+        return array_merge([
+            'Course Syllabus: Cloud Computing and DevOps',
+            'Module 1: Cloud fundamentals, hosting models and core services',
+            'Module 2: Linux server setup, SSH and deployment basics',
+            'Module 3: AWS or cloud service workflow and storage concepts',
+            'Module 4: Git, CI/CD basics and release workflow',
+            'Module 5: Docker fundamentals and containerized deployment',
+            'Module 6: Monitoring, backup and basic infrastructure security',
+            'Module 7: Cloud deployment project and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'ui') || str_contains($text, 'ux') || str_contains($text, 'design') || str_contains($text, 'graphic')) {
+        return array_merge([
+            'Course Syllabus: UI/UX and Design',
+            'Module 1: Design fundamentals, layout, color and typography',
+            'Module 2: User research, user flow and information architecture',
+            'Module 3: Wireframes, components and responsive screen planning',
+            'Module 4: Figma tools, prototyping and design systems',
+            'Module 5: Graphic design basics for banners and social creatives',
+            'Module 6: Portfolio case study and client presentation workflow',
+        ], $common);
+    }
+    if (str_contains($text, 'tally') || str_contains($text, 'account')) {
+        return array_merge([
+            'Course Syllabus: Tally and Accounting',
+            'Module 1: Accounting fundamentals and business entries',
+            'Module 2: Tally setup, company creation and ledger management',
+            'Module 3: GST billing, purchase, sales and inventory workflow',
+            'Module 4: Reports, balance sheet and business documentation',
+            'Module 5: Practical accounts project and office-ready workflow',
+        ], $common);
+    }
+    if (str_contains($text, 'program') || str_contains($text, 'python') || str_contains($text, 'java') || str_contains($text, 'c++') || str_contains($text, 'php')) {
+        return array_merge([
+            'Course Syllabus: Programming Languages',
+            'Module 1: Programming fundamentals, logic and problem solving',
+            'Module 2: C/C++ or Java syntax, control flow and functions',
+            'Module 3: Python or PHP basics with practical exercises',
+            'Module 4: Object-oriented programming and reusable code',
+            'Module 5: Database basics, SQL and mini project integration',
+            'Module 6: Coding practice, debugging and interview preparation',
+        ], $common);
+    }
+
+    return array_merge([
+        'Course Syllabus: Full Stack Development',
+        'Module 1: HTML, CSS, responsive design and Bootstrap basics',
+        'Module 2: JavaScript fundamentals, DOM and interactive UI',
+        'Module 3: Frontend framework basics and component workflow',
+        'Module 4: Backend programming, APIs and authentication',
+        'Module 5: MySQL database design, CRUD and admin panels',
+        'Module 6: Git, hosting, deployment and project maintenance',
+        'Module 7: Full stack live project and portfolio preparation',
+    ], $common);
+}
+
 function dl_send_generated(string $title): void
 {
     $safe = substr(preg_replace('/[^\w\s&+.,-]/u', '', $title) ?: 'Talentteno', 0, 90);
-    $c = "BT\n/F1 22 Tf\n72 760 Td\n(" . dl_pdf_escape('Talentteno Institute') . ") Tj\n/F1 16 Tf\n0 -42 Td\n(" . dl_pdf_escape($safe) . ") Tj\n/F1 11 Tf\n0 -42 Td\n(Practical IT training with live projects, internship and placement support.) Tj\nET";
+    $lines = array_merge([
+        'Talentteno Institute',
+        $safe,
+        'Downloadable Course Syllabus',
+        '',
+    ], dl_syllabus_lines($safe), [
+        '',
+        'For current fees, duration and batch timing, contact Talentteno Institute.',
+    ]);
+    $c = "BT\n/F1 22 Tf\n72 770 Td\n";
+    foreach ($lines as $index => $line) {
+        $fontSize = $index === 0 ? 22 : ($index === 1 ? 16 : 11);
+        $leading = $index < 2 ? 28 : 18;
+        if ($index > 0) {
+            $c .= "0 -{$leading} Td\n";
+        }
+        $c .= "/F1 {$fontSize} Tf\n(" . dl_pdf_escape($line) . ") Tj\n";
+    }
+    $c .= "ET";
     $objs = [
         "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n",
         "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n",
@@ -156,9 +278,9 @@ function dl_send_generated(string $title): void
     $pdf .= "xref\n0 " . (count($objs)+1) . "\n0000000000 65535 f \n";
     for ($i = 1; $i <= count($objs); $i++) $pdf .= sprintf("%010d 00000 n \n", $offs[$i]);
     $pdf .= "trailer\n<< /Size " . (count($objs)+1) . " /Root 1 0 R >>\nstartxref\n$xref\n%%EOF";
-    $name = trim(preg_replace('/[^a-z0-9-]+/i', '-', strtolower($safe)), '-') ?: 'talentteno-brochure';
+    $name = trim(preg_replace('/[^a-z0-9-]+/i', '-', strtolower($safe)), '-') ?: 'talentteno-syllabus';
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+    header('Content-Disposition: inline; filename="' . $name . '-syllabus.pdf"');
     header('Content-Length: ' . strlen($pdf));
     echo $pdf; exit;
 }
@@ -194,7 +316,7 @@ if ($requestMethod === 'POST' && ($_POST['action'] ?? '') === 'download') {
             $fp = __DIR__ . '/uploads/brochures/' . basename((string)$course['brochure_file']);
             if (is_file($fp)) {
                 $db && $db->query("UPDATE courses SET download_count = download_count + 1 WHERE id=" . (int)$courseId);
-                $slug = trim(preg_replace('/[^a-z0-9-]+/i', '-', (string)($course['slug'] ?? '')), '-') ?: 'brochure';
+                $slug = trim(preg_replace('/[^a-z0-9-]+/i', '-', (string)($course['slug'] ?? '')), '-') ?: 'talentteno';
                 dl_send_file($fp, $slug);
             }
         }
@@ -204,7 +326,7 @@ if ($requestMethod === 'POST' && ($_POST['action'] ?? '') === 'download') {
 
 function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitle, array $form): void
 {
-    $message = "Degree: {$form['degree']}\nCollege: {$form['college']}\nYear: {$form['study_year']}\nBrochure: $courseTitle";
+    $message = "Degree: {$form['degree']}\nCollege: {$form['college']}\nYear: {$form['study_year']}\nSyllabus: $courseTitle";
     $type = 'download'; $status = 'new';
     $stmt = $db->prepare('INSERT INTO enquiries (name,email,phone,course_id,course_name,message,type,status) VALUES (?,?,?,?,?,?,?,?)');
     if (!$stmt) return;
@@ -220,8 +342,8 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php tt_render_seo([
-        'title'       => 'Download ' . $courseTitle . ' Brochure | Talentteno Institute',
-        'description' => 'Download the Talentteno course brochure for syllabus, batch timing, fees and placement details.',
+        'title'       => 'View ' . $courseTitle . ' Syllabus | Talentteno Institute',
+        'description' => 'View the Talentteno course syllabus with modules, batch timing, fees and placement details.',
         'canonical'   => tt_abs_url('download.php'),
         'robots'      => 'noindex, follow',
     ]); ?>
@@ -292,7 +414,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
             <div class="dl-card">
                 <div class="dl-card-head">
                     <div>
-                        <h2><i class="fa-solid fa-download" style="color:#0845b2"></i> Download Brochure</h2>
+                        <h2><i class="fa-solid fa-download" style="color:#0845b2"></i> View Syllabus</h2>
                         <p class="dl-course-name"><?= tt_h($courseTitle) ?></p>
                     </div>
                     <a class="dl-back" href="course.php" data-dl-back aria-label="Go back"><i class="fa-solid fa-arrow-left"></i></a>
@@ -359,7 +481,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
                     <div class="dl-form-actions">
                         <a class="dl-cancel" href="course.php"><i class="fa-solid fa-xmark"></i>&nbsp; Cancel</a>
                         <button type="submit" class="dl-submit" id="dlSubmit" disabled>
-                            <i class="fa-solid fa-download"></i> Download
+                            <i class="fa-solid fa-download"></i> View Syllabus
                         </button>
                     </div>
                 </form>
@@ -509,7 +631,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
         if(lastResponse){
             lastResponse.apiUrl = lastUrl;
         }
-        console.warn('Talentteno brochure API returned a non-JSON response.', {path, triedUrls});
+        console.warn('Talentteno syllabus API returned a non-JSON response.', {path, triedUrls});
         return lastResponse;
     }
 
@@ -679,7 +801,7 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
             return;
         }
         dlSubmit.disabled = true;
-        dlSubmit.textContent = 'Preparing Download...';
+        dlSubmit.textContent = 'Preparing Syllabus...';
         try {
             const response = await apiFetch('/brochure/download', {
                 method: 'POST',
@@ -698,29 +820,32 @@ function tt_save_download_enquiry(mysqli $db, ?int $courseId, string $courseTitl
             const contentType = response.headers.get('Content-Type') || '';
             if(!response.ok || contentType.toLowerCase().includes('application/json') || contentType.toLowerCase().includes('text/html')){
                 const data = await parseJson(response);
-                setMessage(otpVerifyMsg, false, data.message || 'Unable to download brochure. Please try again.');
+                setMessage(otpVerifyMsg, false, data.message || 'Unable to open syllabus. Please try again.');
                 showServerErrors(data.errors);
-                dlSubmit.textContent = 'Download Brochure';
+                dlSubmit.textContent = 'View Syllabus';
                 checkSubmit();
                 return;
             }
             const blob = await response.blob();
             const disposition = response.headers.get('Content-Disposition') || '';
             const match = disposition.match(/filename="?([^"]+)"?/i);
-            const filename = match ? match[1] : 'talentteno-brochure.pdf';
+            const filename = match ? match[1] : 'talentteno-syllabus.pdf';
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            URL.revokeObjectURL(url);
-            dlSubmit.textContent = 'Download Brochure';
+            const opened = window.open(url, '_blank', 'noopener');
+            if(!opened){
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }
+            window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+            dlSubmit.textContent = 'View Syllabus';
             checkSubmit();
         } catch(e){
             setMessage(otpVerifyMsg, false, 'Network error. Try again.');
-            dlSubmit.textContent = 'Download Brochure';
+            dlSubmit.textContent = 'View Syllabus';
             checkSubmit();
         }
     });

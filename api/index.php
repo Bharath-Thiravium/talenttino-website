@@ -233,13 +233,13 @@ function send_otp_with_php_mail(string $name, string $email, string $otp, string
     $fromEmail = fallback_from_email();
     $fromName = trim(envv('SMTP_FROM_NAME', envv('MAIL_FROM_NAME', 'Talentteno Institute')));
     $expires = (int)envv('OTP_EXPIRY_MINUTES', '10');
-    $subject = 'Your OTP for Talentteno Brochure Download';
+    $subject = 'Your OTP for Talentteno Syllabus Download';
     $body = implode("\n", [
         'Talentteno Institute',
         '',
         'Hi ' . ($name ?: 'Student') . ',',
         '',
-        'Your 6-digit OTP for ' . ($course ?: 'Talentteno Course Brochure') . ' is ' . $otp . '.',
+        'Your 6-digit OTP for ' . ($course ?: 'Talentteno Course Syllabus') . ' is ' . $otp . '.',
         'This OTP is valid for ' . $expires . ' minutes.',
         '',
         'Do not share this OTP with anyone.',
@@ -289,10 +289,10 @@ function send_otp_email(string $name, string $email, string $otp, string $course
         $mail->CharSet = 'UTF-8';
         $mail->setFrom($fromEmail, $fromName);
         $mail->addAddress($email);
-        $mail->Subject = 'Your OTP for Talentteno Brochure Download';
+        $mail->Subject = 'Your OTP for Talentteno Syllabus Download';
         $mail->isHTML(true);
         $safeName = htmlspecialchars($name ?: 'Student', ENT_QUOTES, 'UTF-8');
-        $safeCourse = htmlspecialchars($course ?: 'Talentteno Course Brochure', ENT_QUOTES, 'UTF-8');
+        $safeCourse = htmlspecialchars($course ?: 'Talentteno Course Syllabus', ENT_QUOTES, 'UTF-8');
         $mail->Body = '<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827">'
             . '<h2 style="margin:0 0 12px;color:#0845b2">Talentteno Institute</h2>'
             . '<p>Hi ' . $safeName . ',</p>'
@@ -397,10 +397,134 @@ function pdf_escape(string $value): string
     return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $value);
 }
 
+function syllabus_lines(string $title): array
+{
+    $text = strtolower($title);
+    $common = [
+        'Training Mode: Mentor-led classroom practice with lab tasks',
+        'Includes: Live projects, internship guidance, certification support',
+        'Career Support: Resume review, mock interview, placement assistance',
+    ];
+
+    if (str_contains($text, 'cyber')) {
+        return array_merge([
+            'Course Syllabus: Cyber Security',
+            'Module 1: Networking basics, OSI model, TCP/IP, ports and protocols',
+            'Module 2: Linux fundamentals, command line, file permissions',
+            'Module 3: Information security concepts, CIA triad, risk and threats',
+            'Module 4: Ethical hacking workflow and safe lab setup',
+            'Module 5: Reconnaissance, scanning, enumeration and reporting',
+            'Module 6: Web application security basics and OWASP concepts',
+            'Module 7: Firewall, endpoint security and defensive monitoring',
+            'Module 8: Practical security project and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'data') || str_contains($text, 'ai') || str_contains($text, 'machine learning')) {
+        return array_merge([
+            'Course Syllabus: Data Science and AI',
+            'Module 1: Python programming fundamentals for data work',
+            'Module 2: NumPy, Pandas, data cleaning and preprocessing',
+            'Module 3: Statistics, probability and business analytics basics',
+            'Module 4: Data visualization with charts and dashboards',
+            'Module 5: SQL, data extraction and reporting workflow',
+            'Module 6: Machine learning concepts and model building',
+            'Module 7: AI workflow, prompt basics and project implementation',
+            'Module 8: Capstone project, portfolio and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'digital') || str_contains($text, 'marketing')) {
+        return array_merge([
+            'Course Syllabus: Digital Marketing',
+            'Module 1: Digital marketing foundations and campaign planning',
+            'Module 2: SEO, keyword research and on-page optimization',
+            'Module 3: Google Ads, Meta Ads and paid campaign basics',
+            'Module 4: Social media strategy, content planning and creatives',
+            'Module 5: Email marketing, lead funnels and landing pages',
+            'Module 6: Analytics, conversion tracking and campaign reports',
+            'Module 7: Practical campaign project and portfolio preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'cloud') || str_contains($text, 'devops') || str_contains($text, 'aws')) {
+        return array_merge([
+            'Course Syllabus: Cloud Computing and DevOps',
+            'Module 1: Cloud fundamentals, hosting models and core services',
+            'Module 2: Linux server setup, SSH and deployment basics',
+            'Module 3: AWS or cloud service workflow and storage concepts',
+            'Module 4: Git, CI/CD basics and release workflow',
+            'Module 5: Docker fundamentals and containerized deployment',
+            'Module 6: Monitoring, backup and basic infrastructure security',
+            'Module 7: Cloud deployment project and interview preparation',
+        ], $common);
+    }
+    if (str_contains($text, 'ui') || str_contains($text, 'ux') || str_contains($text, 'design') || str_contains($text, 'graphic')) {
+        return array_merge([
+            'Course Syllabus: UI/UX and Design',
+            'Module 1: Design fundamentals, layout, color and typography',
+            'Module 2: User research, user flow and information architecture',
+            'Module 3: Wireframes, components and responsive screen planning',
+            'Module 4: Figma tools, prototyping and design systems',
+            'Module 5: Graphic design basics for banners and social creatives',
+            'Module 6: Portfolio case study and client presentation workflow',
+        ], $common);
+    }
+    if (str_contains($text, 'tally') || str_contains($text, 'account')) {
+        return array_merge([
+            'Course Syllabus: Tally and Accounting',
+            'Module 1: Accounting fundamentals and business entries',
+            'Module 2: Tally setup, company creation and ledger management',
+            'Module 3: GST billing, purchase, sales and inventory workflow',
+            'Module 4: Reports, balance sheet and business documentation',
+            'Module 5: Practical accounts project and office-ready workflow',
+        ], $common);
+    }
+    if (str_contains($text, 'program') || str_contains($text, 'python') || str_contains($text, 'java') || str_contains($text, 'c++') || str_contains($text, 'php')) {
+        return array_merge([
+            'Course Syllabus: Programming Languages',
+            'Module 1: Programming fundamentals, logic and problem solving',
+            'Module 2: C/C++ or Java syntax, control flow and functions',
+            'Module 3: Python or PHP basics with practical exercises',
+            'Module 4: Object-oriented programming and reusable code',
+            'Module 5: Database basics, SQL and mini project integration',
+            'Module 6: Coding practice, debugging and interview preparation',
+        ], $common);
+    }
+
+    return array_merge([
+        'Course Syllabus: Full Stack Development',
+        'Module 1: HTML, CSS, responsive design and Bootstrap basics',
+        'Module 2: JavaScript fundamentals, DOM and interactive UI',
+        'Module 3: Frontend framework basics and component workflow',
+        'Module 4: Backend programming, APIs and authentication',
+        'Module 5: MySQL database design, CRUD and admin panels',
+        'Module 6: Git, hosting, deployment and project maintenance',
+        'Module 7: Full stack live project and portfolio preparation',
+    ], $common);
+}
+
 function generated_pdf(string $title): string
 {
     $safe = substr(preg_replace('/[^\w\s&+.,-]/u', '', $title) ?: 'Talentteno', 0, 90);
-    $content = "BT\n/F1 22 Tf\n72 760 Td\n(" . pdf_escape('Talentteno Institute') . ") Tj\n/F1 16 Tf\n0 -42 Td\n(" . pdf_escape($safe) . ") Tj\n/F1 11 Tf\n0 -42 Td\n(Practical IT training with live projects, internship and placement support.) Tj\nET";
+    $lines = array_merge([
+        'Talentteno Institute',
+        $safe,
+        'Downloadable Course Syllabus',
+        '',
+    ], syllabus_lines($safe), [
+        '',
+        'For current fees, duration and batch timing, contact Talentteno Institute.',
+    ]);
+    $content = "BT\n/F1 22 Tf\n72 770 Td\n";
+    $lineIndex = 0;
+    foreach ($lines as $line) {
+        $fontSize = $lineIndex === 0 ? 22 : ($lineIndex === 1 ? 16 : 11);
+        $leading = $lineIndex < 2 ? 28 : 18;
+        if ($lineIndex > 0) {
+            $content .= "0 -{$leading} Td\n";
+        }
+        $content .= "/F1 {$fontSize} Tf\n(" . pdf_escape($line) . ") Tj\n";
+        $lineIndex++;
+    }
+    $content .= "ET";
     $objects = [
         "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n",
         "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n",
@@ -424,9 +548,9 @@ function generated_pdf(string $title): string
 
 function safe_download_name(array $course): string
 {
-    $name = strtolower((string)($course['slug'] ?? $course['title'] ?? 'talentteno-brochure'));
-    $name = trim(preg_replace('/[^a-z0-9-]+/', '-', $name) ?: 'talentteno-brochure', '-');
-    return ($name ?: 'talentteno-brochure') . '-brochure.pdf';
+    $name = strtolower((string)($course['slug'] ?? $course['title'] ?? 'talentteno-syllabus'));
+    $name = trim(preg_replace('/[^a-z0-9-]+/', '-', $name) ?: 'talentteno-syllabus', '-');
+    return ($name ?: 'talentteno-syllabus') . '-syllabus.pdf';
 }
 
 function handle_download(): void
@@ -485,14 +609,14 @@ function handle_download(): void
     $file = $brochure !== '' ? __DIR__ . '/../frontend/uploads/brochures/' . $brochure : '';
     if ($file !== '' && is_file($file)) {
         header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="' . safe_download_name($course) . '"');
+        header('Content-Disposition: inline; filename="' . safe_download_name($course) . '"');
         header('Content-Length: ' . filesize($file));
         readfile($file);
         exit;
     }
     $pdf = generated_pdf((string)$course['title']);
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="' . safe_download_name($course) . '"');
+    header('Content-Disposition: inline; filename="' . safe_download_name($course) . '"');
     header('Content-Length: ' . strlen($pdf));
     echo $pdf;
     exit;

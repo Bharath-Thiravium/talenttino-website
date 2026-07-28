@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS offers (
     full_description    TEXT,
     poster_image        VARCHAR(255) NOT NULL DEFAULT '',
     poster_alt          VARCHAR(255) NOT NULL DEFAULT '',
+    hero_image          VARCHAR(255) NOT NULL DEFAULT '',
+    hero_alt            VARCHAR(255) NOT NULL DEFAULT '',
     original_fee        DECIMAL(10,2) DEFAULT 0,
     offer_fee           DECIMAL(10,2) DEFAULT 0,
     discount_percentage DECIMAL(5,2) DEFAULT 0,

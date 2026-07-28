@@ -1060,7 +1060,7 @@ function tt_catalog_fallback_image(array $course): string
                     <div class="catalog-price"><?php if ($courseOriginalFeeValue > $courseFeeValue && $courseFeeValue > 0): ?><del><?= tt_money($courseOriginalFeeValue) ?></del><?php endif; ?><strong><?= htmlspecialchars($courseFeeLabel) ?></strong></div>
                     <div class="catalog-actions">
                         <a class="catalog-detail-btn" href="<?= tt_h($enquiryHref) ?>"><i class="fa-solid fa-message"></i> Enquiry</a>
-                        <a class="catalog-cta" href="<?= tt_h($downloadHref) ?>"><i class="fa-solid fa-download"></i> Download</a>
+                        <a class="catalog-cta" href="<?= tt_h($downloadHref) ?>"><i class="fa-solid fa-download"></i> Syllabus</a>
                     </div>
                 </article>
                 <?php endforeach; ?>
@@ -1077,7 +1077,7 @@ function tt_catalog_fallback_image(array $course): string
             <p class="course-detail-description"></p>
             <ul class="course-detail-highlights"></ul>
             <div class="course-detail-meta"><span class="course-detail-duration"></span><strong class="course-detail-fee"></strong></div>
-            <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php">Enquire Now</a><a class="btn btn-primary course-detail-download" href="contact.php" hidden><i class="fa-solid fa-download"></i> Brochure</a></div>
+            <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php">Enquire Now</a><a class="btn btn-primary course-detail-download" href="contact.php" hidden><i class="fa-solid fa-download"></i> View Syllabus</a></div>
         </div>
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>

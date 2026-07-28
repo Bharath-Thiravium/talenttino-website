@@ -1030,6 +1030,60 @@ function tt_offer_hero_image(array $offer): string
     return tt_offer_default_image(($offer['title'] ?? '') . ' ' . ($offer['course_name'] ?? '') . ' ' . ($offer['category'] ?? ''));
 }
 
+function tt_offer_slider_images(array $offers, int $limit = 5): array
+{
+    $limit = max(1, $limit);
+    $rankedOffers = $offers;
+    usort($rankedOffers, static function (array $a, array $b): int {
+        $homeCompare = (int)($b['show_on_home_page'] ?? 0) <=> (int)($a['show_on_home_page'] ?? 0);
+        if ($homeCompare !== 0) return $homeCompare;
+        $featuredCompare = (int)($b['is_featured'] ?? 0) <=> (int)($a['is_featured'] ?? 0);
+        if ($featuredCompare !== 0) return $featuredCompare;
+        $orderCompare = (int)($a['display_order'] ?? 0) <=> (int)($b['display_order'] ?? 0);
+        if ($orderCompare !== 0) return $orderCompare;
+        return (int)($b['id'] ?? 0) <=> (int)($a['id'] ?? 0);
+    });
+
+    $slides = [];
+    $seen = [];
+    foreach ($rankedOffers as $offer) {
+        $image = tt_offer_hero_image($offer);
+        if ($image === '' || isset($seen[$image])) {
+            continue;
+        }
+        $seen[$image] = true;
+        $slides[] = [
+            'image' => $image,
+            'mobile_image' => $image,
+            'title' => trim((string)($offer['title'] ?? 'Course Offer')),
+            'alt' => trim((string)($offer['hero_alt'] ?? '')) ?: (trim((string)($offer['poster_alt'] ?? '')) ?: trim((string)($offer['title'] ?? 'Talentteno course offer'))),
+        ];
+        if (count($slides) >= $limit) {
+            return $slides;
+        }
+    }
+
+    foreach (tt_home_slider_images() as $index => $slide) {
+        $image = tt_optimized_image_url($slide['image'] ?? '', 1400) ?: tt_content_image_url($slide['image'] ?? '');
+        if ($image === '' || isset($seen[$image])) {
+            continue;
+        }
+        $mobileImage = tt_optimized_image_url($slide['mobile_image'] ?? '', 900) ?: $image;
+        $seen[$image] = true;
+        $slides[] = [
+            'image' => $image,
+            'mobile_image' => $mobileImage,
+            'title' => trim((string)($slide['title'] ?? '')),
+            'alt' => 'Talentteno course offer image ' . ($index + 1),
+        ];
+        if (count($slides) >= $limit) {
+            break;
+        }
+    }
+
+    return $slides;
+}
+
 function tt_offer_lines(?string $text, int $limit = 5): array
 {
     $lines = preg_split('/\r\n|\r|\n/', trim((string)$text)) ?: [];

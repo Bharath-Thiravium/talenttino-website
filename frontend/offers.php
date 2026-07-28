@@ -4,11 +4,10 @@ require_once __DIR__ . '/includes/site-data.php';
 $settings = tt_settings();
 $offers = tt_offers();
 $featuredOffer = $offers[0] ?? [];
+$offerHeroSlides = tt_offer_slider_images($offers, 5);
 $whatsappUrl = tt_whatsapp_url($settings);
 $phone1Href = tt_phone_href($settings['phone1'] ?? '');
-$featuredImage = $featuredOffer ? tt_offer_hero_image($featuredOffer) : 'assets/images/home.webp';
-$featuredImageUrl = tt_asset_url($featuredImage);
-$featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)($featuredOffer['poster_alt'] ?? ''));
+$featuredImage = $offerHeroSlides[0]['image'] ?? ($featuredOffer ? tt_offer_hero_image($featuredOffer) : 'assets/images/home.webp');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,13 +49,50 @@ $featuredAlt = trim((string)($featuredOffer['hero_alt'] ?? '')) ?: trim((string)
         @media(max-width:980px){.offers-page .offer-card{min-height:650px!important;grid-template-rows:210px minmax(0,1fr)!important}.offers-page .offer-media{height:210px!important}}
         @media(max-width:640px){.offers-page .offer-card{min-height:0!important}.offers-page .offer-body{grid-template-rows:auto!important}.offers-page .offer-card h3{min-height:0!important}}
     </style>
+    <style>
+        .offers-page .offers-hero-slider{position:absolute;inset:0;z-index:0;width:100%;height:100%;overflow:hidden;background:#07142d}
+        .offers-page .offers-hero-slider .slider-track{height:100%;display:flex;transition:transform .65s ease;will-change:transform}
+        .offers-page .offers-hero-slider .slider-slide{position:relative;flex:0 0 100%;min-width:100%;height:100%;overflow:hidden;background:#07142d}
+        .offers-page .offers-hero-slider .slider-slide img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:saturate(1.05)}
+        .offers-page .offers-hero-slider .slider-prev,.offers-page .offers-hero-slider .slider-next{position:absolute;top:50%;z-index:4;width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:#fff;background:rgba(15,23,42,.42);backdrop-filter:blur(10px);transform:translateY(-50%);cursor:pointer}
+        .offers-page .offers-hero-slider .slider-prev{left:18px}.offers-page .offers-hero-slider .slider-next{right:18px}
+        .offers-page .offers-hero-slider .slider-dots{position:absolute;left:50%;bottom:28px;z-index:4;display:flex;gap:9px;transform:translateX(-50%)}
+        .offers-page .offers-hero-slider .slider-dot{width:9px;height:9px;border:0;border-radius:999px;background:rgba(255,255,255,.48);cursor:pointer}
+        .offers-page .offers-hero-slider .slider-dot.is-active{width:28px;background:#fff}
+        @media(max-width:640px){.offers-page .offers-hero-slider .slider-prev,.offers-page .offers-hero-slider .slider-next{display:none}.offers-page .offers-hero-slider .slider-dots{bottom:18px}.offers-page .offers-hero-slider .slider-slide img{object-position:center top}}
+    </style>
 </head>
 <body class="static-site offers-page">
 <div class="site-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
         <section class="offers-hero">
-            <img src="<?= tt_h($featuredImageUrl) ?>" alt="<?= tt_h($featuredAlt) ?>" fetchpriority="high" decoding="async" width="1600" height="900">
+            <div class="offers-hero-slider" data-hero-slider aria-label="Current offers image slider">
+                <div class="slider-track" data-slider-track>
+                    <?php foreach ($offerHeroSlides as $index => $slide): ?>
+                    <?php
+                        $slideImage = tt_asset_url($slide['image'] ?? '');
+                        $slideMobile = tt_asset_url($slide['mobile_image'] ?? ($slide['image'] ?? ''));
+                        $slideAlt = trim((string)($slide['alt'] ?? 'Talentteno course offer'));
+                    ?>
+                    <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>">
+                        <picture>
+                            <source media="(max-width: 640px)" srcset="<?= tt_h($slideMobile) ?>">
+                            <img src="<?= tt_h($slideImage) ?>" alt="<?= tt_h($slideAlt) ?>" loading="<?= $index === 0 ? 'eager' : 'lazy' ?>" fetchpriority="<?= $index === 0 ? 'high' : 'auto' ?>" decoding="async" width="1600" height="900">
+                        </picture>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php if (count($offerHeroSlides) > 1): ?>
+                <button class="slider-prev" type="button" data-slider-prev aria-label="Previous offer image"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="slider-next" type="button" data-slider-next aria-label="Next offer image"><i class="fa-solid fa-chevron-right"></i></button>
+                <div class="slider-dots" data-slider-dots aria-label="Offer image navigation">
+                    <?php foreach ($offerHeroSlides as $i => $_): ?>
+                    <button class="slider-dot<?= $i === 0 ? ' is-active' : '' ?>" type="button" data-dot="<?= $i ?>" aria-label="Go to offer image <?= $i + 1 ?>" aria-pressed="<?= $i === 0 ? 'true' : 'false' ?>"></button>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
             <div class="site-container reveal">
                 <span class="offers-kicker"><i class="fa-solid fa-tags"></i> Current Course Offers</span>
                 <h1>Best training offers with practical learning support.</h1>

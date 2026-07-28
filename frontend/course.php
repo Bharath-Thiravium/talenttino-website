@@ -790,7 +790,7 @@ $courseHeroImage = tt_optimized_image_url('assets/images/our trending.png', 1536
                     <div class="course-footer">
                         <div class="course-actions">
                             <a class="btn btn-secondary course-enquiry-btn" href="<?= tt_h($enquiryHref) ?>"><i class="fa-solid fa-message"></i> Enquiry</a>
-                            <a class="btn btn-primary course-download-btn" href="<?= tt_h($downloadHref) ?>"><i class="fa-solid fa-download"></i> Download</a>
+                            <a class="btn btn-primary course-download-btn" href="<?= tt_h($downloadHref) ?>"><i class="fa-solid fa-download"></i> Syllabus</a>
                         </div>
                     </div>
                 </article>
@@ -808,7 +808,7 @@ $courseHeroImage = tt_optimized_image_url('assets/images/our trending.png', 1536
             <p class="course-detail-description"></p>
             <ul class="course-detail-highlights"></ul>
             <div class="course-detail-meta"><span class="course-detail-duration"></span><strong class="course-detail-fee"></strong></div>
-            <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php"><i class="fa-solid fa-message"></i> Enquire Now</a><a class="btn btn-primary course-detail-download" href="contact.php"><i class="fa-solid fa-download"></i> Download Brochure</a></div>
+            <div class="course-detail-actions"><a class="btn btn-secondary course-detail-enquire" href="contact.php"><i class="fa-solid fa-message"></i> Enquire Now</a><a class="btn btn-primary course-detail-download" href="contact.php"><i class="fa-solid fa-download"></i> View Syllabus</a></div>
         </div>
     </div>
     <?php include __DIR__ . "/includes/footer.php"; ?>
