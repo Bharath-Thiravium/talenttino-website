@@ -18,6 +18,39 @@ function tt_nav_parent_active(array $pages): string {
 ?>
 <link rel="preload" as="image" href="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?>" imagesrcset="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w64.webp')) ?> 64w, <?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?> 128w" imagesizes="54px" fetchpriority="high">
 <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
+<style>
+    html,
+    html body {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    html body .site-shell {
+        padding-top: var(--nav-height, 84px) !important;
+    }
+
+    html body .site-header#site-header,
+    html body.home-page .site-header#site-header,
+    html body.static-site .site-header#site-header,
+    html body.catalog-body .site-header#site-header,
+    html body.course-list-page .site-header#site-header {
+        --nav-offset: 0px !important;
+        top: 0 !important;
+        inset-block-start: 0 !important;
+    }
+
+    @media (max-width: 1100px) {
+        html body .site-shell {
+            padding-top: var(--nav-height, 72px) !important;
+        }
+
+        html body .site-header#site-header .site-nav {
+            top: calc(var(--nav-height) + 8px) !important;
+            height: calc(100dvh - var(--nav-height) - 8px) !important;
+            max-height: calc(100dvh - var(--nav-height) - 8px) !important;
+        }
+    }
+</style>
 <!-- TT_DEPLOY_VERSION: <?= tt_h(tt_deploy_version()) ?> -->
 <header class="site-header" id="site-header">
     <div class="nav-wrap">

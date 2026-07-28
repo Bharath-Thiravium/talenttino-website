@@ -25,6 +25,31 @@ $isAjaxUpload = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
     && isset($_POST['upload_media'])
     && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) === 'fetch';
 
+function tt_media_legacy_upload_dirs(string $currentDir): array
+{
+    $projectRoot = realpath(__DIR__ . '/../..');
+    if (!$projectRoot) {
+        return [];
+    }
+
+    $projectName = basename($projectRoot);
+    $legacyName = rtrim($projectName, '_');
+    if ($legacyName === '' || $legacyName === $projectName) {
+        return [];
+    }
+
+    $legacyRoot = dirname($projectRoot) . DIRECTORY_SEPARATOR . $legacyName;
+    $legacyDir = $legacyRoot . DIRECTORY_SEPARATOR . 'frontend' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . basename(rtrim($currentDir, DIRECTORY_SEPARATOR)) . DIRECTORY_SEPARATOR;
+    $legacyReal = realpath($legacyDir);
+    $currentReal = realpath($currentDir) ?: $currentDir;
+
+    if (!$legacyReal || !is_dir($legacyReal) || $legacyReal === $currentReal) {
+        return [];
+    }
+
+    return [$legacyReal . DIRECTORY_SEPARATOR];
+}
+
 function tt_media_ensure_dir(string $dir): bool
 {
     return is_dir($dir) || mkdir($dir, 0775, true);
@@ -304,6 +329,69 @@ function tt_media_collect_files(string $dir, string $adminUrl, string $frontendP
     ];
 }
 
+function tt_media_count_missing_legacy_files(array $legacyDirs, string $targetDir, bool $galleryOnly = false): int
+{
+    $count = 0;
+    foreach ($legacyDirs as $legacyDir) {
+        foreach (glob(rtrim($legacyDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') ?: [] as $path) {
+            if (!is_file($path) || str_starts_with(basename($path), '.')) {
+                continue;
+            }
+
+            $file = basename($path);
+            if (is_file(rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file)) {
+                continue;
+            }
+
+            $mime = tt_media_extension_mime($file) ?: (mime_content_type($path) ?: '');
+            if ($mime === '' || ($galleryOnly && !str_starts_with($mime, 'image/') && !str_starts_with($mime, 'video/'))) {
+                continue;
+            }
+
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
+function tt_media_import_legacy_files(array $legacyDirs, string $targetDir, bool $galleryOnly = false): array
+{
+    tt_media_ensure_dir($targetDir);
+    $imported = 0;
+    $skipped = 0;
+
+    foreach ($legacyDirs as $legacyDir) {
+        foreach (glob(rtrim($legacyDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') ?: [] as $source) {
+            if (!is_file($source) || str_starts_with(basename($source), '.')) {
+                continue;
+            }
+
+            $file = basename($source);
+            $mime = tt_media_extension_mime($file) ?: (mime_content_type($source) ?: '');
+            if ($mime === '' || ($galleryOnly && !str_starts_with($mime, 'image/') && !str_starts_with($mime, 'video/'))) {
+                $skipped++;
+                continue;
+            }
+
+            $target = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+            if (is_file($target)) {
+                $skipped++;
+                continue;
+            }
+
+            if (@copy($source, $target)) {
+                @touch($target, filemtime($source) ?: time());
+                $imported++;
+            } else {
+                $skipped++;
+            }
+        }
+    }
+
+    return ['imported' => $imported, 'skipped' => $skipped];
+}
+
 function tt_media_render_pagination(array $pagination, string $pageKey): void
 {
     if (($pagination['total_pages'] ?? 1) <= 1) {
@@ -322,6 +410,32 @@ function tt_media_render_pagination(array $pagination, string $pageKey): void
 }
 
 $mediaPerPage = 24;
+$legacyGalleryDirs = tt_media_legacy_upload_dirs($galleryDir);
+$legacyMediaDirs = tt_media_legacy_upload_dirs($mediaDir);
+$legacyGalleryCount = tt_media_count_missing_legacy_files($legacyGalleryDirs, $galleryDir, true);
+$legacyMediaCount = tt_media_count_missing_legacy_files($legacyMediaDirs, $mediaDir, false);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_legacy_media'])) {
+    $importGallery = tt_media_import_legacy_files($legacyGalleryDirs, $galleryDir, true);
+    $importMedia = tt_media_import_legacy_files($legacyMediaDirs, $mediaDir, false);
+    $imported = $importGallery['imported'] + $importMedia['imported'];
+    $skipped = $importGallery['skipped'] + $importMedia['skipped'];
+
+    if ($imported > 0) {
+        $success = $imported . ' old upload file' . ($imported === 1 ? '' : 's') . ' imported into the current live folder.';
+        if ($skipped > 0) {
+            $success .= ' ' . $skipped . ' existing/unsupported file' . ($skipped === 1 ? '' : 's') . ' skipped.';
+        }
+    } else {
+        $error = $skipped > 0
+            ? 'No new files imported. Existing/unsupported files were skipped.'
+            : 'No old upload files found to import.';
+    }
+
+    $legacyGalleryCount = tt_media_count_missing_legacy_files($legacyGalleryDirs, $galleryDir, true);
+    $legacyMediaCount = tt_media_count_missing_legacy_files($legacyMediaDirs, $mediaDir, false);
+}
+
 $galleryLibrary = tt_media_collect_files($galleryDir, $galleryUrl, $galleryFrontendPrefix, true, tt_media_page_number('gallery_page'), $mediaPerPage);
 $mediaLibrary = tt_media_collect_files($mediaDir, $mediaUrl, $mediaFrontendPrefix, false, tt_media_page_number('media_page'), $mediaPerPage);
 $galleryFiles = $galleryLibrary['items'];
@@ -352,6 +466,23 @@ $files = $mediaLibrary['items'];
     <div class="admin-content">
         <?php if ($success): ?><div class="alert alert-success"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?></div><?php endif; ?>
         <?php if ($error): ?><div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div><?php endif; ?>
+        <?php if (($legacyGalleryCount + $legacyMediaCount) > 0): ?>
+        <div class="alert alert-warning" style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+            <span>
+                <i class="fas fa-triangle-exclamation"></i>
+                Old upload folder detected with
+                <strong><?= (int)$legacyGalleryCount ?></strong> gallery item<?= $legacyGalleryCount === 1 ? '' : 's' ?> and
+                <strong><?= (int)$legacyMediaCount ?></strong> media file<?= $legacyMediaCount === 1 ? '' : 's' ?>.
+                This usually happens when live path changed from <code>ergon</code> to <code>ergon_</code>.
+            </span>
+            <form method="POST" style="margin:0;">
+                <input type="hidden" name="import_legacy_media" value="1">
+                <button class="btn-save" type="submit" onclick="return confirm('Import missing old upload files into the current live folder?');">
+                    <i class="fas fa-file-import"></i> Import Old Uploads
+                </button>
+            </form>
+        </div>
+        <?php endif; ?>
 
         <div class="media-upload-options">
             <div class="admin-card media-upload-intro">
@@ -607,12 +738,21 @@ document.querySelector('.media-upload-form').addEventListener('submit', async ev
         formData.append('media_file', file, file.name);
 
         try {
-            const response = await fetch('media.php', {
+            const response = await fetch(window.location.href, {
                 method: 'POST',
                 body: formData,
                 credentials: 'same-origin',
                 headers: { 'X-Requested-With': 'fetch' }
             });
+            if (response.redirected || response.url.includes('login.php')) {
+                window.location.href = response.url || 'login.php';
+                return;
+            }
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                window.location.href = 'login.php';
+                return;
+            }
             const result = await response.json();
             if (!response.ok || !result.ok) {
                 failed.push(result.error || `${file.name}: Upload failed.`);
@@ -634,7 +774,7 @@ document.querySelector('.media-upload-form').addEventListener('submit', async ev
     }
 
     mediaFileCount.textContent = `${uploaded} file${uploaded === 1 ? '' : 's'} uploaded. Refreshing...`;
-    window.location.href = 'media.php';
+    window.location.href = window.location.pathname;
 });
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && mediaUploadModal.classList.contains('is-open')) {
