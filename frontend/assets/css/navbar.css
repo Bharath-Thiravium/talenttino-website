@@ -636,3 +636,38 @@ html body .site-header#site-header .brand-mark.logo-mark img {
         display: inline-flex !important;
     }
 }
+
+/* Keep the fixed header flush with the viewport top. */
+html body .site-shell {
+    padding-top: var(--nav-height, 84px) !important;
+}
+
+html body .site-header#site-header,
+html body.home-page .site-header#site-header,
+html body.static-site .site-header#site-header,
+html body.catalog-body .site-header#site-header,
+html body.course-list-page .site-header#site-header {
+    --nav-offset: 0px !important;
+    top: 0 !important;
+}
+
+@media (max-width: 1100px) {
+    html body .site-shell {
+        padding-top: var(--nav-height, 72px) !important;
+    }
+
+    html body .site-header#site-header,
+    html body.home-page .site-header#site-header,
+    html body.static-site .site-header#site-header,
+    html body.catalog-body .site-header#site-header,
+    html body.course-list-page .site-header#site-header {
+        --nav-offset: 0px !important;
+        top: 0 !important;
+    }
+
+    html body .site-header#site-header .site-nav {
+        top: calc(var(--nav-height) + 8px) !important;
+        height: calc(100dvh - var(--nav-height) - 8px) !important;
+        max-height: calc(100dvh - var(--nav-height) - 8px) !important;
+    }
+}

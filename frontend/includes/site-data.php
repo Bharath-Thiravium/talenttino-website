@@ -27,20 +27,27 @@ function tt_h(?string $value): string
 
 function tt_asset_url(string $relativePath, string $fallbackVersion = '20260727'): string
 {
+    static $cache = [];
+
     $relativePath = trim($relativePath);
     if ($relativePath === '') {
         return '';
     }
 
+    $cacheKey = $relativePath . '|' . $fallbackVersion;
+    if (isset($cache[$cacheKey])) {
+        return $cache[$cacheKey];
+    }
+
     if (preg_match('#^(?:https?:)?//#i', $relativePath) || str_starts_with($relativePath, 'data:')) {
-        return $relativePath;
+        return $cache[$cacheKey] = $relativePath;
     }
 
     $parts = parse_url($relativePath);
     $path = isset($parts['path']) ? str_replace('\\', '/', (string)$parts['path']) : '';
     $path = ltrim($path, '/');
     if ($path === '' || str_contains($path, '..')) {
-        return $relativePath;
+        return $cache[$cacheKey] = $relativePath;
     }
 
     $fullPath = realpath(__DIR__ . '/../' . $path);
@@ -63,7 +70,7 @@ function tt_asset_url(string $relativePath, string $fallbackVersion = '20260727'
         $url .= '#' . rawurlencode((string)$parts['fragment']);
     }
 
-    return $url;
+    return $cache[$cacheKey] = $url;
 }
 
 function tt_safe_public_href(?string $href, string $fallback = 'contact.php'): string
@@ -189,6 +196,12 @@ function tt_seo_url(string $url): string
 
 function tt_fetch_all(string $sql): array
 {
+    static $cache = [];
+
+    if (isset($cache[$sql])) {
+        return $cache[$sql];
+    }
+
     $db = tt_db();
     if (!$db) {
         return [];
@@ -200,7 +213,7 @@ function tt_fetch_all(string $sql): array
         return [];
     }
 
-    return $result->fetch_all(MYSQLI_ASSOC);
+    return $cache[$sql] = $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function tt_fetch_one(string $sql): ?array
@@ -211,6 +224,11 @@ function tt_fetch_one(string $sql): ?array
 
 function tt_settings(): array
 {
+    static $settingsCache = null;
+    if ($settingsCache !== null) {
+        return $settingsCache;
+    }
+
     $defaults = [
         'site_name' => 'Talentteno Institute',
         'tagline' => 'The Future of Your IT Career Starts Here',
@@ -263,7 +281,7 @@ function tt_settings(): array
 
     $settings['instagram_url'] = 'https://www.instagram.com/talentteno__/';
 
-    return $settings;
+    return $settingsCache = $settings;
 }
 
 function tt_social_url(?string $value, string $network): string
@@ -651,13 +669,19 @@ function tt_content_items(string $table, int $limit = 0): array
 
 function tt_content_image_url(?string $image): string
 {
+    static $cache = [];
+
     $image = trim((string)$image);
+    if (isset($cache[$image])) {
+        return $cache[$image];
+    }
+
     if ($image === '') {
         return '';
     }
 
     if (preg_match('/^https?:\/\//i', $image)) {
-        return $image;
+        return $cache[$image] = $image;
     }
 
     $image = ltrim($image, '/');
@@ -682,30 +706,37 @@ function tt_content_image_url(?string $image): string
         }
     }
 
-    return '';
+    return $cache[$image] = '';
 }
 
 function tt_optimized_image_url(?string $image, int $preferredWidth = 800): string
 {
+    static $cache = [];
+
+    $cacheKey = trim((string)$image) . '|' . $preferredWidth;
+    if (isset($cache[$cacheKey])) {
+        return $cache[$cacheKey];
+    }
+
     $resolved = tt_content_image_url($image);
     if ($resolved === '' || preg_match('/^https?:\/\//i', $resolved)) {
-        return $resolved;
+        return $cache[$cacheKey] = $resolved;
     }
 
     $path = (string)(parse_url($resolved, PHP_URL_PATH) ?: $resolved);
     $path = ltrim(rawurldecode($path), '/');
     if ($path === '' || str_contains($path, '..')) {
-        return $resolved;
+        return $cache[$cacheKey] = $resolved;
     }
 
     if (str_starts_with($path, 'uploads/optimized/') || str_starts_with($path, 'assets/images/optimized/')) {
-        return $resolved;
+        return $cache[$cacheKey] = $resolved;
     }
 
     $base = pathinfo(basename($path), PATHINFO_FILENAME);
     $base = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $base), '-'));
     if ($base === '') {
-        return $resolved;
+        return $cache[$cacheKey] = $resolved;
     }
 
     $widths = array_values(array_unique([
@@ -733,16 +764,16 @@ function tt_optimized_image_url(?string $image, int $preferredWidth = 800): stri
 
     foreach ($candidates as $candidate) {
         if (is_file(__DIR__ . '/../' . $candidate)) {
-            return $candidate;
+            return $cache[$cacheKey] = $candidate;
         }
     }
 
     $generated = 'uploads/optimized/' . $base . '-w' . max(1, $preferredWidth) . '.webp';
     if (tt_generate_optimized_image($path, $generated, $preferredWidth)) {
-        return $generated;
+        return $cache[$cacheKey] = $generated;
     }
 
-    return $resolved;
+    return $cache[$cacheKey] = $resolved;
 }
 
 function tt_optimized_image_srcset(?string $image, array $widths = [400, 800, 1200]): string

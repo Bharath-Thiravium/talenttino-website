@@ -17,7 +17,7 @@ function tt_nav_parent_active(array $pages): string {
 }
 ?>
 <link rel="preload" as="image" href="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?>" imagesrcset="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w64.webp')) ?> 64w, <?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?> 128w" imagesizes="54px" fetchpriority="high">
-<link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.css')) ?>">
+<link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
 <!-- TT_DEPLOY_VERSION: <?= tt_h(tt_deploy_version()) ?> -->
 <header class="site-header" id="site-header">
     <div class="nav-wrap">
