@@ -16,7 +16,7 @@ function tt_nav_parent_active(array $pages): string {
     return in_array($_tt_active, $pages, true) ? ' active' : '';
 }
 ?>
-<link rel="preload" as="image" href="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?>" imagesrcset="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w64.webp')) ?> 64w, <?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?> 128w" imagesizes="54px" fetchpriority="high">
+<link rel="preload" as="image" href="<?= tt_h(tt_asset_url('assets/images/logot-transparent.png')) ?>" fetchpriority="high">
 <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
 <style>
     html,
@@ -76,13 +76,74 @@ function tt_nav_parent_active(array $pages): string {
             background: linear-gradient(135deg, #2563eb 0, #c026d3 100%) !important;
         }
     }
+
+    html body .site-header#site-header .brand {
+        grid-template-columns: 68px minmax(0, 1fr) !important;
+        column-gap: 4px !important;
+    }
+
+    html body .site-header#site-header .brand-mark.logo-mark,
+    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark {
+        width: 68px !important;
+        height: 68px !important;
+        min-width: 68px !important;
+        max-width: 68px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        clip-path: none !important;
+    }
+
+    html body .site-header#site-header .brand-mark.logo-mark img,
+    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
+        width: 68px !important;
+        height: 68px !important;
+        max-width: none !important;
+        object-fit: contain !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    @media (max-width: 1100px) {
+        html body .site-header#site-header .brand {
+            grid-template-columns: 58px minmax(0, 1fr) !important;
+            column-gap: 2px !important;
+        }
+
+        html body .site-header#site-header .brand-mark.logo-mark,
+        html body .site-header#site-header.is-scrolled .brand-mark.logo-mark,
+        html body .site-header#site-header .brand-mark.logo-mark img,
+        html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
+            width: 58px !important;
+            height: 58px !important;
+            min-width: 58px !important;
+            max-width: none !important;
+        }
+    }
+
+    html body .service-modal-brand .smo-logo,
+    html body .service-modal-brand .smo-logo img {
+        width: 58px !important;
+        height: 58px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        object-fit: contain !important;
+    }
 </style>
 <!-- TT_DEPLOY_VERSION: <?= tt_h(tt_deploy_version()) ?> -->
 <header class="site-header" id="site-header">
     <div class="nav-wrap">
         <a class="brand" href="index.php" aria-label="Talentteno Institute home">
             <span class="brand-mark logo-mark">
-                <img src="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?>" srcset="<?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w64.webp')) ?> 64w, <?= tt_h(tt_asset_url('uploads/optimized/logot-transparent-w128.webp')) ?> 128w" sizes="54px" alt="Talentteno Institute logo" width="48" height="48" decoding="async" fetchpriority="high">
+                <img src="<?= tt_h(tt_asset_url('assets/images/logot-transparent.png')) ?>" alt="Talentteno Institute logo" width="68" height="68" decoding="async" fetchpriority="high">
             </span>
             <span class="brand-copy">
                 <span class="brand-name">Talentteno Institute</span>

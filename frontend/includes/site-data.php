@@ -425,9 +425,11 @@ function tt_render_seo(array $page = []): void
     $description = tt_plain_text((string)($page['description'] ?? $settings['seo_description'] ?? $settings['footer_description']), 170);
     $keywords = trim((string)($page['keywords'] ?? $settings['seo_keywords'] ?? ''));
     $canonical = tt_seo_url((string)($page['canonical'] ?? basename($_SERVER['SCRIPT_NAME'] ?? 'index.php')));
-    $defaultLogo = 'uploads/optimized/logot-transparent-w128.webp';
+    $defaultLogo = 'assets/images/logot-transparent.png';
     $pageImage = (string)($page['image'] ?? $defaultLogo);
-    $image = tt_seo_url(tt_optimized_image_url($pageImage, 1200) ?: $pageImage);
+    $image = $pageImage === $defaultLogo
+        ? tt_seo_url(tt_asset_url($defaultLogo))
+        : tt_seo_url(tt_optimized_image_url($pageImage, 1200) ?: $pageImage);
     $type = $page['type'] ?? 'website';
     $robots = $page['robots'] ?? 'index, follow, max-image-preview:large';
     $company = tt_company_profile($settings);
@@ -541,7 +543,7 @@ function tt_render_seo(array $page = []): void
     }
     echo '    <meta name="robots" content="' . tt_h($robots) . '">' . PHP_EOL;
     echo '    <meta name="theme-color" content="#11143d">' . PHP_EOL;
-    echo '    <link rel="icon" type="image/webp" href="' . tt_h(tt_abs_url(tt_asset_url($defaultLogo))) . '">' . PHP_EOL;
+    echo '    <link rel="icon" type="image/png" href="' . tt_h(tt_abs_url(tt_asset_url($defaultLogo))) . '">' . PHP_EOL;
     echo '    <link rel="apple-touch-icon" href="' . tt_h(tt_abs_url(tt_asset_url($defaultLogo))) . '">' . PHP_EOL;
     echo '    <link rel="canonical" href="' . tt_h($canonical) . '">' . PHP_EOL;
     echo '    <link rel="alternate" hreflang="en-IN" href="' . tt_h($canonical) . '">' . PHP_EOL;

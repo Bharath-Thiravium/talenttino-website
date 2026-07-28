@@ -15,7 +15,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 /* Sidebar */
 .admin-sidebar { width: var(--sidebar-w); background: #0F172A; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; overflow-y: auto; }
 .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.sidebar-logo img { width: 42px; height: 42px; object-fit: contain; padding: 4px; border-radius: 10px; background: white; }
+.sidebar-logo img { width: 56px; height: 56px; object-fit: contain; padding: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .sidebar-name { display: block; color: white; font-weight: 700; font-size: 16px; line-height: 1; }
 .sidebar-role { display: block; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 3px; }
 .sidebar-nav { padding: 16px 0; flex: 1; }
@@ -283,7 +283,7 @@ body.modal-open { overflow: hidden; }
         overflow: visible;
     }
     .sidebar-logo { gap: 10px; padding: 12px 14px; }
-    .sidebar-logo img { width: 36px; height: 36px; border-radius: 9px; }
+    .sidebar-logo img { width: 48px; height: 48px; border-radius: 0; background: transparent; }
     .sidebar-name { font-size: 14px; }
     .sidebar-role { font-size: 10px; }
     .sidebar-nav {

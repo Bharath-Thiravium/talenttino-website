@@ -46,6 +46,74 @@ foreach ($contactCourses as $course) {
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
+    <style>
+        .contact-page .contact-grid{align-items:stretch}
+        .contact-page .contact-card{
+            position:relative!important;
+            overflow:hidden!important;
+            border:0!important;
+            border-top:0!important;
+            border-radius:18px!important;
+            background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(247,251,255,.92))!important;
+            box-shadow:0 24px 70px rgba(15,23,42,.10),inset 0 1px 0 rgba(255,255,255,.9)!important;
+            transform:translateY(0)!important;
+            transition:transform .34s cubic-bezier(.2,.8,.2,1),box-shadow .34s ease,background .34s ease!important;
+        }
+        .contact-page .contact-card::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            border-radius:inherit;
+            background:radial-gradient(circle at var(--pointer-x,18%) var(--pointer-y,12%),rgba(37,99,235,.16),transparent 34%),
+                       linear-gradient(135deg,rgba(37,99,235,.10),rgba(192,38,211,.08));
+            opacity:0;
+            transition:opacity .34s ease;
+            pointer-events:none;
+        }
+        .contact-page .contact-card::after{
+            content:"";
+            position:absolute;
+            left:22px;
+            right:22px;
+            bottom:0;
+            height:3px;
+            border-radius:999px 999px 0 0;
+            background:linear-gradient(90deg,#2563eb,#06b6d4,#c026d3);
+            transform:scaleX(.18);
+            transform-origin:left center;
+            opacity:.72;
+            transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .3s ease;
+        }
+        .contact-page .contact-card:hover{
+            transform:translateY(-10px)!important;
+            background:#fff!important;
+            box-shadow:0 34px 90px rgba(15,23,42,.16),0 14px 34px rgba(37,99,235,.10)!important;
+        }
+        .contact-page .contact-card:hover::before{opacity:1}
+        .contact-page .contact-card:hover::after{transform:scaleX(1);opacity:1}
+        .contact-page .contact-card>i{
+            position:relative;
+            z-index:1;
+            border-radius:18px!important;
+            box-shadow:0 16px 32px rgba(37,99,235,.18)!important;
+            transition:transform .34s cubic-bezier(.2,.8,.2,1),box-shadow .34s ease!important;
+        }
+        .contact-page .contact-card:hover>i{
+            transform:translateY(-3px) rotate(-6deg) scale(1.06)!important;
+            box-shadow:0 20px 42px rgba(124,58,237,.26)!important;
+        }
+        .contact-page .contact-card h3,
+        .contact-page .contact-card p,
+        .contact-page .contact-card span{position:relative;z-index:1}
+        @media(prefers-reduced-motion:reduce){
+            .contact-page .contact-card,
+            .contact-page .contact-card::before,
+            .contact-page .contact-card::after,
+            .contact-page .contact-card>i{transition:none!important}
+            .contact-page .contact-card:hover,
+            .contact-page .contact-card:hover>i{transform:none!important}
+        }
+    </style>
 </head>
 <body class="static-site contact-page">
 <div class="site-shell">
