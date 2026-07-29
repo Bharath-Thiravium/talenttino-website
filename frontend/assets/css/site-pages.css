@@ -57189,3 +57189,81 @@ html body .site-header#site-header .site-nav {
         max-width: 58px !important;
     }
 }
+
+
+/* Absolute final page-height guard: all pages must fill and scroll after refresh. */
+html,
+html body {
+    width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+html body .site-shell,
+html body.home-page .site-shell,
+html body.static-site .site-shell,
+html body.catalog-body .site-shell,
+html body.course-list-page .site-shell {
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-top: var(--nav-height, 84px) !important;
+}
+
+@media (max-width: 1100px) {
+    html body .site-shell,
+    html body.home-page .site-shell,
+    html body.static-site .site-shell,
+    html body.catalog-body .site-shell,
+    html body.course-list-page .site-shell {
+        min-height: 100dvh !important;
+        padding-top: var(--nav-height, 72px) !important;
+    }
+}
+
+/* Absolute final hero refresh guard: first-viewport hero text must not wait for reveal JS. */
+html body .page-hero,
+html body .page-hero.has-page-hero-image {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+html body .page-hero .site-container,
+html body .page-hero .reveal,
+html body .page-hero .reveal:not(.is-visible),
+html body .page-hero .scroll-reveal-auto,
+html body .page-hero .contact-hero-copy {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    transition-delay: 0ms !important;
+    will-change: auto !important;
+}
+
+html body .page-hero .page-hero-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+}
+
+html body .page-hero .page-hero-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+}
+
+html body .page-hero > .site-container,
+html body .page-hero .contact-hero-layout,
+html body .page-hero .about-hero__inner {
+    position: relative !important;
+    z-index: 2 !important;
+}
