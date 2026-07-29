@@ -16,134 +16,12 @@ function tt_nav_parent_active(array $pages): string {
     return in_array($_tt_active, $pages, true) ? ' active' : '';
 }
 ?>
-<link rel="preload" as="image" href="<?= tt_h(tt_asset_url('assets/images/logot-transparent.png')) ?>" fetchpriority="high">
-<link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
-<style>
-    html,
-    html body {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    html body .site-shell {
-        padding-top: var(--nav-height, 84px) !important;
-    }
-
-    html body .site-header#site-header,
-    html body.home-page .site-header#site-header,
-    html body.static-site .site-header#site-header,
-    html body.catalog-body .site-header#site-header,
-    html body.course-list-page .site-header#site-header {
-        --nav-offset: 0px !important;
-        top: 0 !important;
-        inset-block-start: 0 !important;
-    }
-
-    @media (max-width: 1100px) {
-        html body .site-shell {
-            padding-top: var(--nav-height, 72px) !important;
-        }
-
-        html body .site-header#site-header .site-nav {
-            top: calc(var(--nav-height) + 8px) !important;
-            height: calc(100dvh - var(--nav-height) - 8px) !important;
-            max-height: calc(100dvh - var(--nav-height) - 8px) !important;
-            gap: 10px !important;
-        }
-
-        html body .site-header#site-header .site-nav > a,
-        html body .site-header#site-header .site-nav .nav-item > a {
-            min-height: 54px !important;
-            border: 1px solid rgba(37, 99, 235, .14) !important;
-            border-radius: 12px !important;
-            background: #ffffff !important;
-        }
-
-        html body .site-header#site-header .site-nav > a.active,
-        html body .site-header#site-header .site-nav > a[aria-current="page"],
-        html body .site-header#site-header .site-nav .nav-item.active > a,
-        html body .site-header#site-header .site-nav .nav-item.open > a {
-            color: #0845b2 !important;
-            background: #eef7ff !important;
-            border-color: rgba(37, 99, 235, .22) !important;
-        }
-
-        html body .site-header#site-header .site-nav .nav-enroll-cta {
-            min-height: 54px !important;
-            justify-content: center !important;
-            border: 0 !important;
-            border-radius: 12px !important;
-            background: linear-gradient(135deg, #2563eb 0, #c026d3 100%) !important;
-        }
-    }
-
-    html body .site-header#site-header .brand {
-        grid-template-columns: 68px minmax(0, 1fr) !important;
-        column-gap: 4px !important;
-    }
-
-    html body .site-header#site-header .brand-mark.logo-mark,
-    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark {
-        width: 68px !important;
-        height: 68px !important;
-        min-width: 68px !important;
-        max-width: 68px !important;
-        padding: 0 !important;
-        border: 0 !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        overflow: visible !important;
-        clip-path: none !important;
-    }
-
-    html body .site-header#site-header .brand-mark.logo-mark img,
-    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
-        width: 68px !important;
-        height: 68px !important;
-        max-width: none !important;
-        object-fit: contain !important;
-        border: 0 !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }
-
-    @media (max-width: 1100px) {
-        html body .site-header#site-header .brand {
-            grid-template-columns: 58px minmax(0, 1fr) !important;
-            column-gap: 2px !important;
-        }
-
-        html body .site-header#site-header .brand-mark.logo-mark,
-        html body .site-header#site-header.is-scrolled .brand-mark.logo-mark,
-        html body .site-header#site-header .brand-mark.logo-mark img,
-        html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
-            width: 58px !important;
-            height: 58px !important;
-            min-width: 58px !important;
-            max-width: none !important;
-        }
-    }
-
-    html body .service-modal-brand .smo-logo,
-    html body .service-modal-brand .smo-logo img {
-        width: 58px !important;
-        height: 58px !important;
-        padding: 0 !important;
-        border: 0 !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        object-fit: contain !important;
-    }
-</style>
 <!-- TT_DEPLOY_VERSION: <?= tt_h(tt_deploy_version()) ?> -->
 <header class="site-header" id="site-header">
     <div class="nav-wrap">
         <a class="brand" href="index.php" aria-label="Talentteno Institute home">
             <span class="brand-mark logo-mark">
-                <img src="<?= tt_h(tt_asset_url('assets/images/logot-transparent.png')) ?>" alt="Talentteno Institute logo" width="68" height="68" decoding="async" fetchpriority="high">
+                <img src="<?= tt_h(tt_asset_url('assets/images/logot-transparent.png')) ?>" alt="Talentteno Institute logo" width="58" height="58" decoding="async" fetchpriority="high">
             </span>
             <span class="brand-copy">
                 <span class="brand-name">Talentteno Institute</span>
@@ -186,25 +64,3 @@ function tt_nav_parent_active(array $pages): string {
         </button>
     </div>
 </header>
-<script>
-    (function () {
-        var nav = document.getElementById('site-nav');
-        if (!nav) return;
-        var offersLink = nav.querySelector('a[href="offers.php"]');
-        if (!offersLink) {
-            offersLink = document.createElement('a');
-            offersLink.href = 'offers.php';
-            offersLink.textContent = 'Offers';
-            if ((window.location.pathname.split('/').pop() || 'index.php') === 'offers.php') {
-                offersLink.className = 'active';
-                offersLink.setAttribute('aria-current', 'page');
-            }
-            nav.insertBefore(offersLink, nav.querySelector('a[href="gallery.php"]') || nav.querySelector('a[href="contact.php"]') || nav.querySelector('.more-menu') || nav.querySelector('.nav-enroll-cta'));
-        }
-        var courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu)');
-        var galleryLink = nav.querySelector('a[href="gallery.php"]');
-        if (courseMenu && offersLink && courseMenu.nextElementSibling !== offersLink) {
-            nav.insertBefore(offersLink, galleryLink || courseMenu.nextSibling);
-        }
-    })();
-</script>

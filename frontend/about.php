@@ -21,7 +21,24 @@ foreach ($steps as $step) {
     $cleanSteps[] = $step;
 }
 $steps = count($cleanSteps) >= 4 ? array_slice($cleanSteps, 0, 4) : $defaultAboutSteps;
+$aboutHeroImage = 'assets/images/optimized/about-w1536.webp';
+$aboutHeroSrcset = implode(', ', [
+    tt_asset_url('assets/images/optimized/about-w768.webp') . ' 768w',
+    tt_asset_url('assets/images/optimized/about-w1200.webp') . ' 1200w',
+    tt_asset_url('assets/images/optimized/about-w1536.webp') . ' 1536w',
+]);
 $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
+
+$ttPageCssPath = 'assets/css/site-pages.min.css';
+$ttNavbarCssPath = 'assets/css/navbar.min.css';
+$ttPageJsPath = 'assets/js/site-pages.min.js';
+$ttAboutAssetVersion = static function (string $path): string {
+    $fullPath = __DIR__ . '/' . ltrim($path, '/');
+    return is_file($fullPath) ? (string) filemtime($fullPath) : (string) time();
+};
+$ttPageCss = tt_asset_url($ttPageCssPath, $ttAboutAssetVersion($ttPageCssPath));
+$ttNavbarCss = tt_asset_url($ttNavbarCssPath, $ttAboutAssetVersion($ttNavbarCssPath));
+$ttPageJs = tt_asset_url($ttPageJsPath, $ttAboutAssetVersion($ttPageJsPath));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,15 +57,207 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preload" as="image" href="assets/images/optimized/about-w1536.webp" imagesrcset="assets/images/optimized/about-w768.webp 768w, assets/images/optimized/about-w1200.webp 1200w, assets/images/optimized/about-w1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="image" href="<?= tt_h(tt_asset_url($aboutHeroImage)) ?>" imagesrcset="<?= tt_h($aboutHeroSrcset) ?>" imagesizes="100vw" fetchpriority="high">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;display=block">
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
-    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
+    <link rel="stylesheet" href="<?= tt_h($ttPageCss) ?>">
+    <link rel="stylesheet" href="<?= tt_h($ttNavbarCss) ?>">
     <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body.about-page {
+            margin: 0 !important;
+            background: #f7f9ff !important;
+            font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+            text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            font-synthesis: none;
+        }
+
+        body.about-page .site-shell {
+            padding-top: var(--nav-height, 84px) !important;
+        }
+
+        body.about-page .site-header#site-header {
+            --nav-height: 84px !important;
+            --header-height: 84px !important;
+            height: 84px !important;
+            min-height: 84px !important;
+            max-height: 84px !important;
+        }
+
+        body.about-page .page-main {
+            display: block !important;
+            background: #f7f9ff !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image {
+            position: relative !important;
+            width: 100% !important;
+            height: 465px !important;
+            min-height: 465px !important;
+            max-height: 465px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: stretch !important;
+            overflow: hidden !important;
+            isolation: isolate !important;
+            background: #07142d !important;
+            background-image: var(--about-hero-image) !important;
+            background-size: cover !important;
+            background-position: center 47% !important;
+            background-repeat: no-repeat !important;
+            box-shadow: inset 0 0 0 9999px rgba(2, 8, 23, 0.46) !important;
+            color: #ffffff !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 !important;
+            z-index: 1 !important;
+            display: block !important;
+            pointer-events: none !important;
+            opacity: 1 !important;
+            mix-blend-mode: normal !important;
+            background:
+                linear-gradient(90deg, rgba(2, 8, 23, 0.90), rgba(2, 8, 23, 0.70) 45%, rgba(2, 8, 23, 0.38)),
+                linear-gradient(0deg, rgba(2, 8, 23, 0.82), rgba(2, 8, 23, 0.16) 54%) !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image .about-hero__inner {
+            position: relative !important;
+            z-index: 2 !important;
+            width: min(100% - 48px, 1200px) !important;
+            max-width: 1200px !important;
+            min-height: 465px !important;
+            box-sizing: border-box !important;
+            margin-inline: auto !important;
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 20px !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            animation: aboutHeroOpacity 360ms ease-out both !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image .about-hero__content {
+            flex: 0 1 720px !important;
+            width: min(100%, 720px) !important;
+            max-width: 720px !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            position: relative !important;
+            left: auto !important;
+            margin: 0 auto 0 0 !important;
+            margin-inline: 0 auto !important;
+            padding: 0 !important;
+            display: grid !important;
+            justify-items: start !important;
+            align-content: start !important;
+            gap: 20px !important;
+            text-align: left !important;
+            transform: none !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image > .container.site-container.about-hero__inner {
+            width: min(100% - 48px, 1200px) !important;
+            max-width: 1200px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
+            text-align: left !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image > .container.site-container.about-hero__inner > .about-hero__content {
+            flex: 0 1 720px !important;
+            height: auto !important;
+            min-height: 0 !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
+            justify-self: start !important;
+            align-self: center !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image .hero-kicker {
+            width: max-content !important;
+            max-width: 100% !important;
+            justify-self: start !important;
+            min-height: 34px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 9px !important;
+            padding: 8px 14px !important;
+            border: 1px solid rgba(255, 255, 255, 0.24) !important;
+            border-radius: 999px !important;
+            background: rgba(255, 255, 255, 0.14) !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font: 900 12px/1.2 "Plus Jakarta Sans", Arial, sans-serif !important;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image h1 {
+            max-width: 720px !important;
+            margin: 0 !important;
+            text-align: left !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+            font-size: clamp(54px, 5.2vw, 84px) !important;
+            line-height: 1.01 !important;
+            font-weight: 900 !important;
+            letter-spacing: 0 !important;
+        }
+
+        body.about-page .page-hero.has-page-hero-image p {
+            max-width: 680px !important;
+            margin: 0 !important;
+            text-align: left !important;
+            color: rgba(255, 255, 255, 0.90) !important;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.90) !important;
+            font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+            font-size: clamp(20px, 1.55vw, 24px) !important;
+            line-height: 1.45 !important;
+            font-weight: 600 !important;
+        }
+
+        @keyframes aboutHeroOpacity {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         body.about-page .about-intro-section .site-container.about-intro {
             width: min(100% - 96px, 1360px) !important;
             max-width: 1360px !important;
@@ -260,6 +469,33 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
         }
 
         @media (max-width: 520px) {
+            body.about-page .site-shell {
+                padding-top: var(--nav-height, 72px) !important;
+            }
+
+            body.about-page .site-header#site-header {
+                --nav-height: 72px !important;
+                --header-height: 72px !important;
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+            }
+
+            body.about-page .page-hero.has-page-hero-image {
+                height: 560px !important;
+                min-height: 560px !important;
+                max-height: 560px !important;
+                padding: 0 !important;
+                background-position: 58% center !important;
+            }
+
+            body.about-page .page-hero.has-page-hero-image .about-hero__inner {
+                width: min(100% - 32px, 1200px) !important;
+                min-height: 560px !important;
+                margin-inline: auto !important;
+                padding: 0 !important;
+            }
+
             body.about-page .tt-stat-card {
                 flex-basis: min(82vw, 300px) !important;
                 min-height: 154px !important;
@@ -267,10 +503,13 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
         }
 
         @media (prefers-reduced-motion: reduce) {
+            body.about-page .page-hero.has-page-hero-image,
+            body.about-page .page-hero.has-page-hero-image *,
             body.about-page .tt-stat-card,
             body.about-page .tt-stat-card::after,
             body.about-page .tt-stat-card::before {
                 animation: none !important;
+                transition: none !important;
             }
         }
     </style>
@@ -279,13 +518,13 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
 <div class="site-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <main class="page-main">
-        <section class="page-hero has-page-hero-image">
-            <img class="page-hero-bg" src="assets/images/optimized/about-w1536.webp" srcset="assets/images/optimized/about-w768.webp 768w, assets/images/optimized/about-w1200.webp 1200w, assets/images/optimized/about-w1536.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" fetchpriority="high" width="1536" height="1024">
-            <span class="page-hero-overlay" aria-hidden="true"></span>
-            <div class="site-container reveal">
-                <span class="hero-kicker"><i class="fa-solid fa-graduation-cap"></i> Practical IT Institute</span>
-                <h1><?= tt_h($settings['about_title']) ?></h1>
-                <p><?= tt_h($settings['tagline']) ?></p>
+        <section class="page-hero has-page-hero-image" style="--about-hero-image: url('<?= tt_h(tt_asset_url($aboutHeroImage)) ?>');">
+            <div class="container site-container about-hero__inner">
+                <div class="about-hero__content">
+                    <span class="hero-kicker"><i class="fa-solid fa-graduation-cap"></i> Practical IT Institute</span>
+                    <h1><?= tt_h($settings['about_title']) ?></h1>
+                    <p><?= tt_h($settings['tagline']) ?></p>
+                </div>
             </div>
         </section>
         <section class="section about-intro-section">
@@ -396,6 +635,6 @@ $aboutStoryImage = tt_optimized_image_url('assets/images/About .png', 800);
     </main>
     <?php include __DIR__ . "/includes/footer.php"; ?>
 </div>
-<script src="<?= tt_h(tt_asset_url('assets/js/site-pages.min.js')) ?>" defer></script>
+<script src="<?= tt_h($ttPageJs) ?>" defer></script>
 </body>
 </html>

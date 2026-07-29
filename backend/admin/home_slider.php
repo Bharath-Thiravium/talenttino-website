@@ -88,7 +88,7 @@ function tt_home_slide_media_images(): array
     }
 
     usort($images, static fn($a, $b) => $b['modified'] <=> $a['modified']);
-    return $images;
+    return array_slice($images, 0, 80);
 }
 
 function tt_home_slide_default_images(): array
@@ -260,8 +260,12 @@ $mediaImages = tt_home_slide_media_images();
     <title>Home Slider - Talentteno Admin</title>
     <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
     <link rel="apple-touch-icon" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
 </head>
 <body>
@@ -304,7 +308,7 @@ $mediaImages = tt_home_slide_media_images();
                             <i class="fas fa-images"></i> Choose Image from Media
                         </button>
                         <div class="course-selected-media" data-selected-media-preview hidden>
-                            <img src="" alt="">
+                            <img loading="lazy" decoding="async" src="" alt="">
                             <span></span>
                             <button type="button" class="media-remove-btn" data-clear-selected-media aria-label="Remove selected image">
                                 <i class="fas fa-times"></i>
@@ -323,7 +327,7 @@ $mediaImages = tt_home_slide_media_images();
                                     <?php foreach ($mediaImages as $media): ?>
                                     <button type="button" class="course-media-option" data-pick-media="<?= htmlspecialchars($media['file']) ?>" data-media-url="<?= htmlspecialchars($media['url']) ?>" title="<?= htmlspecialchars($media['label']) ?>">
                                         <span class="course-media-thumb">
-                                            <img src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
+                                            <img loading="lazy" decoding="async" src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
                                             <i class="fas fa-check"></i>
                                         </span>
                                         <span class="course-media-name"><?= htmlspecialchars($media['label']) ?></span>
@@ -345,7 +349,7 @@ $mediaImages = tt_home_slide_media_images();
                         <small class="field-help">Choose from popup or paste a valid frontend image path.</small>
                         <?php if (!empty($editSlide['image'])): ?>
                         <div class="course-current-image" style="margin-top:10px;">
-                            <img class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['image'])) ?>" alt="Current home slider image">
+                            <img loading="lazy" decoding="async" class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['image'])) ?>" alt="Current home slider image">
                         </div>
                         <?php endif; ?>
                     </div>
@@ -357,7 +361,7 @@ $mediaImages = tt_home_slide_media_images();
                             <i class="fas fa-mobile-screen-button"></i> Choose Mobile Image from Media
                         </button>
                         <div class="course-selected-media" data-selected-media-preview hidden>
-                            <img src="" alt="">
+                            <img loading="lazy" decoding="async" src="" alt="">
                             <span></span>
                             <button type="button" class="media-remove-btn" data-clear-selected-media aria-label="Remove selected mobile image">
                                 <i class="fas fa-times"></i>
@@ -376,7 +380,7 @@ $mediaImages = tt_home_slide_media_images();
                                     <?php foreach ($mediaImages as $media): ?>
                                     <button type="button" class="course-media-option" data-pick-media="<?= htmlspecialchars($media['file']) ?>" data-media-url="<?= htmlspecialchars($media['url']) ?>" title="<?= htmlspecialchars($media['label']) ?>">
                                         <span class="course-media-thumb">
-                                            <img src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
+                                            <img loading="lazy" decoding="async" src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
                                             <i class="fas fa-check"></i>
                                         </span>
                                         <span class="course-media-name"><?= htmlspecialchars($media['label']) ?></span>
@@ -396,7 +400,7 @@ $mediaImages = tt_home_slide_media_images();
                         <small class="field-help">Used only on mobile view. If empty, desktop image is used.</small>
                         <?php if (!empty($editSlide['mobile_image'])): ?>
                         <div class="course-current-image" style="margin-top:10px;">
-                            <img class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['mobile_image'])) ?>" alt="Current mobile home slider image">
+                            <img loading="lazy" decoding="async" class="course-image-preview home-slider-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($editSlide['mobile_image'])) ?>" alt="Current mobile home slider image">
                         </div>
                         <?php endif; ?>
                     </div>
@@ -430,7 +434,7 @@ $mediaImages = tt_home_slide_media_images();
                             <?php foreach ($slides as $slide): ?>
                             <tr>
                                 <td>
-                                    <img class="home-slider-table-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($slide['image'])) ?>" alt="">
+                                    <img loading="lazy" decoding="async" class="home-slider-table-preview" src="<?= htmlspecialchars(tt_home_slide_admin_url($slide['image'])) ?>" alt="">
                                 </td>
                                 <td><strong><?= htmlspecialchars($slide['title'] ?: 'Home background') ?></strong></td>
                                 <td style="max-width:230px;color:#64748B;font-size:12px;"><?= htmlspecialchars($slide['image']) ?></td>

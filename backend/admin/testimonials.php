@@ -123,8 +123,12 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC")->fet
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
     <link rel="apple-touch-icon" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
 </head>
 <body>
@@ -148,7 +152,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC")->fet
                     <input type="hidden" name="image_existing" value="<?= htmlspecialchars($edit['image'] ?? '') ?>">
                     <div class="form-group"><label>Student Name *</label><input type="text" name="student_name" required value="<?= htmlspecialchars($edit['student_name'] ?? '') ?>"></div>
                     <div class="form-group"><label>Company</label><input type="text" name="company" value="<?= htmlspecialchars($edit['company'] ?? '') ?>"></div>
-                    <div class="form-group"><label>Image</label><input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image.</small><?php $editImageUrl = $edit ? tt_admin_testimonial_image_url($edit['image'] ?? '', $edit['course'] ?? '') : ''; if ($editImageUrl !== ''): ?><div class="content-current-image"><img src="<?= htmlspecialchars($editImageUrl) ?>" alt=""><span>Current image</span></div><?php endif; ?></div>
+                    <div class="form-group"><label>Image</label><input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif"><small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image.</small><?php $editImageUrl = $edit ? tt_admin_testimonial_image_url($edit['image'] ?? '', $edit['course'] ?? '') : ''; if ($editImageUrl !== ''): ?><div class="content-current-image"><img loading="lazy" decoding="async" src="<?= htmlspecialchars($editImageUrl) ?>" alt=""><span>Current image</span></div><?php endif; ?></div>
                     <div class="form-group"><label>Course</label><input type="text" name="course" value="<?= htmlspecialchars($edit['course'] ?? '') ?>"></div>
                     <div class="form-group"><label>Review *</label><textarea name="review" rows="4" required><?= htmlspecialchars($edit['review'] ?? '') ?></textarea></div>
                     <div class="form-row">
@@ -168,7 +172,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY id DESC")->fet
                             <?php foreach ($testimonials as $t): ?>
                             <tr>
                                 <td><strong><?= htmlspecialchars($t['student_name']) ?></strong></td>
-                                <td><?php $testimonialImageUrl = tt_admin_testimonial_image_url($t['image'] ?? '', $t['course'] ?? ''); if ($testimonialImageUrl !== ''): ?><img class="content-admin-thumb" src="<?= htmlspecialchars($testimonialImageUrl) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
+                                <td><?php $testimonialImageUrl = tt_admin_testimonial_image_url($t['image'] ?? '', $t['course'] ?? ''); if ($testimonialImageUrl !== ''): ?><img loading="lazy" decoding="async" class="content-admin-thumb" src="<?= htmlspecialchars($testimonialImageUrl) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
                                 <td class="content-detail-cell"><strong><?= htmlspecialchars($t['course'] ?: '—') ?></strong><span><?= htmlspecialchars($t['review'] ?: '') ?></span></td>
                                 <td><?= str_repeat('★', $t['rating']) ?></td>
                                 <td><span class="badge badge-<?= $t['is_active']?'green':'gray' ?>"><?= $t['is_active']?'Active':'Hidden' ?></span></td>

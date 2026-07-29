@@ -100,8 +100,12 @@ $iconOptions = [
     <meta charset="UTF-8"><title>Review Showcase — Talentteno Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
 </head>
 <body>
@@ -137,7 +141,7 @@ $iconOptions = [
                         <input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif">
                         <small class="field-help">JPG, PNG, WebP or GIF.</small>
                         <?php if (!empty($edit['image'])): ?>
-                        <div class="content-current-image"><img src="<?= htmlspecialchars(tt_admin_review_image_url($edit['image'])) ?>" alt=""><span>Current image</span></div>
+                        <div class="content-current-image"><img loading="lazy" decoding="async" src="<?= htmlspecialchars(tt_admin_review_image_url($edit['image'])) ?>" alt=""><span>Current image</span></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-row">
@@ -156,7 +160,7 @@ $iconOptions = [
                         <tbody>
                             <?php foreach ($items as $item): ?>
                             <tr>
-                                <td><?php if (!empty($item['image'])): ?><img class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_review_image_url($item['image'])) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
+                                <td><?php if (!empty($item['image'])): ?><img loading="lazy" decoding="async" class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_review_image_url($item['image'])) ?>" alt=""><?php else: ?><span class="content-admin-placeholder"><i class="fas fa-image"></i></span><?php endif; ?></td>
                                 <td><strong><?= htmlspecialchars($item['title']) ?></strong><br><small><i class="fa-solid <?= htmlspecialchars($item['icon']) ?>"></i> <?= htmlspecialchars($item['icon']) ?></small></td>
                                 <td><?= (int)$item['sort_order'] ?></td>
                                 <td><span class="badge badge-<?= $item['is_active'] ? 'green' : 'gray' ?>"><?= $item['is_active'] ? 'Active' : 'Hidden' ?></span></td>

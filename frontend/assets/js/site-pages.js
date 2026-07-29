@@ -28,95 +28,7 @@ if (canHover && !reduceMotion) {
     }, { passive: true });
 }
 
-// Add shared navigation semantics and active state without duplicating page logic.
-if (nav) {
-    nav.setAttribute('aria-label', 'Primary navigation');
-    if (!nav.querySelector('.nav-enroll-cta')) {
-        const enrollCta = document.createElement('a');
-        enrollCta.className = 'nav-enroll-cta';
-        enrollCta.href = '#home-signup';
-        enrollCta.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span>Enroll Now</span>';
-        nav.appendChild(enrollCta);
-    }
-    const courseMenu = nav.querySelector('.nav-item.has-menu:not(.more-menu) .nav-menu');
-    if (courseMenu) {
-        courseMenu.querySelectorAll('a[href="course.php"], a[href$="/course.php"]').forEach(link => link.remove());
-        const courseLinks = [
-            ['shorttermcourse.php', 'Short Term Course', 'fa-clock'],
-            ['popularcourse.php', 'Popular Course', 'fa-fire'],
-            ['advancecourse.php', 'Advance Course', 'fa-layer-group'],
-            ['designingcourse.php', 'Designing Course', 'fa-pen-nib'],
-            ['cybersecuritycourse.php', 'Cyber Security', 'fa-shield-halved'],
-        ];
-        courseLinks.forEach(([href, label, icon]) => {
-            let link = courseMenu.querySelector(`a[href="${href}"]`);
-            if (!link) {
-                link = document.createElement('a');
-                link.href = href;
-                courseMenu.appendChild(link);
-            }
-            link.className = 'nav-menu-rich-link';
-            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
-        });
-    }
-    const moreMenu = nav.querySelector('.nav-item.has-menu.more-menu');
-    const moreTrigger = moreMenu?.querySelector(':scope > a');
-    const morePanel = moreMenu?.querySelector(':scope > .nav-menu');
-    if (moreTrigger) {
-        moreTrigger.innerHTML = 'Others <i class="fa-solid fa-chevron-down"></i>';
-    }
-    if (morePanel) {
-        const baseMoreLinks = [
-            ['services.php', 'Services', 'fa-concierge-bell'],
-            ['career.php', 'Career', 'fa-briefcase'],
-            ['blog.php', 'Blog', 'fa-newspaper'],
-            ['project.php', 'Project', 'fa-diagram-project'],
-        ];
-        baseMoreLinks.forEach(([href, label, icon]) => {
-            let link = morePanel.querySelector(`a[href="${href}"]`);
-            if (!link) {
-                link = document.createElement('a');
-                link.href = href;
-                morePanel.appendChild(link);
-            }
-            link.className = 'nav-menu-rich-link';
-            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
-        });
-        const otherLinks = [
-            ['review.php', 'Student Reviews', 'fa-star'],
-            ['why-talentteno.php', 'Why Talentteno', 'fa-graduation-cap'],
-            ['hiring.php', 'Hiring', 'fa-user-plus'],
-            ['franchise.php', 'Franchise Enquiry', 'fa-handshake'],
-        ];
-        otherLinks.forEach(([href, label, icon]) => {
-            let link = morePanel.querySelector(`a[href="${href}"]`);
-            if (!link) {
-                link = document.createElement('a');
-                link.href = href;
-                morePanel.appendChild(link);
-            }
-            link.className = 'nav-menu-rich-link';
-            link.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${label}</span>`;
-        });
-    }
-    const currentPage = window.location.pathname.split('/').pop() || 'index.php';
-    const morePages = ['services.php', 'career.php', 'blog.php', 'project.php', 'review.php', 'why-talentteno.php', 'hiring.php', 'franchise.php'];
-    nav.querySelectorAll('a[href]').forEach(link => {
-        if (link.classList.contains('nav-enroll-cta')) return;
-        const targetHref = link.getAttribute('href');
-        const targetPage = targetHref.split('?')[0].split('#')[0] || currentPage;
-        const targetHash = targetHref.includes('#') ? targetHref.slice(targetHref.indexOf('#')) : '';
-        const isSameHash = targetHash && targetPage === currentPage && window.location.hash === targetHash;
-        const hasSectionHash = Boolean(window.location.hash);
-        const isCoursePage = ['course.php', 'course-catalog.php', 'shorttermcourse.php', 'popularcourse.php', 'advancecourse.php', 'designingcourse.php', 'cybersecuritycourse.php', 'download.php'].includes(currentPage);
-        const isMoreTrigger = link.closest('.more-menu') && link.getAttribute('href') === '#';
-        const isCurrent = (!targetHash && targetPage === currentPage && !hasSectionHash) || isSameHash || (targetPage === 'course.php' && isCoursePage) || (isMoreTrigger && morePages.includes(currentPage));
-        link.classList.toggle('active', isCurrent);
-        if (isCurrent) link.setAttribute('aria-current', 'page');
-        else link.removeAttribute('aria-current');
-        if (isCurrent) link.closest('.nav-item')?.classList.add('active');
-    });
-}
+nav?.setAttribute('aria-label', 'Primary navigation');
 
 document.querySelectorAll('a[href^="tel:"][data-copy-phone]').forEach(link => {
     link.addEventListener('click', () => {
@@ -443,6 +355,38 @@ if (reduceMotion) {
 } else {
     revealItems.forEach(item => item.classList.add('is-visible'));
 }
+
+document.querySelectorAll('[data-talent-footer]').forEach(footer => {
+    const animatedParts = footer.querySelectorAll('.talent-footer__column, .talent-footer__features, .talent-footer__bottom');
+    animatedParts.forEach((item, index) => {
+        item.style.setProperty('--talent-footer-delay', `${Math.min(index * 70, 420)}ms`);
+    });
+    if (canHover && !reduceMotion) {
+        footer.querySelectorAll('.talent-footer__feature').forEach(card => {
+            card.addEventListener('pointermove', event => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--footer-card-x', `${event.clientX - rect.left}px`);
+                card.style.setProperty('--footer-card-y', `${event.clientY - rect.top}px`);
+            }, { passive: true });
+        });
+    }
+    footer.classList.add('is-ready');
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        footer.classList.add('is-visible');
+        return;
+    }
+
+    const footerObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            footer.classList.add('is-visible');
+            footerObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px 10% 0px' });
+
+    footerObserver.observe(footer);
+});
 
 const counterItems = document.querySelectorAll('.stat-card strong, .about-highlights strong, .home-stats strong, .tt-stat-num');
 
@@ -1013,7 +957,7 @@ if (aiChat) {
 }
 
 
-// Hero slider — auto-play, arrows, dots, pause on hover
+// Hero slider: first slide is visible in HTML/CSS; JS only crossfades after load.
 (function () {
     const slider = document.querySelector('[data-hero-slider]');
     if (!slider || slider.dataset.sliderInit === 'true') return;
@@ -1026,7 +970,7 @@ if (aiChat) {
 
     let current = 0;
     let timer = null;
-    const INTERVAL = 4000;
+    const INTERVAL = 5500;
     const track = slider.querySelector('[data-slider-track]');
 
     function hydrateSlide(index) {
@@ -1058,7 +1002,7 @@ if (aiChat) {
 
     function updateTrack() {
         if (!track) return;
-        track.style.transform = 'translate3d(-' + (current * 100) + '%, 0, 0)';
+        track.style.transform = 'none';
     }
 
     function syncAspectRatio(index) {
@@ -1096,7 +1040,6 @@ if (aiChat) {
 
         current = (index + slides.length) % slides.length;
         hydrateSlide(current);
-        hydrateSlide((current + 1) % slides.length);
         updateTrack();
 
         slides[current].classList.add('is-active');
@@ -1110,7 +1053,7 @@ if (aiChat) {
 
     function startAuto() {
         stopAuto();
-        window.setTimeout(() => hydrateSlide((current + 1) % slides.length), Math.max(1000, INTERVAL - 1200));
+        if (reduceMotion) return;
         timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
     }
 

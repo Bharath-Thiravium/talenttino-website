@@ -1,6 +1,6 @@
 <div class="admin-sidebar">
     <div class="sidebar-logo">
-        <img src="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>" alt="Talentteno logo">
+        <img loading="lazy" decoding="async" src="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>" alt="Talentteno logo">
         <div>
             <span class="sidebar-name">Talentteno</span>
             <span class="sidebar-role">Admin Panel</span>
@@ -13,8 +13,17 @@
         <a href="enquiries.php" class="<?= basename($_SERVER['PHP_SELF']) === 'enquiries.php' ? 'active' : '' ?>">
             <i class="fas fa-inbox"></i> Enquiries
             <?php
-            require_once '../includes/db.php';
-            $new_count = $conn->query("SELECT COUNT(*) FROM enquiries WHERE status = 'new'")->fetch_row()[0];
+            $newCountCache = $_SESSION['admin_new_enquiry_count_cache'] ?? null;
+            if (
+                !is_array($newCountCache)
+                || (time() - (int)($newCountCache['time'] ?? 0)) > 30
+                || basename($_SERVER['PHP_SELF']) === 'enquiries.php'
+            ) {
+                $new_count = (int)($conn->query("SELECT COUNT(*) FROM enquiries WHERE status = 'new'")->fetch_row()[0] ?? 0);
+                $_SESSION['admin_new_enquiry_count_cache'] = ['time' => time(), 'count' => $new_count];
+            } else {
+                $new_count = (int)($newCountCache['count'] ?? 0);
+            }
             if ($new_count > 0) echo "<span class='badge-count'>$new_count</span>";
             ?>
         </a>

@@ -153,9 +153,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?
     <?php tt_render_seo(['title' => 'Hiring | Talentteno Institute', 'description' => 'Hiring opportunities for trainers, counsellors and placement partners at Talentteno Institute.', 'canonical' => tt_abs_url('hiring.php')]); ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <?php $ttPageCss = tt_asset_url('assets/css/site-pages.min.css'); ?>
+    <link rel="stylesheet" href="<?= tt_h($ttPageCss) ?>" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="<?= tt_h($ttPageCss) ?>"></noscript>
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
 </head>
 <body class="static-site hiring-page">
 <div class="site-shell">

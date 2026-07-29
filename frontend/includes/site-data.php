@@ -741,25 +741,41 @@ function tt_optimized_image_url(?string $image, int $preferredWidth = 800): stri
         return $cache[$cacheKey] = $resolved;
     }
 
-    $widths = array_values(array_unique([
-        $preferredWidth,
+    $preferredWidth = max(1, (int)$preferredWidth);
+    $exactCandidates = [
+        'uploads/optimized/' . $base . '-w' . $preferredWidth . '.webp',
+        'assets/images/optimized/' . $base . '-w' . $preferredWidth . '.webp',
+    ];
+
+    foreach ($exactCandidates as $candidate) {
+        if (is_file(__DIR__ . '/../' . $candidate)) {
+            return $cache[$cacheKey] = $candidate;
+        }
+    }
+
+    $generated = 'uploads/optimized/' . $base . '-w' . $preferredWidth . '.webp';
+    if (tt_generate_optimized_image($path, $generated, $preferredWidth)) {
+        return $cache[$cacheKey] = $generated;
+    }
+
+    $fallbackWidths = array_values(array_unique([
+        400,
+        430,
+        768,
         800,
         900,
         1200,
-        768,
-        430,
-        400,
         1400,
         1536,
     ]));
 
     $candidates = [];
     if (str_starts_with($path, 'assets/images/')) {
-        $candidates[] = 'assets/images/optimized/' . $base . '-desktop.webp';
         $candidates[] = 'assets/images/optimized/' . $base . '-mobile.webp';
+        $candidates[] = 'assets/images/optimized/' . $base . '-desktop.webp';
     }
 
-    foreach ($widths as $width) {
+    foreach ($fallbackWidths as $width) {
         $candidates[] = 'uploads/optimized/' . $base . '-w' . (int)$width . '.webp';
         $candidates[] = 'assets/images/optimized/' . $base . '-w' . (int)$width . '.webp';
     }
@@ -768,11 +784,6 @@ function tt_optimized_image_url(?string $image, int $preferredWidth = 800): stri
         if (is_file(__DIR__ . '/../' . $candidate)) {
             return $cache[$cacheKey] = $candidate;
         }
-    }
-
-    $generated = 'uploads/optimized/' . $base . '-w' . max(1, $preferredWidth) . '.webp';
-    if (tt_generate_optimized_image($path, $generated, $preferredWidth)) {
-        return $cache[$cacheKey] = $generated;
     }
 
     return $cache[$cacheKey] = $resolved;

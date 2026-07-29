@@ -145,7 +145,7 @@ function tt_admin_media_images(): array
         ];
     }
     usort($images, static fn($a, $b) => $b['modified'] <=> $a['modified']);
-    return $images;
+    return array_slice($images, 0, 80);
 }
 
 $mediaImages = tt_admin_media_images();
@@ -357,8 +357,12 @@ $courses = $conn->query("SELECT * FROM courses ORDER BY is_featured DESC, id DES
     <title>Manage Courses — Talentteno Admin</title>
     <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
     <link rel="apple-touch-icon" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
 </head>
 <body>
@@ -403,7 +407,7 @@ $courses = $conn->query("SELECT * FROM courses ORDER BY is_featured DESC, id DES
                             <tr data-course-row="<?= htmlspecialchars($c['course_type'] ?? 'course') ?>">
                                 <td>
                                     <?php if (!empty($c['image'])): ?>
-                                    <img class="course-admin-thumb" src="../../frontend/uploads/course-images/<?= rawurlencode($c['image']) ?>" alt="">
+                                    <img loading="lazy" decoding="async" class="course-admin-thumb" src="../../frontend/uploads/course-images/<?= rawurlencode($c['image']) ?>" alt="">
                                     <?php else: ?>
                                     <span class="course-admin-placeholder"><i class="fas fa-image"></i></span>
                                     <?php endif; ?>
@@ -520,7 +524,7 @@ function tt_admin_render_course_modal(?array $course, ?string $fixedType, array 
                         <i class="fas fa-images"></i> Choose Image from Media
                     </button>
                     <div class="course-selected-media" data-selected-media-preview hidden>
-                        <img src="" alt="">
+                        <img loading="lazy" decoding="async" src="" alt="">
                         <span></span>
                         <button type="button" class="media-remove-btn" data-clear-selected-media aria-label="Remove selected image">
                             <i class="fas fa-times"></i>
@@ -540,7 +544,7 @@ function tt_admin_render_course_modal(?array $course, ?string $fixedType, array 
                                 <?php foreach ($mediaImages as $media): ?>
                                 <button type="button" class="course-media-option" data-pick-media="<?= htmlspecialchars($media['file']) ?>" data-media-url="<?= htmlspecialchars($media['url']) ?>" title="<?= htmlspecialchars($media['label']) ?>">
                                     <span class="course-media-thumb">
-                                        <img src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
+                                        <img loading="lazy" decoding="async" src="<?= htmlspecialchars($media['url']) ?>" alt="<?= htmlspecialchars($media['label']) ?>">
                                         <i class="fas fa-check"></i>
                                     </span>
                                     <span class="course-media-name"><?= htmlspecialchars($media['label']) ?></span>
@@ -560,7 +564,7 @@ function tt_admin_render_course_modal(?array $course, ?string $fixedType, array 
                     <?php endif; ?>
                     <?php if (!empty($course['image'])): ?>
                     <div class="course-current-image" data-current-image-preview>
-                        <img class="course-image-preview" src="../../frontend/uploads/course-images/<?= rawurlencode($course['image']) ?>" alt="Current course image">
+                        <img loading="lazy" decoding="async" class="course-image-preview" src="../../frontend/uploads/course-images/<?= rawurlencode($course['image']) ?>" alt="Current course image">
                         <button type="button" class="media-remove-btn" data-remove-current-image aria-label="Remove current image">
                             <i class="fas fa-times"></i>
                         </button>

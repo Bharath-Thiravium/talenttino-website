@@ -27,9 +27,13 @@ $featuredImage = $offerHeroSlides[0]['image'] ?? ($featuredOffer ? tt_offer_hero
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/site-pages.min.css')) ?>">
+    <link rel="preload" as="image" href="<?= tt_h(tt_asset_url($featuredImage)) ?>" fetchpriority="high">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <?php $ttPageCss = tt_asset_url('assets/css/site-pages.min.css'); ?>
+    <link rel="stylesheet" href="<?= tt_h($ttPageCss) ?>" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="<?= tt_h($ttPageCss) ?>"></noscript>
+    <link rel="stylesheet" href="<?= tt_h(tt_asset_url('assets/css/navbar.min.css')) ?>">
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap">
     </noscript>
@@ -50,16 +54,22 @@ $featuredImage = $offerHeroSlides[0]['image'] ?? ($featuredOffer ? tt_offer_hero
         @media(max-width:640px){.offers-page .offer-card{min-height:0!important}.offers-page .offer-body{grid-template-rows:auto!important}.offers-page .offer-card h3{min-height:0!important}}
     </style>
     <style>
+        .offers-page .offers-hero{height:calc(100dvh - var(--header-height));min-height:620px;display:block;align-items:normal;background:#07142d}
+        .offers-page .offers-hero:after{display:none;content:none}
         .offers-page .offers-hero-slider{position:absolute;inset:0;z-index:0;width:100%;height:100%;overflow:hidden;background:#07142d}
-        .offers-page .offers-hero-slider .slider-track{height:100%;display:flex;transition:transform .65s ease;will-change:transform}
-        .offers-page .offers-hero-slider .slider-slide{position:relative;flex:0 0 100%;min-width:100%;height:100%;overflow:hidden;background:#07142d}
-        .offers-page .offers-hero-slider .slider-slide img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:saturate(1.05)}
+        .offers-page .offers-hero-slider .slider-track{position:absolute;inset:0;width:100%;height:100%;display:block!important;transform:none!important;transition:none!important;will-change:auto!important}
+        .offers-page .offers-hero-slider .slider-slide{position:absolute;inset:0;width:100%;height:100%;min-width:0!important;display:block;overflow:hidden;background:#07142d;opacity:0;visibility:hidden;transform:scale(1.015);pointer-events:none;transition:opacity 800ms ease,transform 800ms ease,visibility 800ms ease}
+        .offers-page .offers-hero-slider .slider-slide.is-active{opacity:1;visibility:visible;transform:scale(1);pointer-events:auto;z-index:1}
+        .offers-page .offers-hero-slider .slider-slide:not(.is-active){opacity:0!important;visibility:hidden!important;z-index:0}
+        .offers-page .offers-hero-slider .slider-slide img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:none;background:#07142d}
         .offers-page .offers-hero-slider .slider-prev,.offers-page .offers-hero-slider .slider-next{position:absolute;top:50%;z-index:4;width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:#fff;background:rgba(15,23,42,.42);backdrop-filter:blur(10px);transform:translateY(-50%);cursor:pointer}
         .offers-page .offers-hero-slider .slider-prev{left:18px}.offers-page .offers-hero-slider .slider-next{right:18px}
         .offers-page .offers-hero-slider .slider-dots{position:absolute;left:50%;bottom:28px;z-index:4;display:flex;gap:9px;transform:translateX(-50%)}
         .offers-page .offers-hero-slider .slider-dot{width:9px;height:9px;border:0;border-radius:999px;background:rgba(255,255,255,.48);cursor:pointer}
         .offers-page .offers-hero-slider .slider-dot.is-active{width:28px;background:#fff}
-        @media(max-width:640px){.offers-page .offers-hero-slider .slider-prev,.offers-page .offers-hero-slider .slider-next{display:none}.offers-page .offers-hero-slider .slider-dots{bottom:18px}.offers-page .offers-hero-slider .slider-slide img{object-position:center top}}
+        @media(max-width:980px){.offers-page .offers-hero{height:calc(100dvh - var(--header-height));min-height:560px}}
+        @media(max-width:640px){.offers-page .offers-hero-slider .slider-prev,.offers-page .offers-hero-slider .slider-next{display:none}.offers-page .offers-hero-slider .slider-dots{bottom:18px}.offers-page .offers-hero-slider .slider-slide img{object-position:center}}
+        @media(prefers-reduced-motion:reduce){.offers-page .offers-hero-slider .slider-slide{transition:none!important;transform:none!important}}
     </style>
 </head>
 <body class="static-site offers-page">
@@ -77,8 +87,8 @@ $featuredImage = $offerHeroSlides[0]['image'] ?? ($featuredOffer ? tt_offer_hero
                     ?>
                     <div class="slider-slide<?= $index === 0 ? ' is-active' : '' ?>" data-slide aria-hidden="<?= $index === 0 ? 'false' : 'true' ?>">
                         <picture>
-                            <source media="(max-width: 640px)" srcset="<?= tt_h($slideMobile) ?>">
-                            <img src="<?= tt_h($slideImage) ?>" alt="<?= tt_h($slideAlt) ?>" loading="<?= $index === 0 ? 'eager' : 'lazy' ?>" fetchpriority="<?= $index === 0 ? 'high' : 'auto' ?>" decoding="async" width="1600" height="900">
+                            <source media="(max-width: 640px)" <?= $index === 0 ? 'srcset="' . tt_h($slideMobile) . '"' : 'data-srcset="' . tt_h($slideMobile) . '"' ?>>
+                            <img <?= $index === 0 ? 'src="' . tt_h($slideImage) . '"' : 'data-src="' . tt_h($slideImage) . '"' ?> alt="<?= tt_h($slideAlt) ?>" loading="<?= $index === 0 ? 'eager' : 'lazy' ?>"<?= $index === 0 ? ' fetchpriority="high"' : '' ?> decoding="async" width="1600" height="900">
                         </picture>
                     </div>
                     <?php endforeach; ?>
@@ -92,26 +102,6 @@ $featuredImage = $offerHeroSlides[0]['image'] ?? ($featuredOffer ? tt_offer_hero
                     <?php endforeach; ?>
                 </div>
                 <?php endif; ?>
-            </div>
-            <div class="site-container reveal">
-                <span class="offers-kicker"><i class="fa-solid fa-tags"></i> Current Course Offers</span>
-                <h1>Best training offers with practical learning support.</h1>
-                <p>Choose course offers with live projects, certificate support, internship guidance and placement preparation from Talentteno Institute.</p>
-                <div class="offers-actions">
-                    <a class="offers-primary" href="#offer-cards"><i class="fa-solid fa-arrow-down"></i> View Offers</a>
-                    <a class="offers-secondary" href="<?= tt_h($whatsappUrl) ?>" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="offers-strip">
-            <div class="site-container">
-                <div class="offers-strip-grid reveal">
-                    <div class="offers-strip-item"><i class="fa-solid fa-laptop-code"></i><div><strong>Live Projects</strong><span>Practice-led learning</span></div></div>
-                    <div class="offers-strip-item"><i class="fa-solid fa-certificate"></i><div><strong>Certificate</strong><span>Course completion proof</span></div></div>
-                    <div class="offers-strip-item"><i class="fa-solid fa-user-tie"></i><div><strong>Career Support</strong><span>Resume and interview help</span></div></div>
-                    <div class="offers-strip-item"><i class="fa-solid fa-clock"></i><div><strong>Flexible Batches</strong><span>Offline, online or hybrid</span></div></div>
-                </div>
             </div>
         </section>
 

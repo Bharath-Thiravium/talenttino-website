@@ -205,8 +205,12 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
     <title><?= htmlspecialchars($contentTitle) ?> - Talentteno Admin</title>
     <link rel="icon" type="image/png" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
     <link rel="apple-touch-icon" href="<?= htmlspecialchars(tt_admin_asset_url('../../frontend/assets/images/logot-transparent.png')) ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <link rel="stylesheet" href="<?= htmlspecialchars(tt_admin_asset_url('admin.css')) ?>">
 </head>
 <body>
@@ -253,7 +257,7 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
                         <small class="field-help">Optional. Choose a JPG, PNG, WebP, or GIF image. If empty, frontend chooses a matching default image.</small>
                         <?php if (!empty($edit_item['image'])): ?>
                         <div class="content-current-image">
-                            <img src="<?= htmlspecialchars(tt_admin_content_image_url($edit_item['image'])) ?>" alt="">
+                            <img loading="lazy" decoding="async" src="<?= htmlspecialchars(tt_admin_content_image_url($edit_item['image'])) ?>" alt="">
                             <span>Current image</span>
                         </div>
                         <?php endif; ?>
@@ -296,7 +300,7 @@ $items = $conn->query("SELECT * FROM `$contentTable` ORDER BY sort_order ASC, id
                                 <td><strong><?= htmlspecialchars($item['title']) ?></strong></td>
                                 <td>
                                     <?php if (!empty($item['image'])): ?>
-                                    <img class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_content_image_url($item['image'])) ?>" alt="">
+                                    <img loading="lazy" decoding="async" class="content-admin-thumb" src="<?= htmlspecialchars(tt_admin_content_image_url($item['image'])) ?>" alt="">
                                     <?php else: ?>
                                     <span class="content-admin-placeholder"><i class="fas fa-image"></i></span>
                                     <?php endif; ?>
