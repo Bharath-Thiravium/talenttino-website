@@ -44,26 +44,26 @@ function tt_catalog_fallback_image(array $course): string
 {
     $needle = strtolower(trim(($course['name'] ?? '') . ' ' . ($course['category'] ?? '') . ' ' . ($course['desc'] ?? '')));
     $map = [
-        'cloud' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
-        'cyber' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'security' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'data science' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'artificial intelligence' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'ai' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'database' => 'uploads/media/data-analyst-20260703-133130-702998.png',
-        'data' => 'uploads/media/data-analyst-20260703-133130-702998.png',
-        'digital marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'graphic' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'design' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'web' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'full stack' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'programming' => 'uploads/media/programming-languages-20260703-133210-630417.png',
-        'software' => 'uploads/media/programming-languages-20260703-133210-630417.png',
-        'testing' => 'uploads/media/programming-languages-20260703-133210-630417.png',
-        'hardware' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
-        'computer' => 'uploads/media/programming-languages-20260703-133210-630417.png',
-        'accounting' => 'uploads/media/data-analyst-20260703-133130-702998.png',
+        'cloud' => 'uploads/optimized/cloud-computing-20260703-133220-323189-w800.webp',
+        'cyber' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'security' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'data science' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'artificial intelligence' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'ai' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'database' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp',
+        'data' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp',
+        'digital marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'graphic' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'design' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'web' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'full stack' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'programming' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
+        'software' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
+        'testing' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
+        'hardware' => 'uploads/optimized/cloud-computing-20260703-133220-323189-w800.webp',
+        'computer' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
+        'accounting' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp',
         'career' => 'assets/images/contact-counsellor-hero.png',
         'english' => 'assets/images/contact-counsellor-hero.png',
     ];
@@ -74,7 +74,7 @@ function tt_catalog_fallback_image(array $course): string
         }
     }
 
-    return 'uploads/media/full-stack-development-20260703-133158-761383.png';
+    return 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp';
 }
 ?>
 <!DOCTYPE html>

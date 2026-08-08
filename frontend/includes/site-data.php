@@ -567,7 +567,33 @@ function tt_courses(int $limit = 0, bool $featuredOnly = false): array
 {
     $where = $featuredOnly ? 'WHERE is_active = 1 AND is_featured = 1' : 'WHERE is_active = 1';
     $limitSql = $limit > 0 ? ' LIMIT ' . $limit : '';
-    return tt_fetch_all("SELECT * FROM courses $where ORDER BY is_featured DESC, id DESC$limitSql");
+    $orderSql = tt_courses_order_sql();
+    return tt_fetch_all("SELECT * FROM courses $where ORDER BY $orderSql$limitSql");
+}
+
+function tt_courses_has_sort_order(): bool
+{
+    static $hasSortOrder = null;
+    if ($hasSortOrder !== null) {
+        return $hasSortOrder;
+    }
+
+    $db = tt_db();
+    if (!$db) {
+        return $hasSortOrder = false;
+    }
+
+    $column = @$db->query("SHOW COLUMNS FROM courses LIKE 'sort_order'");
+    return $hasSortOrder = $column && $column->num_rows > 0;
+}
+
+function tt_courses_order_sql(bool $singleType = false): string
+{
+    if (!tt_courses_has_sort_order()) {
+        return 'is_featured DESC, id DESC';
+    }
+
+    return 'COALESCE(NULLIF(sort_order, 0), 999999) ASC, id ASC';
 }
 
 function tt_course_highlights(array $course, array $fallback = []): array
@@ -608,7 +634,8 @@ function tt_courses_by_type(string $type): array
     }
 
     $safeType = $db->real_escape_string($type);
-    return tt_fetch_all("SELECT * FROM courses WHERE is_active = 1 AND course_type = '$safeType' ORDER BY is_featured DESC, id DESC");
+    $orderSql = tt_courses_order_sql(true);
+    return tt_fetch_all("SELECT * FROM courses WHERE is_active = 1 AND course_type = '$safeType' ORDER BY $orderSql");
 }
 
 function tt_services(int $limit = 0): array
@@ -650,12 +677,12 @@ function tt_review_showcase(): array
     $rows = tt_fetch_all("SELECT * FROM review_showcase WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
     if ($rows) return $rows;
     return [
-        ['image' => 'uploads/media/full-stack-development-20260703-133158-761383.png', 'title' => 'Full Stack Development', 'icon' => 'fa-code'],
-        ['image' => 'uploads/media/data-science-ai-20260703-133112-527863.png', 'title' => 'AI & Machine Learning', 'icon' => 'fa-brain'],
-        ['image' => 'uploads/media/cyber-security-20260703-133329-242125.png', 'title' => 'Cyber Security', 'icon' => 'fa-shield-halved'],
-        ['image' => 'uploads/media/data-analyst-20260703-133130-702998.png', 'title' => 'Data Analyst', 'icon' => 'fa-chart-line'],
-        ['image' => 'uploads/media/digital-marketing-20260703-133146-981935.png', 'title' => 'Digital Marketing', 'icon' => 'fa-bullhorn'],
-        ['image' => 'uploads/media/programming-languages-20260703-133210-630417.png', 'title' => 'Programming Languages', 'icon' => 'fa-terminal'],
+        ['image' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp', 'title' => 'Full Stack Development', 'icon' => 'fa-code'],
+        ['image' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp', 'title' => 'AI & Machine Learning', 'icon' => 'fa-brain'],
+        ['image' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp', 'title' => 'Cyber Security', 'icon' => 'fa-shield-halved'],
+        ['image' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp', 'title' => 'Data Analyst', 'icon' => 'fa-chart-line'],
+        ['image' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp', 'title' => 'Digital Marketing', 'icon' => 'fa-bullhorn'],
+        ['image' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp', 'title' => 'Programming Languages', 'icon' => 'fa-terminal'],
     ];
 }
 
@@ -880,15 +907,15 @@ function tt_item_image(array $item, string $type = 'general'): string
 
     $text = strtolower(($item['title'] ?? '') . ' ' . ($item['short_desc'] ?? '') . ' ' . ($item['description'] ?? '') . ' ' . $type);
     $map = [
-        'cyber' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'security' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'data' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'dashboard' => 'uploads/media/data-analyst-20260703-133130-702998.png',
-        'full stack' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'website' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'digital' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'programming' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'cyber' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'security' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'data' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'dashboard' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp',
+        'full stack' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'website' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'digital' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'programming' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
         'career' => 'assets/images/contact-counsellor-hero.png',
         'placement' => 'assets/images/contact-counsellor-hero.png',
         'interview' => 'assets/images/contact-counsellor-hero.png',
@@ -995,12 +1022,12 @@ function tt_offer_default_image(string $text = ''): string
 {
     $text = strtolower($text);
     $map = [
-        'cyber' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'security' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'data' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'ai' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'digital' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+        'cyber' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'security' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'data' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'ai' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'digital' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
         'design' => 'assets/images/design .png',
         'student' => 'assets/images/home1.webp',
         'group' => 'assets/images/home2.webp',
@@ -1166,7 +1193,7 @@ function tt_offers(): array
             'badge_text' => 'Combo Deal',
             'short_description' => 'Learn networking, ethical hacking basics, practical labs and security reporting in one guided combo.',
             'full_description' => 'Designed for learners who want a focused security pathway with lab practice and career support.',
-            'poster_image' => 'uploads/media/cyber-security-20260703-133329-242125.png',
+            'poster_image' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
             'original_fee' => 75000,
             'offer_fee' => 49999,
             'discount_percentage' => 33,

@@ -58,7 +58,7 @@ $homeHighlights = [
 ];
 $modelTeam = [
     ['name' => 'Senior Full Stack Mentor', 'role' => 'Web Development Trainer', 'image' => 'assets/images/home1.webp'],
-    ['name' => 'Data & AI Coach', 'role' => 'Python and Analytics Mentor', 'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png'],
+    ['name' => 'Data & AI Coach', 'role' => 'Python and Analytics Mentor', 'image' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp'],
     ['name' => 'Career Guidance Lead', 'role' => 'Interview Preparation Mentor', 'image' => 'assets/images/home2.webp'],
     ['name' => 'Digital Skills Trainer', 'role' => 'Marketing and Design Mentor', 'image' => 'assets/images/home3.webp'],
 ];
@@ -73,10 +73,10 @@ $reviewItems = $testimonials ?: [
 ];
 $reviewShowcaseImages = tt_review_showcase();
 $coursePathTracks = [
-    ['course' => 'Full Stack Development', 'step' => 'Step 01', 'title' => 'Full stack project training', 'desc' => 'Build frontend, backend, database and deployment skills through practical project work.', 'image' => 'uploads/media/full-stack-development-20260703-133158-761383.png'],
-    ['course' => 'Data Science & AI', 'step' => 'Step 02', 'title' => 'Data science and AI practice', 'desc' => 'Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks.', 'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png'],
-    ['course' => 'Cyber Security', 'step' => 'Step 03', 'title' => 'Cyber security lab training', 'desc' => 'Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks.', 'image' => 'uploads/media/cyber-security-20260703-133329-242125.png'],
-    ['course' => 'Digital Marketing', 'step' => 'Step 04', 'title' => 'Digital marketing projects', 'desc' => 'Build practical confidence with campaign planning, SEO basics, social media workflow and reporting.', 'image' => 'uploads/media/digital-marketing-20260703-133146-981935.png'],
+    ['course' => 'Full Stack Development', 'step' => 'Step 01', 'title' => 'Full stack project training', 'desc' => 'Build frontend, backend, database and deployment skills through practical project work.', 'image' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp'],
+    ['course' => 'Data Science & AI', 'step' => 'Step 02', 'title' => 'Data science and AI practice', 'desc' => 'Learn Python, analytics, machine learning basics and AI workflow through guided practical tasks.', 'image' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp'],
+    ['course' => 'Cyber Security', 'step' => 'Step 03', 'title' => 'Cyber security lab training', 'desc' => 'Practice security fundamentals, guided lab workflows and beginner-friendly cyber project tasks.', 'image' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp'],
+    ['course' => 'Digital Marketing', 'step' => 'Step 04', 'title' => 'Digital marketing projects', 'desc' => 'Build practical confidence with campaign planning, SEO basics, social media workflow and reporting.', 'image' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp'],
     ['course' => 'UI / UX and Design', 'step' => 'Step 05', 'title' => 'UI / UX portfolio guidance', 'desc' => 'Learn design foundations, interface planning, tool practice and portfolio-ready project presentation.', 'image' => 'assets/images/design%20.png'],
 ];
 
@@ -185,19 +185,19 @@ function tt_home_course_image(array $course): string
 
     $text = strtolower(trim(($course['title'] ?? '') . ' ' . ($course['category'] ?? '')));
     $map = [
-        'cloud' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
-        'cyber' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'security' => 'uploads/media/cyber-security-20260703-133329-242125.png',
-        'data analyst' => 'uploads/media/data-analyst-20260703-133130-702998.png',
-        'data science' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'artificial intelligence' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'machine learning' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'ai' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
-        'digital marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'marketing' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
-        'full stack' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'web' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
-        'programming' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+        'cloud' => 'uploads/optimized/cloud-computing-20260703-133220-323189-w800.webp',
+        'cyber' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'security' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp',
+        'data analyst' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp',
+        'data science' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'artificial intelligence' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'machine learning' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'ai' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
+        'digital marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'marketing' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
+        'full stack' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'web' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
+        'programming' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
     ];
 
     foreach ($map as $needle => $image) {
@@ -515,7 +515,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['form_source'] ?
                     <a class="model-gradient-btn" href="about.php" aria-label="Read more about Talentteno Institute">About Talentteno <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
                 <div class="model-about-visual reveal reveal-right">
-                    <?php $aboutMainImage = 'uploads/media/full-stack-development-20260703-133158-761383.png'; $aboutMainSrcset = tt_home_optimized_srcset($aboutMainImage, [400, 800]); ?>
+                    <?php $aboutMainImage = 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp'; $aboutMainSrcset = tt_home_optimized_srcset($aboutMainImage, [400, 800]); ?>
                     <img class="model-about-main" src="<?= tt_h(tt_home_image_src($aboutMainImage, 800)) ?>"<?= $aboutMainSrcset !== '' ? ' srcset="' . tt_h($aboutMainSrcset) . '" sizes="(max-width: 767px) 100vw, 645px"' : '' ?> alt="Full stack project training visual" loading="lazy" decoding="async" width="645" height="430">
                     <?php $aboutFloatImage = 'assets/images/home2.webp'; $aboutFloatSrcset = tt_home_optimized_srcset($aboutFloatImage, [430, 900]); ?>
                     <img class="model-about-float" src="<?= tt_h(tt_home_image_src($aboutFloatImage, 430)) ?>"<?= $aboutFloatSrcset !== '' ? ' srcset="' . tt_h($aboutFloatSrcset) . '" sizes="220px"' : '' ?> alt="Students learning with mentor" loading="lazy" decoding="async" width="220" height="147">

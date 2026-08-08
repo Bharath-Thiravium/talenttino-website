@@ -601,9 +601,9 @@ $ttPageJs = tt_asset_url($ttPageJsPath, $ttAboutAssetVersion($ttPageJsPath));
                     <p>Students work through modern programming, AI, cyber security, analytics and digital marketing workflows with guided practice and portfolio-ready output.</p>
                 </div>
                 <div class="about-image-strip reveal reveal-right" aria-label="Talentteno course visuals">
-                    <img src="uploads/media/full-stack-development-20260703-133158-761383.png" alt="Full stack development training visual" loading="lazy" decoding="async">
-                    <img src="uploads/media/programming-languages-20260703-133210-630417.png" alt="Programming languages training visual" loading="lazy" decoding="async">
-                    <img src="uploads/media/digital-marketing-20260703-133146-981935.png" alt="Digital marketing training visual" loading="lazy" decoding="async">
+                    <img src="uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp" alt="Full stack development training visual" loading="lazy" decoding="async">
+                    <img src="uploads/optimized/programming-languages-20260703-133210-630417-w800.webp" alt="Programming languages training visual" loading="lazy" decoding="async">
+                    <img src="uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp" alt="Digital marketing training visual" loading="lazy" decoding="async">
                 </div>
             </div>
         </section>

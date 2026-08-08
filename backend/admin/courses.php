@@ -19,6 +19,7 @@ if (isset($_GET['delete_error'])) {
 // Add the catalog placement fields to databases created before this feature.
 $conn->query("ALTER TABLE courses ADD COLUMN IF NOT EXISTS course_type ENUM('course', 'short', 'popular', 'advanced', 'designing', 'cyber') DEFAULT 'course' AFTER category");
 $conn->query("ALTER TABLE courses MODIFY course_type ENUM('course', 'short', 'popular', 'advanced', 'designing', 'cyber') DEFAULT 'course'");
+$conn->query("ALTER TABLE courses ADD COLUMN IF NOT EXISTS sort_order INT DEFAULT 0 AFTER course_type");
 $conn->query("ALTER TABLE courses ADD COLUMN IF NOT EXISTS highlights TEXT AFTER description");
 $conn->query("CREATE TABLE IF NOT EXISTS course_seed_log (
     course_type VARCHAR(30) PRIMARY KEY,
@@ -123,6 +124,184 @@ function tt_admin_unique_course_slug(mysqli $conn, string $title, int $currentId
     return $slug;
 }
 
+function tt_admin_next_course_sort_order(mysqli $conn, string $type): int
+{
+    $result = $conn->query('SELECT COALESCE(MAX(sort_order), 0) AS max_sort FROM courses');
+    $max = (int)(($result ? $result->fetch_assoc() : ['max_sort' => 0])['max_sort'] ?? 0);
+    return $max + 10;
+}
+
+function tt_admin_backfill_course_sort_order(mysqli $conn, array $courseTypes): void
+{
+    $typeKeys = array_keys($courseTypes);
+    foreach ($typeKeys as $type) {
+        $hasSorted = $conn->prepare('SELECT COUNT(*) AS total FROM courses WHERE course_type = ? AND sort_order > 0');
+        if (!$hasSorted) {
+            continue;
+        }
+
+        $hasSorted->bind_param('s', $type);
+        $hasSorted->execute();
+        $sortedCount = (int)($hasSorted->get_result()->fetch_assoc()['total'] ?? 0);
+
+        if ($sortedCount === 0) {
+            $rowsStmt = $conn->prepare('SELECT id FROM courses WHERE course_type = ? ORDER BY is_featured DESC, id DESC');
+            $nextSort = 10;
+        } else {
+            $rowsStmt = $conn->prepare('SELECT id FROM courses WHERE course_type = ? AND sort_order <= 0 ORDER BY id ASC');
+            $nextSort = tt_admin_next_course_sort_order($conn, $type);
+        }
+
+        if (!$rowsStmt) {
+            continue;
+        }
+
+        $rowsStmt->bind_param('s', $type);
+        $rowsStmt->execute();
+        $rows = $rowsStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        if (!$rows) {
+            continue;
+        }
+
+        $update = $conn->prepare('UPDATE courses SET sort_order = ? WHERE id = ?');
+        if (!$update) {
+            continue;
+        }
+
+        foreach ($rows as $row) {
+            $id = (int)($row['id'] ?? 0);
+            if ($id <= 0) {
+                continue;
+            }
+            $update->bind_param('ii', $nextSort, $id);
+            $update->execute();
+            $nextSort += 10;
+        }
+    }
+}
+
+function tt_admin_apply_named_course_order(mysqli $conn): void
+{
+    $orders = [
+        ['short', 'Tally Prime'],
+        ['advanced', 'Cyber Security Master Program'],
+        ['cyber', 'AWS (Amazon Web Services)'],
+        ['designing', 'AI for Creative Program'],
+        ['designing', 'VFX Compositing'],
+        ['popular', 'Advanced Tally with GST'],
+        ['course', 'Advanced Cyber Security Combo'],
+        ['course', 'Artificial Intelligence & Machine Learning'],
+        ['course', 'Digital Marketing'],
+        ['course', 'Full Stack Web Development'],
+        ['course', 'Data Science & Data Analyst'],
+        ['designing', 'Motion Graphics'],
+        ['short', 'Robotics'],
+        ['cyber', 'Hardware Hacking + NAS + Firewall + Fiber Optical Cable'],
+        ['advanced', 'Python Fullstack'],
+        ['short', 'Computer Fundamental'],
+        ['short', 'Digital Marketing'],
+        ['short', 'Figma'],
+        ['short', 'Oracle - SQL'],
+        ['short', 'SQL'],
+        ['short', 'Mysql'],
+        ['short', 'Mango DB'],
+        ['short', 'React'],
+        ['short', 'Bootstrap'],
+        ['short', 'PHP'],
+        ['short', 'Javascript'],
+        ['short', 'Payroll + Income Tax'],
+        ['short', 'GST Practical'],
+        ['short', 'Internet & Email Typing'],
+        ['short', 'HTML / CSS'],
+        ['short', 'Basic Computer'],
+        ['short', 'Python'],
+        ['short', 'C++'],
+        ['short', 'C'],
+        ['cyber', 'SOC (Security Operations Center)'],
+        ['cyber', 'Penetration Testing'],
+        ['cyber', 'IoT (Internet of Things) Security'],
+        ['cyber', 'Advanced Ethical Hacking'],
+        ['cyber', 'Basic Ethical Hacking'],
+        ['cyber', 'Linux'],
+        ['cyber', 'Windows Server'],
+        ['cyber', 'CCNP (Cisco Certified Network Professional)'],
+        ['cyber', 'CCNA (Cisco Certified Network Associate)'],
+        ['designing', 'Video Editing & Color'],
+        ['designing', '3D Animation & Modeling'],
+        ['advanced', 'Data Science & AI Professional'],
+        ['advanced', 'Master Python'],
+        ['advanced', 'MERN Stack'],
+        ['advanced', 'Graphic Design + Video Editing'],
+        ['advanced', 'UI/UX + Frontend Development'],
+        ['advanced', 'C# Fullstack'],
+        ['advanced', 'PHP Fullstack'],
+        ['advanced', 'Software Testing Master Program'],
+        ['designing', 'Animation'],
+        ['advanced', 'MEAN Stack'],
+        ['advanced', 'Java Full Stack'],
+        ['popular', 'Flutter + Firebase'],
+        ['advanced', 'Digital Marketing + Graphic Design'],
+        ['popular', 'Backend Development'],
+        ['popular', 'Frontend Development'],
+        ['popular', 'Automation Testing (Selenium)'],
+        ['short', 'Chip Level Service'],
+        ['short', 'Computer Hardware'],
+        ['short', 'Cloud computing & Devops'],
+        ['short', 'Microsoft Azure'],
+        ['popular', 'Machine Learning'],
+        ['popular', 'Data Analytics'],
+        ['popular', 'C# & .NET'],
+        ['popular', 'Advanced Java'],
+        ['short', 'Core Java'],
+        ['popular', 'Office Administration'],
+        ['popular', 'Software Testing'],
+        ['designing', 'Graphic Design'],
+        ['cyber', 'Hardware Networking'],
+        ['popular', 'Artificial Intelligence'],
+        ['short', 'Web Development'],
+        ['short', 'Microsoft Courses'],
+        ['course', 'C, C++, Java & Python'],
+        ['course', 'UI/UX Design'],
+        ['course', 'Tally'],
+        ['course', 'Python Programming'],
+        ['course', 'Cyber Security'],
+    ];
+
+    $conn->query('UPDATE courses SET sort_order = 0');
+
+    $update = $conn->prepare('UPDATE courses SET sort_order = ? WHERE course_type = ? AND title = ?');
+    if (!$update) {
+        return;
+    }
+
+    foreach ($orders as $index => [$type, $title]) {
+        $sortOrder = ((int)$index + 1) * 10;
+        $update->bind_param('iss', $sortOrder, $type, $title);
+        $update->execute();
+    }
+
+    $nextSort = (count($orders) + 1) * 10;
+    $unordered = $conn->query('SELECT id FROM courses WHERE sort_order <= 0 ORDER BY id ASC');
+    if (!$unordered) {
+        return;
+    }
+
+    $append = $conn->prepare('UPDATE courses SET sort_order = ? WHERE id = ?');
+    if (!$append) {
+        return;
+    }
+
+    while ($row = $unordered->fetch_assoc()) {
+        $id = (int)($row['id'] ?? 0);
+        if ($id <= 0) {
+            continue;
+        }
+        $append->bind_param('ii', $nextSort, $id);
+        $append->execute();
+        $nextSort += 10;
+    }
+}
+
 function tt_admin_ensure_upload_dir(string $dir): bool
 {
     return is_dir($dir) || mkdir($dir, 0775, true);
@@ -131,27 +310,36 @@ function tt_admin_ensure_upload_dir(string $dir): bool
 function tt_admin_media_images(): array
 {
     $dir = __DIR__ . '/../../frontend/uploads/media/';
+    $extensionMimes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'webp' => 'image/webp',
+        'gif' => 'image/gif',
+    ];
     $images = [];
     foreach (glob($dir . '*') ?: [] as $path) {
         if (!is_file($path)) continue;
-        if (str_starts_with(basename($path), '.')) continue;
-        $mime = mime_content_type($path) ?: '';
-        if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) continue;
+        $file = basename($path);
+        if (str_starts_with($file, '.')) continue;
+        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        $mime = $extensionMimes[$extension] ?? (mime_content_type($path) ?: '');
+        if (!in_array($mime, $extensionMimes, true)) continue;
         $images[] = [
-            'file' => basename($path),
-            'label' => basename($path),
-            'url' => '../../frontend/uploads/media/' . rawurlencode(basename($path)),
+            'file' => $file,
+            'label' => $file,
+            'url' => '../../frontend/uploads/media/' . rawurlencode($file),
             'modified' => filemtime($path),
         ];
     }
     usort($images, static fn($a, $b) => $b['modified'] <=> $a['modified']);
-    return array_slice($images, 0, 80);
+    return $images;
 }
 
 $mediaImages = tt_admin_media_images();
 
 $catalogExists = $conn->prepare("SELECT id FROM courses WHERE title = ? AND course_type = ? LIMIT 1");
-$catalogInsert = $conn->prepare("INSERT INTO courses (title, slug, category, course_type, description, highlights, duration, fee, original_fee, is_featured, is_active) VALUES (?, ?, ?, ?, ?, ?, '', 0, 0, 0, 1)");
+$catalogInsert = $conn->prepare("INSERT INTO courses (title, slug, category, course_type, sort_order, description, highlights, duration, fee, original_fee, is_featured, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, '', 0, 0, 0, 1)");
 $seedExists = $conn->prepare("SELECT course_type FROM course_seed_log WHERE course_type = ? LIMIT 1");
 $seedMark = $conn->prepare("INSERT IGNORE INTO course_seed_log (course_type) VALUES (?)");
 $courseCountByType = $conn->prepare("SELECT COUNT(*) AS total FROM courses WHERE course_type = ?");
@@ -172,7 +360,7 @@ if ($catalogExists && $catalogInsert && $seedExists && $seedMark && $courseCount
             continue;
         }
 
-        foreach ($catalogCourses as $catalogCourse) {
+        foreach ($catalogCourses as $catalogIndex => $catalogCourse) {
             $title = trim((string)($catalogCourse['name'] ?? ''));
             if ($title === '') continue;
 
@@ -198,13 +386,17 @@ if ($catalogExists && $catalogInsert && $seedExists && $seedMark && $courseCount
                                 ? 'Business'
                                 : 'Development'))));
 
-            $catalogInsert->bind_param('ssssss', $title, $slug, $category, $type, $description, $highlights);
+            $sortOrder = ((int)$catalogIndex + 1) * 10;
+            $catalogInsert->bind_param('ssssiss', $title, $slug, $category, $type, $sortOrder, $description, $highlights);
             @$catalogInsert->execute();
         }
         $seedMark->bind_param('s', $type);
         $seedMark->execute();
     }
 }
+
+tt_admin_backfill_course_sort_order($conn, $courseTypes);
+tt_admin_apply_named_course_order($conn);
 
 // Handle form submission - Add / Edit course
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -236,6 +428,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'image/jpeg' => 'jpg',
             'image/png' => 'png',
             'image/webp' => 'webp',
+            'image/gif' => 'gif',
         ];
 
         if (!is_file($source)) {
@@ -247,7 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $image_mime = mime_content_type($source);
             if (!isset($image_mimes[$image_mime])) {
-                $error = 'Selected media must be JPG, PNG, or WebP.';
+                $error = 'Selected media must be JPG, PNG, GIF, or WebP.';
                 $upload_valid = false;
             } else {
                 $new_image = 'media_' . time() . '_' . uniqid() . '.' . $image_mimes[$image_mime];
@@ -290,15 +483,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($title && $category && $upload_valid) {
+        $sort_order = 0;
         if ($id > 0) {
-            $stmt = $conn->prepare("UPDATE courses SET title=?, slug=?, category=?, course_type=?, description=?, highlights=?, duration=?, fee=?, original_fee=?, brochure_file=?, image=?, is_featured=?, is_active=? WHERE id=?");
-            if ($stmt) {
-                $stmt->bind_param('sssssssddssiii', $title, $slug, $category, $course_type, $description, $highlights, $duration, $fee, $original_fee, $brochure_file, $course_image, $is_featured, $is_active, $id);
+            $currentStmt = $conn->prepare('SELECT course_type, sort_order FROM courses WHERE id = ? LIMIT 1');
+            if ($currentStmt) {
+                $currentStmt->bind_param('i', $id);
+                $currentStmt->execute();
+                $currentCourse = $currentStmt->get_result()->fetch_assoc() ?: [];
+                $currentType = (string)($currentCourse['course_type'] ?? $course_type);
+                $sort_order = (int)($currentCourse['sort_order'] ?? 0);
+                if ($currentType !== $course_type || $sort_order <= 0) {
+                    $sort_order = tt_admin_next_course_sort_order($conn, $course_type);
+                }
             }
         } else {
-            $stmt = $conn->prepare("INSERT INTO courses (title, slug, category, course_type, description, highlights, duration, fee, original_fee, brochure_file, image, is_featured, is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $sort_order = tt_admin_next_course_sort_order($conn, $course_type);
+        }
+
+        if ($id > 0) {
+            $stmt = $conn->prepare("UPDATE courses SET title=?, slug=?, category=?, course_type=?, sort_order=?, description=?, highlights=?, duration=?, fee=?, original_fee=?, brochure_file=?, image=?, is_featured=?, is_active=? WHERE id=?");
             if ($stmt) {
-                $stmt->bind_param('sssssssddssii', $title, $slug, $category, $course_type, $description, $highlights, $duration, $fee, $original_fee, $brochure_file, $course_image, $is_featured, $is_active);
+                $stmt->bind_param('ssssisssddssiii', $title, $slug, $category, $course_type, $sort_order, $description, $highlights, $duration, $fee, $original_fee, $brochure_file, $course_image, $is_featured, $is_active, $id);
+            }
+        } else {
+            $stmt = $conn->prepare("INSERT INTO courses (title, slug, category, course_type, sort_order, description, highlights, duration, fee, original_fee, brochure_file, image, is_featured, is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            if ($stmt) {
+                $stmt->bind_param('ssssisssddssii', $title, $slug, $category, $course_type, $sort_order, $description, $highlights, $duration, $fee, $original_fee, $brochure_file, $course_image, $is_featured, $is_active);
             }
         }
 
@@ -347,7 +557,7 @@ if (isset($_GET['edit'])) {
     $edit_course = $conn->query("SELECT * FROM courses WHERE id = $id")->fetch_assoc();
 }
 
-$courses = $conn->query("SELECT * FROM courses ORDER BY is_featured DESC, id DESC")->fetch_all(MYSQLI_ASSOC);
+$courses = $conn->query("SELECT * FROM courses ORDER BY COALESCE(NULLIF(sort_order, 0), 999999), id ASC")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -535,10 +745,17 @@ function tt_admin_render_course_modal(?array $course, ?string $fixedType, array 
                         <div class="course-media-modal-backdrop" data-close-media-picker></div>
                         <div class="course-media-modal-panel">
                             <div class="course-media-modal-header">
-                                <h3>Choose Course Image</h3>
+                                <div>
+                                    <h3>Choose Course Image</h3>
+                                    <span class="course-media-count"><?= count($mediaImages) ?> images available</span>
+                                </div>
                                 <button type="button" class="modal-close" data-close-media-picker aria-label="Close">
                                     <i class="fas fa-times"></i>
                                 </button>
+                            </div>
+                            <div class="course-media-search">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                                <input type="search" placeholder="Search media images..." data-media-search>
                             </div>
                             <div class="course-media-picker">
                                 <?php foreach ($mediaImages as $media): ?>
@@ -550,6 +767,7 @@ function tt_admin_render_course_modal(?array $course, ?string $fixedType, array 
                                     <span class="course-media-name"><?= htmlspecialchars($media['label']) ?></span>
                                 </button>
                                 <?php endforeach; ?>
+                                <p class="course-media-empty" data-media-empty hidden>No images match your search.</p>
                             </div>
                             <div class="course-media-modal-footer">
                                 <button type="button" class="btn-cancel" data-close-media-picker>Cancel</button>
@@ -674,6 +892,14 @@ document.querySelectorAll('[data-open-media-picker]').forEach((button) => {
         modal.dataset.pendingFile = '';
         modal.dataset.pendingUrl = '';
         modal.querySelectorAll('[data-pick-media]').forEach(option => option.classList.remove('is-selected'));
+        modal.querySelectorAll('[data-pick-media]').forEach(option => option.hidden = false);
+        const searchInput = modal.querySelector('[data-media-search]');
+        if (searchInput) {
+            searchInput.value = '';
+            setTimeout(() => searchInput.focus(), 0);
+        }
+        const emptyState = modal.querySelector('[data-media-empty]');
+        if (emptyState) emptyState.hidden = true;
         const applyButton = modal.querySelector('[data-apply-media-picker]');
         if (applyButton) applyButton.disabled = true;
     });
@@ -696,6 +922,34 @@ document.querySelectorAll('[data-pick-media]').forEach((button) => {
         const applyButton = modal.querySelector('[data-apply-media-picker]');
         if (applyButton) applyButton.disabled = modal.dataset.pendingFile === '';
     });
+});
+
+document.querySelectorAll('[data-media-search]').forEach((input) => {
+    input.addEventListener('input', () => {
+        const modal = input.closest('[data-media-picker-modal]');
+        if (!modal) return;
+        const query = input.value.trim().toLowerCase();
+        let visible = 0;
+        modal.querySelectorAll('[data-pick-media]').forEach((option) => {
+            const label = (option.dataset.pickMedia || option.title || option.textContent || '').toLowerCase();
+            const matches = query === '' || label.includes(query);
+            option.hidden = !matches;
+            if (matches) visible++;
+        });
+        const emptyState = modal.querySelector('[data-media-empty]');
+        if (emptyState) emptyState.hidden = visible !== 0;
+    });
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') return;
+    const input = event.target.closest('[data-media-search]');
+    if (!input) return;
+    const modal = input.closest('[data-media-picker-modal]');
+    const firstVisible = modal?.querySelector('[data-pick-media]:not([hidden])');
+    if (!firstVisible) return;
+    event.preventDefault();
+    firstVisible.click();
 });
 
 document.querySelectorAll('[data-apply-media-picker]').forEach((button) => {

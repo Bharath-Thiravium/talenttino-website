@@ -3,8 +3,8 @@ require_once __DIR__ . '/includes/site-data.php';
 $items = tt_blog_posts();
 $items = $items ?: [
     ['icon' => 'fa-newspaper', 'title' => 'How to Choose an IT Course', 'short_desc' => 'Pick a practical track based on your career goal.', 'description' => 'Compare your interest, current skill level, project goals and placement timeline before choosing a course.', 'image' => 'assets/images/home1.webp'],
-    ['icon' => 'fa-code', 'title' => 'Why Projects Matter', 'short_desc' => 'Portfolio projects help prove your skills in interviews.', 'description' => 'Live projects show practical problem solving, coding confidence and the ability to explain your work.', 'image' => 'uploads/media/full-stack-development-20260703-133158-761383.png'],
-    ['icon' => 'fa-lightbulb', 'title' => 'Learning from Basics', 'short_desc' => 'A strong foundation makes advanced tools easier.', 'description' => 'Start with fundamentals, practice consistently, then move into tools, frameworks and real-time tasks.', 'image' => 'uploads/media/programming-languages-20260703-133210-630417.png'],
+    ['icon' => 'fa-code', 'title' => 'Why Projects Matter', 'short_desc' => 'Portfolio projects help prove your skills in interviews.', 'description' => 'Live projects show practical problem solving, coding confidence and the ability to explain your work.', 'image' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp'],
+    ['icon' => 'fa-lightbulb', 'title' => 'Learning from Basics', 'short_desc' => 'A strong foundation makes advanced tools easier.', 'description' => 'Start with fundamentals, practice consistently, then move into tools, frameworks and real-time tasks.', 'image' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp'],
 ];
 $blogHeroImage = tt_optimized_image_url('assets/images/blog.png', 1536);
 ?>

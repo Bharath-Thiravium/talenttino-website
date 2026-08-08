@@ -14,7 +14,7 @@ $coursePage = [
             'name' => '3D Animation & Modeling',
             'category' => 'Designing',
             'desc' => 'Learn 3D asset creation, modeling basics, animation workflow and portfolio-ready creative output.',
-            'image' => 'uploads/media/full-stack-development-20260703-133158-761383.png',
+            'image' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp',
             'items' => ['3D modeling basics', 'Animation workflow', 'Portfolio project support'],
         ],
         [
@@ -22,7 +22,7 @@ $coursePage = [
             'name' => 'VFX Compositing',
             'category' => 'Designing',
             'desc' => 'Build visual effects composition skills with layers, masking, tracking and cinematic finishing.',
-            'image' => 'uploads/media/data-science-ai-20260703-133112-527863.png',
+            'image' => 'uploads/optimized/data-science-ai-20260703-133112-527863-w800.webp',
             'items' => ['Compositing workflow', 'Masking and tracking', 'Creative project practice'],
         ],
         [
@@ -38,7 +38,7 @@ $coursePage = [
             'name' => 'Motion Graphics',
             'category' => 'Designing',
             'desc' => 'Create animated titles, social media motion posts, explainer graphics and brand animations.',
-            'image' => 'uploads/media/digital-marketing-20260703-133146-981935.png',
+            'image' => 'uploads/optimized/digital-marketing-20260703-133146-981935-w800.webp',
             'items' => ['Animated graphics', 'Title animation', 'Social media motion design'],
         ],
         [
@@ -62,7 +62,7 @@ $coursePage = [
             'name' => 'AI for Creative Program',
             'category' => 'Designing',
             'desc' => 'Use AI tools for idea generation, creative production, design acceleration and content workflows.',
-            'image' => 'uploads/media/programming-languages-20260703-133210-630417.png',
+            'image' => 'uploads/optimized/programming-languages-20260703-133210-630417-w800.webp',
             'items' => ['AI creative tools', 'Prompt workflow', 'Design productivity practice'],
         ],
     ],

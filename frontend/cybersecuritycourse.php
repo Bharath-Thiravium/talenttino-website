@@ -3,7 +3,7 @@ if (!defined('TT_CATALOG_DATA_ONLY')) {
     require_once __DIR__ . '/includes/site-data.php';
 }
 
-$cyberImage = 'uploads/media/cyber-security-20260703-133329-242125.png';
+$cyberImage = 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp';
 $coursePage = [
     'title' => 'Cyber Security Courses',
     'subtitle' => 'Network security, server administration, cloud security, ethical hacking and SOC training with practical lab support.',
@@ -39,7 +39,7 @@ $coursePage = [
             'name' => 'AWS (Amazon Web Services)',
             'category' => 'Security',
             'desc' => 'Understand AWS cloud services, access control, storage, networking and cloud security practices.',
-            'image' => 'uploads/media/cloud-computing-20260703-133220-323189.png',
+            'image' => 'uploads/optimized/cloud-computing-20260703-133220-323189-w800.webp',
             'items' => ['IAM and cloud access', 'AWS networking basics', 'Cloud security workflow'],
         ],
         [

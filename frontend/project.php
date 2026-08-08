@@ -2,9 +2,9 @@
 require_once __DIR__ . '/includes/site-data.php';
 $items = tt_projects();
 $items = $items ?: [
-    ['icon' => 'fa-diagram-project', 'title' => 'Live Website Project', 'short_desc' => 'Build a complete responsive business website.', 'description' => 'Plan pages, create responsive sections, connect enquiry forms and publish portfolio-ready work.', 'image' => 'uploads/media/full-stack-development-20260703-133158-761383.png'],
-    ['icon' => 'fa-database', 'title' => 'Data Dashboard Project', 'short_desc' => 'Practice data cleaning, reporting and visualization.', 'description' => 'Use real datasets to clean data, prepare charts and explain business insights clearly.', 'image' => 'uploads/media/data-analyst-20260703-133130-702998.png'],
-    ['icon' => 'fa-shield-halved', 'title' => 'Cyber Lab Project', 'short_desc' => 'Learn practical security workflows in guided labs.', 'description' => 'Practice security basics, scanning workflow, reporting and safe lab documentation.', 'image' => 'uploads/media/cyber-security-20260703-133329-242125.png'],
+    ['icon' => 'fa-diagram-project', 'title' => 'Live Website Project', 'short_desc' => 'Build a complete responsive business website.', 'description' => 'Plan pages, create responsive sections, connect enquiry forms and publish portfolio-ready work.', 'image' => 'uploads/optimized/full-stack-development-20260703-133158-761383-w800.webp'],
+    ['icon' => 'fa-database', 'title' => 'Data Dashboard Project', 'short_desc' => 'Practice data cleaning, reporting and visualization.', 'description' => 'Use real datasets to clean data, prepare charts and explain business insights clearly.', 'image' => 'uploads/optimized/data-analyst-20260703-133130-702998-w800.webp'],
+    ['icon' => 'fa-shield-halved', 'title' => 'Cyber Lab Project', 'short_desc' => 'Learn practical security workflows in guided labs.', 'description' => 'Practice security basics, scanning workflow, reporting and safe lab documentation.', 'image' => 'uploads/optimized/cyber-security-20260703-133329-242125-w800.webp'],
 ];
 $projectHeroImage = tt_optimized_image_url('assets/images/project.png', 1536);
 ?>

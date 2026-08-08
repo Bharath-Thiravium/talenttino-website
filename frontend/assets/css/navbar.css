@@ -553,3 +553,112 @@ html body .site-header#site-header .menu-button {
         transition: none !important;
     }
 }
+
+/* Final brand spacing: consistent left inset and fuller logo/title area on every page. */
+html body .site-header#site-header .nav-wrap,
+html body .site-header#site-header.is-scrolled .nav-wrap,
+html body.catalog-body .site-header#site-header .nav-wrap,
+html body.course-list-page .site-header#site-header .nav-wrap,
+html body.home-page .site-header#site-header .nav-wrap,
+html body.static-site .site-header#site-header .nav-wrap {
+    padding-left: clamp(38px, 3.2vw, 52px) !important;
+    padding-right: clamp(22px, 2.2vw, 34px) !important;
+}
+
+html body .site-header#site-header .brand,
+html body .site-header#site-header.is-scrolled .brand {
+    flex-basis: 660px !important;
+    width: 660px !important;
+    max-width: 660px !important;
+    grid-template-columns: 82px minmax(0, 1fr) !important;
+    column-gap: 12px !important;
+}
+
+html body .site-header#site-header .brand-mark.logo-mark,
+html body .site-header#site-header .brand-mark.logo-mark img,
+html body .site-header#site-header.is-scrolled .brand-mark.logo-mark,
+html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
+    width: 82px !important;
+    height: 82px !important;
+    min-width: 82px !important;
+    min-height: 82px !important;
+    max-width: 82px !important;
+    max-height: 82px !important;
+}
+
+html body .site-header#site-header .brand-copy {
+    padding-right: 10px !important;
+}
+
+html body .site-header#site-header .brand-name {
+    font-size: clamp(40px, 3.05vw, 48px) !important;
+    line-height: 0.96 !important;
+}
+
+html body .site-header#site-header .brand-sub {
+    margin-top: 6px !important;
+    font-size: 10px !important;
+    letter-spacing: 0.46em !important;
+}
+
+@media (max-width: 1260px) and (min-width: 1101px) {
+    html body .site-header#site-header .brand,
+    html body .site-header#site-header.is-scrolled .brand {
+        flex-basis: 520px !important;
+        width: 520px !important;
+        max-width: 520px !important;
+    }
+
+    html body .site-header#site-header .brand-name {
+        font-size: 36px !important;
+    }
+}
+
+@media (max-width: 1100px) {
+    html body .site-header#site-header .nav-wrap,
+    html body .site-header#site-header.is-scrolled .nav-wrap {
+        padding-left: 18px !important;
+        padding-right: 68px !important;
+    }
+
+    html body .site-header#site-header .brand,
+    html body .site-header#site-header.is-scrolled .brand {
+        grid-template-columns: 54px minmax(0, 1fr) !important;
+        column-gap: 6px !important;
+    }
+
+    html body .site-header#site-header .brand-mark.logo-mark,
+    html body .site-header#site-header .brand-mark.logo-mark img,
+    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark,
+    html body .site-header#site-header.is-scrolled .brand-mark.logo-mark img {
+        width: 54px !important;
+        height: 54px !important;
+        min-width: 54px !important;
+        min-height: 54px !important;
+        max-width: 54px !important;
+        max-height: 54px !important;
+    }
+
+    html body .site-header#site-header .brand-name {
+        font-size: clamp(20px, 5.4vw, 24px) !important;
+        line-height: 1.02 !important;
+    }
+
+    html body .site-header#site-header .brand-sub {
+        margin-top: 4px !important;
+        font-size: 7.5px !important;
+        letter-spacing: 0.22em !important;
+    }
+}
+
+@media (max-width: 420px) {
+    html body .site-header#site-header .nav-wrap,
+    html body .site-header#site-header.is-scrolled .nav-wrap {
+        padding-left: 14px !important;
+        padding-right: 62px !important;
+    }
+
+    html body .site-header#site-header .brand-name {
+        font-size: clamp(18px, 5.2vw, 22px) !important;
+    }
+}
